@@ -3,19 +3,48 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */; };
 		67B0429023E277980046924F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0428F23E277980046924F /* AppDelegate.swift */; };
 		67B0429223E277980046924F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0429123E277980046924F /* SceneDelegate.swift */; };
 		67B0429423E277990046924F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0429323E277990046924F /* ViewController.swift */; };
 		67B0429723E277990046924F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67B0429523E277990046924F /* Main.storyboard */; };
 		67B0429923E2779A0046924F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67B0429823E2779A0046924F /* Assets.xcassets */; };
 		67B0429C23E2779A0046924F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67B0429A23E2779A0046924F /* LaunchScreen.storyboard */; };
+		67B042B923E278490046924F /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042A523E278490046924F /* SignUpViewController.swift */; };
+		67B042BA23E278490046924F /* EmailPhoneLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042A623E278490046924F /* EmailPhoneLoginViewController.swift */; };
+		67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042A723E278490046924F /* EmailPasswordSignUpViewController.swift */; };
+		67B042BC23E278490046924F /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042A823E278490046924F /* StartViewController.swift */; };
+		67B042BD23E278490046924F /* EmailPhoneSignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042A923E278490046924F /* EmailPhoneSignUpViewController.swift */; };
+		67B042BE23E278490046924F /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042AA23E278490046924F /* LoginViewController.swift */; };
+		67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042AB23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift */; };
+		67B042C023E278490046924F /* ExploreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042AD23E278490046924F /* ExploreViewController.swift */; };
+		67B042C123E278490046924F /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042AE23E278490046924F /* ActivityViewController.swift */; };
+		67B042C223E278490046924F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042AF23E278490046924F /* HomeViewController.swift */; };
+		67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B123E278490046924F /* ExploreProfileViewController.swift */; };
+		67B042C423E278490046924F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B223E278490046924F /* ProfileViewController.swift */; };
+		67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B323E278490046924F /* ProfileSettingsViewController.swift */; };
+		67B042C623E278490046924F /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B523E278490046924F /* CameraController.swift */; };
+		67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B623E278490046924F /* ChooseDareViewController.swift */; };
+		67B042C823E278490046924F /* DareCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* DareCameraViewController.swift */; };
+		67B042C923E278490046924F /* DarePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B823E278490046924F /* DarePostViewController.swift */; };
+		67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */; };
+		67B042D423E2785B0046924F /* ProfileHeaderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CC23E2785B0046924F /* ProfileHeaderCollectionViewCell.swift */; };
+		67B042D523E2785B0046924F /* PostCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CD23E2785B0046924F /* PostCollectionViewCell.swift */; };
+		67B042D623E2785B0046924F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CE23E2785B0046924F /* MainTabBarController.swift */; };
+		67B042D723E2785B0046924F /* ExploreProfileHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CF23E2785B0046924F /* ExploreProfileHeaderCell.swift */; };
+		67B042D823E2785B0046924F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042D023E2785B0046924F /* Post.swift */; };
+		67B042D923E2785B0046924F /* hills.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 67B042D223E2785B0046924F /* hills.mp4 */; };
+		67B042DD23E278660046924F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042DB23E278660046924F /* Constants.swift */; };
+		67B042DE23E278660046924F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042DC23E278660046924F /* Utilities.swift */; };
+		67B042E023E279390046924F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67B042DF23E279390046924F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.release.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.release.xcconfig"; sourceTree = "<group>"; };
 		67B0428C23E277980046924F /* Dare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67B0428F23E277980046924F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67B0429123E277980046924F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +53,36 @@
 		67B0429823E2779A0046924F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		67B0429B23E2779A0046924F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		67B0429D23E2779A0046924F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		67B042A523E278490046924F /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		67B042A623E278490046924F /* EmailPhoneLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailPhoneLoginViewController.swift; sourceTree = "<group>"; };
+		67B042A723E278490046924F /* EmailPasswordSignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailPasswordSignUpViewController.swift; sourceTree = "<group>"; };
+		67B042A823E278490046924F /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
+		67B042A923E278490046924F /* EmailPhoneSignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailPhoneSignUpViewController.swift; sourceTree = "<group>"; };
+		67B042AA23E278490046924F /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		67B042AB23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlreadyRegisteredEmailPasswordViewController.swift; sourceTree = "<group>"; };
+		67B042AD23E278490046924F /* ExploreViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreViewController.swift; sourceTree = "<group>"; };
+		67B042AE23E278490046924F /* ActivityViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
+		67B042AF23E278490046924F /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		67B042B123E278490046924F /* ExploreProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreProfileViewController.swift; sourceTree = "<group>"; };
+		67B042B223E278490046924F /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		67B042B323E278490046924F /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
+		67B042B523E278490046924F /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		67B042B623E278490046924F /* ChooseDareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseDareViewController.swift; sourceTree = "<group>"; };
+		67B042B723E278490046924F /* DareCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DareCameraViewController.swift; sourceTree = "<group>"; };
+		67B042B823E278490046924F /* DarePostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarePostViewController.swift; sourceTree = "<group>"; };
+		67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityLoadingCellNode.swift; sourceTree = "<group>"; };
+		67B042CC23E2785B0046924F /* ProfileHeaderCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderCollectionViewCell.swift; sourceTree = "<group>"; };
+		67B042CD23E2785B0046924F /* PostCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCollectionViewCell.swift; sourceTree = "<group>"; };
+		67B042CE23E2785B0046924F /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		67B042CF23E2785B0046924F /* ExploreProfileHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreProfileHeaderCell.swift; sourceTree = "<group>"; };
+		67B042D023E2785B0046924F /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		67B042D223E2785B0046924F /* hills.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hills.mp4; sourceTree = "<group>"; };
+		67B042DB23E278660046924F /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		67B042DC23E278660046924F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		67B042DF23E279390046924F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		67B042E123E287220046924F /* Dare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dare.entitlements; sourceTree = "<group>"; };
+		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
+		ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +102,8 @@
 			children = (
 				67B0428E23E277980046924F /* Dare */,
 				67B0428D23E277980046924F /* Products */,
+				88B507C92ED58F2C2FDE5E45 /* Pods */,
+				B300C10654378B432A0F44B3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +118,11 @@
 		67B0428E23E277980046924F /* Dare */ = {
 			isa = PBXGroup;
 			children = (
+				67B042E123E287220046924F /* Dare.entitlements */,
+				67B042DA23E278660046924F /* Helpers */,
+				67B042D123E2785B0046924F /* Media */,
+				67B042CA23E2785B0046924F /* Custom Classes */,
+				67B042A323E278490046924F /* ViewControllers */,
 				67B0428F23E277980046924F /* AppDelegate.swift */,
 				67B0429123E277980046924F /* SceneDelegate.swift */,
 				67B0429323E277990046924F /* ViewController.swift */,
@@ -63,8 +130,115 @@
 				67B0429823E2779A0046924F /* Assets.xcassets */,
 				67B0429A23E2779A0046924F /* LaunchScreen.storyboard */,
 				67B0429D23E2779A0046924F /* Info.plist */,
+				67B042DF23E279390046924F /* GoogleService-Info.plist */,
 			);
 			path = Dare;
+			sourceTree = "<group>";
+		};
+		67B042A323E278490046924F /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				67B042A423E278490046924F /* Authorization */,
+				67B042AC23E278490046924F /* Main */,
+			);
+			name = ViewControllers;
+			path = "../../../Ideas/Risk App/Dare/Dare/ViewControllers";
+			sourceTree = "<group>";
+		};
+		67B042A423E278490046924F /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				67B042A823E278490046924F /* StartViewController.swift */,
+				67B042A523E278490046924F /* SignUpViewController.swift */,
+				67B042AA23E278490046924F /* LoginViewController.swift */,
+				67B042A623E278490046924F /* EmailPhoneLoginViewController.swift */,
+				67B042A723E278490046924F /* EmailPasswordSignUpViewController.swift */,
+				67B042A923E278490046924F /* EmailPhoneSignUpViewController.swift */,
+				67B042AB23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
+		67B042AC23E278490046924F /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				67B042AD23E278490046924F /* ExploreViewController.swift */,
+				67B042AE23E278490046924F /* ActivityViewController.swift */,
+				67B042AF23E278490046924F /* HomeViewController.swift */,
+				67B042B023E278490046924F /* Profile */,
+				67B042B423E278490046924F /* Create */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		67B042B023E278490046924F /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				67B042B123E278490046924F /* ExploreProfileViewController.swift */,
+				67B042B223E278490046924F /* ProfileViewController.swift */,
+				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		67B042B423E278490046924F /* Create */ = {
+			isa = PBXGroup;
+			children = (
+				67B042B523E278490046924F /* CameraController.swift */,
+				67B042B623E278490046924F /* ChooseDareViewController.swift */,
+				67B042B723E278490046924F /* DareCameraViewController.swift */,
+				67B042B823E278490046924F /* DarePostViewController.swift */,
+			);
+			path = Create;
+			sourceTree = "<group>";
+		};
+		67B042CA23E2785B0046924F /* Custom Classes */ = {
+			isa = PBXGroup;
+			children = (
+				67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */,
+				67B042CC23E2785B0046924F /* ProfileHeaderCollectionViewCell.swift */,
+				67B042CD23E2785B0046924F /* PostCollectionViewCell.swift */,
+				67B042CE23E2785B0046924F /* MainTabBarController.swift */,
+				67B042CF23E2785B0046924F /* ExploreProfileHeaderCell.swift */,
+				67B042D023E2785B0046924F /* Post.swift */,
+			);
+			name = "Custom Classes";
+			path = "../../../Ideas/Risk App/Dare/Dare/Custom Classes";
+			sourceTree = "<group>";
+		};
+		67B042D123E2785B0046924F /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				67B042D223E2785B0046924F /* hills.mp4 */,
+			);
+			name = Media;
+			path = "../../../Ideas/Risk App/Dare/Dare/Media";
+			sourceTree = "<group>";
+		};
+		67B042DA23E278660046924F /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				67B042DB23E278660046924F /* Constants.swift */,
+				67B042DC23E278660046924F /* Utilities.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		88B507C92ED58F2C2FDE5E45 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */,
+				4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B300C10654378B432A0F44B3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +248,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67B042A023E2779A0046924F /* Build configuration list for PBXNativeTarget "Dare" */;
 			buildPhases = (
+				444654E79545539E1BF1E01B /* [CP] Check Pods Manifest.lock */,
 				67B0428823E277980046924F /* Sources */,
 				67B0428923E277980046924F /* Frameworks */,
 				67B0428A23E277980046924F /* Resources */,
+				0CC035023C686ECBCA0D6055 /* [CP] Embed Pods Frameworks */,
+				F48FAA5551461645FCCFD92D /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -125,7 +302,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67B042D923E2785B0046924F /* hills.mp4 in Resources */,
 				67B0429C23E2779A0046924F /* LaunchScreen.storyboard in Resources */,
+				67B042E023E279390046924F /* GoogleService-Info.plist in Resources */,
 				67B0429923E2779A0046924F /* Assets.xcassets in Resources */,
 				67B0429723E277990046924F /* Main.storyboard in Resources */,
 			);
@@ -133,14 +312,98 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		0CC035023C686ECBCA0D6055 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dare/Pods-Dare-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dare/Pods-Dare-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dare/Pods-Dare-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		444654E79545539E1BF1E01B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Dare-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F48FAA5551461645FCCFD92D /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dare/Pods-Dare-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Dare/Pods-Dare-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Dare/Pods-Dare-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		67B0428823E277980046924F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67B042D523E2785B0046924F /* PostCollectionViewCell.swift in Sources */,
+				67B042C923E278490046924F /* DarePostViewController.swift in Sources */,
+				67B042DE23E278660046924F /* Utilities.swift in Sources */,
+				67B042D623E2785B0046924F /* MainTabBarController.swift in Sources */,
+				67B042BE23E278490046924F /* LoginViewController.swift in Sources */,
+				67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */,
+				67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */,
+				67B042BC23E278490046924F /* StartViewController.swift in Sources */,
 				67B0429423E277990046924F /* ViewController.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
+				67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */,
+				67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */,
+				67B042D423E2785B0046924F /* ProfileHeaderCollectionViewCell.swift in Sources */,
+				67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */,
+				67B042BA23E278490046924F /* EmailPhoneLoginViewController.swift in Sources */,
+				67B042C123E278490046924F /* ActivityViewController.swift in Sources */,
+				67B042C823E278490046924F /* DareCameraViewController.swift in Sources */,
+				67B042B923E278490046924F /* SignUpViewController.swift in Sources */,
+				67B042D823E2785B0046924F /* Post.swift in Sources */,
+				67B042BD23E278490046924F /* EmailPhoneSignUpViewController.swift in Sources */,
+				67B042C023E278490046924F /* ExploreViewController.swift in Sources */,
+				67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */,
+				67B042C423E278490046924F /* ProfileViewController.swift in Sources */,
+				67B042C223E278490046924F /* HomeViewController.swift in Sources */,
+				67B042C623E278490046924F /* CameraController.swift in Sources */,
 				67B0429223E277980046924F /* SceneDelegate.swift in Sources */,
+				67B042D723E2785B0046924F /* ExploreProfileHeaderCell.swift in Sources */,
+				67B042DD23E278660046924F /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,11 +545,14 @@
 		};
 		67B042A123E2779A0046924F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Dare/Dare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 63G2K835SQ;
 				INFOPLIST_FILE = Dare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -300,11 +566,14 @@
 		};
 		67B042A223E2779A0046924F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Dare/Dare.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 63G2K835SQ;
 				INFOPLIST_FILE = Dare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
