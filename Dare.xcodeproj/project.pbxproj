@@ -27,7 +27,6 @@
 		67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B123E278490046924F /* ExploreProfileViewController.swift */; };
 		67B042C423E278490046924F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B223E278490046924F /* ProfileViewController.swift */; };
 		67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B323E278490046924F /* ProfileSettingsViewController.swift */; };
-		67B042C623E278490046924F /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B523E278490046924F /* CameraController.swift */; };
 		67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B623E278490046924F /* ChooseDareViewController.swift */; };
 		67B042C823E278490046924F /* DareCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* DareCameraViewController.swift */; };
 		67B042C923E278490046924F /* DarePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B823E278490046924F /* DarePostViewController.swift */; };
@@ -41,6 +40,8 @@
 		67B042DD23E278660046924F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042DB23E278660046924F /* Constants.swift */; };
 		67B042DE23E278660046924F /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042DC23E278660046924F /* Utilities.swift */; };
 		67B042E023E279390046924F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67B042DF23E279390046924F /* GoogleService-Info.plist */; };
+		67B042E323E3698C0046924F /* VideoPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042E223E3698C0046924F /* VideoPlayback.swift */; };
+		67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430423E3C8760046924F /* EditProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +67,6 @@
 		67B042B123E278490046924F /* ExploreProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreProfileViewController.swift; sourceTree = "<group>"; };
 		67B042B223E278490046924F /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		67B042B323E278490046924F /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
-		67B042B523E278490046924F /* CameraController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		67B042B623E278490046924F /* ChooseDareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseDareViewController.swift; sourceTree = "<group>"; };
 		67B042B723E278490046924F /* DareCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DareCameraViewController.swift; sourceTree = "<group>"; };
 		67B042B823E278490046924F /* DarePostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarePostViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +81,8 @@
 		67B042DC23E278660046924F /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		67B042DF23E279390046924F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		67B042E123E287220046924F /* Dare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dare.entitlements; sourceTree = "<group>"; };
+		67B042E223E3698C0046924F /* VideoPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayback.swift; sourceTree = "<group>"; };
+		67B0430423E3C8760046924F /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
 		ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -177,6 +179,7 @@
 				67B042B123E278490046924F /* ExploreProfileViewController.swift */,
 				67B042B223E278490046924F /* ProfileViewController.swift */,
 				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
+				67B0430423E3C8760046924F /* EditProfileViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -184,9 +187,9 @@
 		67B042B423E278490046924F /* Create */ = {
 			isa = PBXGroup;
 			children = (
-				67B042B523E278490046924F /* CameraController.swift */,
 				67B042B623E278490046924F /* ChooseDareViewController.swift */,
 				67B042B723E278490046924F /* DareCameraViewController.swift */,
+				67B042E223E3698C0046924F /* VideoPlayback.swift */,
 				67B042B823E278490046924F /* DarePostViewController.swift */,
 			);
 			path = Create;
@@ -376,6 +379,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */,
 				67B042D523E2785B0046924F /* PostCollectionViewCell.swift in Sources */,
 				67B042C923E278490046924F /* DarePostViewController.swift in Sources */,
 				67B042DE23E278660046924F /* Utilities.swift in Sources */,
@@ -400,7 +404,7 @@
 				67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */,
 				67B042C423E278490046924F /* ProfileViewController.swift in Sources */,
 				67B042C223E278490046924F /* HomeViewController.swift in Sources */,
-				67B042C623E278490046924F /* CameraController.swift in Sources */,
+				67B042E323E3698C0046924F /* VideoPlayback.swift in Sources */,
 				67B0429223E277980046924F /* SceneDelegate.swift in Sources */,
 				67B042D723E2785B0046924F /* ExploreProfileHeaderCell.swift in Sources */,
 				67B042DD23E278660046924F /* Constants.swift in Sources */,
