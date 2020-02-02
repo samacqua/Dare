@@ -41,6 +41,8 @@
 		67B042E023E279390046924F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67B042DF23E279390046924F /* GoogleService-Info.plist */; };
 		67B042E323E3698C0046924F /* VideoPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042E223E3698C0046924F /* VideoPlayback.swift */; };
 		67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430423E3C8760046924F /* EditProfileViewController.swift */; };
+		67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */; };
+		67B0430923E75F490046924F /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430823E75F490046924F /* Profile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +83,8 @@
 		67B042E123E287220046924F /* Dare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Dare.entitlements; sourceTree = "<group>"; };
 		67B042E223E3698C0046924F /* VideoPlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayback.swift; sourceTree = "<group>"; };
 		67B0430423E3C8760046924F /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
+		67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeUserInfoViewController.swift; sourceTree = "<group>"; };
+		67B0430823E75F490046924F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
 		ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -175,8 +179,9 @@
 			children = (
 				67B042B123E278490046924F /* ExploreProfileViewController.swift */,
 				67B042B223E278490046924F /* ProfileViewController.swift */,
-				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
 				67B0430423E3C8760046924F /* EditProfileViewController.swift */,
+				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
+				67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -201,6 +206,7 @@
 				67B042CE23E2785B0046924F /* MainTabBarController.swift */,
 				67B042CF23E2785B0046924F /* ExploreProfileHeaderCell.swift */,
 				67B042D023E2785B0046924F /* Post.swift */,
+				67B0430823E75F490046924F /* Profile.swift */,
 			);
 			name = "Custom Classes";
 			path = "../../../Ideas/Risk App/Dare/Dare/Custom Classes";
@@ -384,8 +390,10 @@
 				67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */,
 				67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */,
 				67B042BC23E278490046924F /* StartViewController.swift in Sources */,
+				67B0430923E75F490046924F /* Profile.swift in Sources */,
 				67B0429423E277990046924F /* ViewController.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
+				67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */,
 				67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */,
 				67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */,
 				67B042D423E2785B0046924F /* ProfileHeaderCollectionViewCell.swift in Sources */,
