@@ -43,6 +43,8 @@
 		67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430423E3C8760046924F /* EditProfileViewController.swift */; };
 		67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */; };
 		67B0430923E75F490046924F /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430823E75F490046924F /* Profile.swift */; };
+		67B3EDE123E7BF5F00D0C190 /* SegmentedControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE023E7BF5F00D0C190 /* SegmentedControlExtension.swift */; };
+		67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,6 +87,8 @@
 		67B0430423E3C8760046924F /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeUserInfoViewController.swift; sourceTree = "<group>"; };
 		67B0430823E75F490046924F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		67B3EDE023E7BF5F00D0C190 /* SegmentedControlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlExtension.swift; sourceTree = "<group>"; };
+		67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCategoryViewController.swift; sourceTree = "<group>"; };
 		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
 		ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -189,9 +193,10 @@
 		67B042B423E278490046924F /* Create */ = {
 			isa = PBXGroup;
 			children = (
-				67B042B623E278490046924F /* ChooseDareViewController.swift */,
 				67B042B723E278490046924F /* DareCameraViewController.swift */,
 				67B042E223E3698C0046924F /* VideoPlayback.swift */,
+				67B042B623E278490046924F /* ChooseDareViewController.swift */,
+				67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */,
 				67B042B823E278490046924F /* DarePostViewController.swift */,
 			);
 			path = Create;
@@ -226,6 +231,7 @@
 			children = (
 				67B042DB23E278660046924F /* Constants.swift */,
 				67B042DC23E278660046924F /* Utilities.swift */,
+				67B3EDE023E7BF5F00D0C190 /* SegmentedControlExtension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -411,6 +417,7 @@
 				67B042DE23E278660046924F /* Utilities.swift in Sources */,
 				67B042D623E2785B0046924F /* MainTabBarController.swift in Sources */,
 				67B042BE23E278490046924F /* LoginViewController.swift in Sources */,
+				67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */,
 				67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */,
 				67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */,
 				67B042BC23E278490046924F /* StartViewController.swift in Sources */,
@@ -425,6 +432,7 @@
 				67B042BA23E278490046924F /* EmailPhoneLoginViewController.swift in Sources */,
 				67B042C123E278490046924F /* ActivityViewController.swift in Sources */,
 				67B042C823E278490046924F /* DareCameraViewController.swift in Sources */,
+				67B3EDE123E7BF5F00D0C190 /* SegmentedControlExtension.swift in Sources */,
 				67B042B923E278490046924F /* SignUpViewController.swift in Sources */,
 				67B042D823E2785B0046924F /* Post.swift in Sources */,
 				67B042BD23E278490046924F /* EmailPhoneSignUpViewController.swift in Sources */,
