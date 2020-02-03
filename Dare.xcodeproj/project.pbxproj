@@ -165,9 +165,9 @@
 		67B042AC23E278490046924F /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				67B042AD23E278490046924F /* ExploreViewController.swift */,
-				67B042AE23E278490046924F /* ActivityViewController.swift */,
-				67B042AF23E278490046924F /* HomeViewController.swift */,
+				67B0430C23E7826E0046924F /* Home */,
+				67B0430B23E782540046924F /* Activity */,
+				67B0430A23E7824A0046924F /* Explore */,
 				67B042B023E278490046924F /* Profile */,
 				67B042B423E278490046924F /* Create */,
 			);
@@ -228,6 +228,30 @@
 				67B042DC23E278660046924F /* Utilities.swift */,
 			);
 			path = Helpers;
+			sourceTree = "<group>";
+		};
+		67B0430A23E7824A0046924F /* Explore */ = {
+			isa = PBXGroup;
+			children = (
+				67B042AD23E278490046924F /* ExploreViewController.swift */,
+			);
+			path = Explore;
+			sourceTree = "<group>";
+		};
+		67B0430B23E782540046924F /* Activity */ = {
+			isa = PBXGroup;
+			children = (
+				67B042AE23E278490046924F /* ActivityViewController.swift */,
+			);
+			path = Activity;
+			sourceTree = "<group>";
+		};
+		67B0430C23E7826E0046924F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				67B042AF23E278490046924F /* HomeViewController.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 		88B507C92ED58F2C2FDE5E45 /* Pods */ = {
