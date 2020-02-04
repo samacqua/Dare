@@ -45,6 +45,7 @@
 		67B0430923E75F490046924F /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B0430823E75F490046924F /* Profile.swift */; };
 		67B3EDE123E7BF5F00D0C190 /* SegmentedControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE023E7BF5F00D0C190 /* SegmentedControlExtension.swift */; };
 		67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */; };
+		67B3EDE523E886D100D0C190 /* Dare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE423E886D100D0C190 /* Dare.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,6 +90,7 @@
 		67B0430823E75F490046924F /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		67B3EDE023E7BF5F00D0C190 /* SegmentedControlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlExtension.swift; sourceTree = "<group>"; };
 		67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCategoryViewController.swift; sourceTree = "<group>"; };
+		67B3EDE423E886D100D0C190 /* Dare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dare.swift; sourceTree = "<group>"; };
 		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
 		ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -212,6 +214,7 @@
 				67B042CF23E2785B0046924F /* ExploreProfileHeaderCell.swift */,
 				67B042D023E2785B0046924F /* Post.swift */,
 				67B0430823E75F490046924F /* Profile.swift */,
+				67B3EDE423E886D100D0C190 /* Dare.swift */,
 			);
 			name = "Custom Classes";
 			path = "../../../Ideas/Risk App/Dare/Dare/Custom Classes";
@@ -424,6 +427,7 @@
 				67B0430923E75F490046924F /* Profile.swift in Sources */,
 				67B0429423E277990046924F /* ViewController.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
+				67B3EDE523E886D100D0C190 /* Dare.swift in Sources */,
 				67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */,
 				67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */,
 				67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */,
