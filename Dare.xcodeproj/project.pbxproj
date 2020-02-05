@@ -124,9 +124,9 @@
 		678BAED323E9D9C7002E027E /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				67B042CD23E2785B0046924F /* PostCollectionViewCell.swift */,
 				67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */,
 				67B042CC23E2785B0046924F /* ProfileHeaderCollectionViewCell.swift */,
-				67B042CD23E2785B0046924F /* PostCollectionViewCell.swift */,
 				67B042CF23E2785B0046924F /* ExploreProfileHeaderCell.swift */,
 				678BAED423E9DA0E002E027E /* DarePageHeaderCell.swift */,
 			);
