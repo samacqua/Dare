@@ -209,8 +209,8 @@
 		67B042B023E278490046924F /* Profile */ = {
 			isa = PBXGroup;
 			children = (
-				67B042B123E278490046924F /* ExploreProfileViewController.swift */,
 				67B042B223E278490046924F /* ProfileViewController.swift */,
+				67B042B123E278490046924F /* ExploreProfileViewController.swift */,
 				67B0430423E3C8760046924F /* EditProfileViewController.swift */,
 				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
 				67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */,
