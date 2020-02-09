@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */; };
+		67193FF923EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */; };
+		67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */; };
+		67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFE23EF9C7D00F18787 /* PostPreview.swift */; };
 		678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED023E9D672002E027E /* DarePageViewController.swift */; };
 		678BAED523E9DA0E002E027E /* DarePageHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */; };
 		679FBBF323EBF024008892EB /* PostSelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679FBBF223EBF024008892EB /* PostSelectedViewController.swift */; };
@@ -61,6 +64,9 @@
 
 /* Begin PBXFileReference section */
 		4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.release.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.release.xcconfig"; sourceTree = "<group>"; };
+		67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStickyHeaderCellNode.swift; sourceTree = "<group>"; };
+		67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProfileNavHeaderCellNode.swift; sourceTree = "<group>"; };
+		67193FFE23EF9C7D00F18787 /* PostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPreview.swift; sourceTree = "<group>"; };
 		678BAED023E9D672002E027E /* DarePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageViewController.swift; sourceTree = "<group>"; };
 		678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageHeaderNodeCell.swift; sourceTree = "<group>"; };
 		679FBBF223EBF024008892EB /* PostSelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectedViewController.swift; sourceTree = "<group>"; };
@@ -133,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				67B042D023E2785B0046924F /* Post.swift */,
+				67193FFE23EF9C7D00F18787 /* PostPreview.swift */,
 				67B0430823E75F490046924F /* Profile.swift */,
 				67B3EDE423E886D100D0C190 /* Dare.swift */,
 			);
@@ -160,6 +167,8 @@
 				679FBBF823ED03B9008892EB /* EditProfileHeaderCell.swift */,
 				679FBBFA23ED042A008892EB /* EditProfilePostCell.swift */,
 				679FBBFC23ED049E008892EB /* ProfileSettingsPostCell.swift */,
+				67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */,
+				67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -498,10 +507,13 @@
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
 				679FBBF323EBF024008892EB /* PostSelectedViewController.swift in Sources */,
 				67B3EDE523E886D100D0C190 /* Dare.swift in Sources */,
+				67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */,
 				678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */,
 				67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */,
 				67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */,
 				67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */,
+				67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */,
+				67193FF923EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift in Sources */,
 				67B042D423E2785B0046924F /* ProfileHeaderNodeCell.swift in Sources */,
 				67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */,
 				67B042BA23E278490046924F /* EmailPhoneLoginViewController.swift in Sources */,

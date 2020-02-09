@@ -23,7 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         // Firebase Setup
         FirebaseApp.configure()
         
-        // Facebook SDK Setup
         if #available(iOS 13.0, *) {    } else {
             self.window = UIWindow(frame: UIScreen.main.bounds)
             self.window?.makeKeyAndVisible()

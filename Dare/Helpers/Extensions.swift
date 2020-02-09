@@ -70,3 +70,46 @@ extension UIViewController {
         view.endEditing(true)
     }
 }
+
+extension Date {
+    func timeAgoDisplay() -> String {
+        let secondsAgo = Int(Date().timeIntervalSince(self))
+        
+        let minute = 60
+        let hour = 60 * minute
+        let day = 24 * hour
+        let week = 7 * day
+        let year = 52 * week
+        
+        if secondsAgo < minute {
+            if secondsAgo < 15 {
+                return "just now"
+            }
+            return "\(secondsAgo) seconds ago"
+        } else if secondsAgo < hour {
+            if Int(secondsAgo / minute) == 1 {
+                return "1 minute ago"
+            }
+            return "\(Int(secondsAgo / minute)) minutes ago"
+        } else if secondsAgo < day {
+            if Int(secondsAgo / hour) == 1 {
+                return "1 hour ago"
+            }
+            return "\(Int(secondsAgo / hour)) hours ago"
+        } else if secondsAgo < week {
+            if Int(secondsAgo / day) == 1 {
+                return "1 day ago"
+            }
+            return "\(Int(secondsAgo / day)) days ago"
+        } else if secondsAgo < year {
+            if Int(secondsAgo / week) == 1 {
+                return "1 week ago"
+            }
+            return "\(Int(secondsAgo / week)) weeks ago"
+        }
+        if Int(secondsAgo / year) == 1 {
+            return "1 year ago"
+        }
+        return "\(Int(secondsAgo / year)) years ago"
+    }
+}
