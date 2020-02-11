@@ -13,6 +13,7 @@
 		67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFE23EF9C7D00F18787 /* PostPreview.swift */; };
 		675215E623F09CCB000537F4 /* FollowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E523F09CCB000537F4 /* FollowsViewController.swift */; };
 		675215E823F0A563000537F4 /* ProfilePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E723F0A563000537F4 /* ProfilePreview.swift */; };
+		675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E923F2368F000537F4 /* FollowsTableCellNode.swift */; };
 		678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED023E9D672002E027E /* DarePageViewController.swift */; };
 		678BAED523E9DA0E002E027E /* DarePageHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */; };
 		679FBBF323EBF024008892EB /* PostSelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679FBBF223EBF024008892EB /* PostSelectedViewController.swift */; };
@@ -71,6 +72,7 @@
 		67193FFE23EF9C7D00F18787 /* PostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPreview.swift; sourceTree = "<group>"; };
 		675215E523F09CCB000537F4 /* FollowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsViewController.swift; sourceTree = "<group>"; };
 		675215E723F0A563000537F4 /* ProfilePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePreview.swift; sourceTree = "<group>"; };
+		675215E923F2368F000537F4 /* FollowsTableCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsTableCellNode.swift; sourceTree = "<group>"; };
 		678BAED023E9D672002E027E /* DarePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageViewController.swift; sourceTree = "<group>"; };
 		678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageHeaderNodeCell.swift; sourceTree = "<group>"; };
 		679FBBF223EBF024008892EB /* PostSelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectedViewController.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */,
 				679FBBF423ED0258008892EB /* ProfileCellNode.swift */,
 				67B042CF23E2785B0046924F /* ExploreProfileHeaderNodeCell.swift */,
+				675215E923F2368F000537F4 /* FollowsTableCellNode.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -502,6 +505,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */,
 				67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */,
 				679FBC0123ED084D008892EB /* DraftsCollectionCell.swift in Sources */,
 				67B042D523E2785B0046924F /* PostCellNode.swift in Sources */,
