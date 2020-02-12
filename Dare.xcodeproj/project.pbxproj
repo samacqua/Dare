@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */; };
+		670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846523F34CE800C354C0 /* CommentCellNode.swift */; };
+		670D846823F3510000C354C0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846723F3510000C354C0 /* Comment.swift */; };
 		67193FF923EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */; };
 		67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */; };
 		67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFE23EF9C7D00F18787 /* PostPreview.swift */; };
@@ -16,6 +18,8 @@
 		675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E923F2368F000537F4 /* FollowsTableCellNode.swift */; };
 		678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED023E9D672002E027E /* DarePageViewController.swift */; };
 		678BAED523E9DA0E002E027E /* DarePageHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */; };
+		6794743323F3212800EEA3B6 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6794743223F3212800EEA3B6 /* CommentViewController.swift */; };
+		6794743523F3318E00EEA3B6 /* CommentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6794743423F3318E00EEA3B6 /* CommentPresenter.swift */; };
 		679FBBF323EBF024008892EB /* PostSelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679FBBF223EBF024008892EB /* PostSelectedViewController.swift */; };
 		679FBBF523ED0258008892EB /* ProfileCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679FBBF423ED0258008892EB /* ProfileCellNode.swift */; };
 		679FBBF723ED0352008892EB /* EditProfilePictureHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679FBBF623ED0352008892EB /* EditProfilePictureHeaderCell.swift */; };
@@ -67,6 +71,8 @@
 
 /* Begin PBXFileReference section */
 		4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.release.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.release.xcconfig"; sourceTree = "<group>"; };
+		670D846523F34CE800C354C0 /* CommentCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellNode.swift; sourceTree = "<group>"; };
+		670D846723F3510000C354C0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStickyHeaderCellNode.swift; sourceTree = "<group>"; };
 		67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProfileNavHeaderCellNode.swift; sourceTree = "<group>"; };
 		67193FFE23EF9C7D00F18787 /* PostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPreview.swift; sourceTree = "<group>"; };
@@ -75,6 +81,8 @@
 		675215E923F2368F000537F4 /* FollowsTableCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsTableCellNode.swift; sourceTree = "<group>"; };
 		678BAED023E9D672002E027E /* DarePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageViewController.swift; sourceTree = "<group>"; };
 		678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageHeaderNodeCell.swift; sourceTree = "<group>"; };
+		6794743223F3212800EEA3B6 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
+		6794743423F3318E00EEA3B6 /* CommentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentPresenter.swift; sourceTree = "<group>"; };
 		679FBBF223EBF024008892EB /* PostSelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSelectedViewController.swift; sourceTree = "<group>"; };
 		679FBBF423ED0258008892EB /* ProfileCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCellNode.swift; sourceTree = "<group>"; };
 		679FBBF623ED0352008892EB /* EditProfilePictureHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfilePictureHeaderCell.swift; sourceTree = "<group>"; };
@@ -160,6 +168,7 @@
 				67B0430823E75F490046924F /* Profile.swift */,
 				675215E723F0A563000537F4 /* ProfilePreview.swift */,
 				67B3EDE423E886D100D0C190 /* Dare.swift */,
+				670D846723F3510000C354C0 /* Comment.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -170,6 +179,7 @@
 				679FBC0723ED0DC4008892EB /* Dare */,
 				679FBC0623ED0DB2008892EB /* Profile */,
 				67B042CD23E2785B0046924F /* PostCellNode.swift */,
+				670D846523F34CE800C354C0 /* CommentCellNode.swift */,
 				67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */,
 			);
 			path = Cells;
@@ -350,6 +360,8 @@
 			isa = PBXGroup;
 			children = (
 				67B042AF23E278490046924F /* HomeViewController.swift */,
+				6794743223F3212800EEA3B6 /* CommentViewController.swift */,
+				6794743423F3318E00EEA3B6 /* CommentPresenter.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -505,6 +517,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6794743323F3212800EEA3B6 /* CommentViewController.swift in Sources */,
 				675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */,
 				67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */,
 				679FBC0123ED084D008892EB /* DraftsCollectionCell.swift in Sources */,
@@ -521,8 +534,10 @@
 				67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */,
 				67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */,
 				67B042BC23E278490046924F /* StartViewController.swift in Sources */,
+				670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */,
 				67B0430923E75F490046924F /* Profile.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
+				670D846823F3510000C354C0 /* Comment.swift in Sources */,
 				679FBBF323EBF024008892EB /* PostSelectedViewController.swift in Sources */,
 				67B3EDE523E886D100D0C190 /* Dare.swift in Sources */,
 				67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */,
@@ -550,6 +565,7 @@
 				67B042C223E278490046924F /* HomeViewController.swift in Sources */,
 				67B042E323E3698C0046924F /* VideoPlayback.swift in Sources */,
 				679FBBFF23ED07B3008892EB /* CategoriesCollectionCell.swift in Sources */,
+				6794743523F3318E00EEA3B6 /* CommentPresenter.swift in Sources */,
 				67B0429223E277980046924F /* SceneDelegate.swift in Sources */,
 				67B042D723E2785B0046924F /* ExploreProfileHeaderNodeCell.swift in Sources */,
 				67B042DD23E278660046924F /* Constants.swift in Sources */,
