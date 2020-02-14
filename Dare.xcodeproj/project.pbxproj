@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */; };
+		670092FB23F6380200D92A49 /* CreateDareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670092FA23F6380200D92A49 /* CreateDareCell.swift */; };
+		670092FD23F6380D00D92A49 /* RandomDareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670092FC23F6380D00D92A49 /* RandomDareCell.swift */; };
 		670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846523F34CE800C354C0 /* CommentCellNode.swift */; };
 		670D846823F3510000C354C0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846723F3510000C354C0 /* Comment.swift */; };
 		670D846B23F59E0200C354C0 /* DareCreateInitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */; };
@@ -51,7 +53,7 @@
 		67B042C423E278490046924F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B223E278490046924F /* ProfileViewController.swift */; };
 		67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B323E278490046924F /* ProfileSettingsViewController.swift */; };
 		67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B623E278490046924F /* ChooseDareViewController.swift */; };
-		67B042C823E278490046924F /* DareCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* DareCameraViewController.swift */; };
+		67B042C823E278490046924F /* CameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* CameraCell.swift */; };
 		67B042C923E278490046924F /* DarePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B823E278490046924F /* DarePostViewController.swift */; };
 		67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */; };
 		67B042D423E2785B0046924F /* ProfileHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CC23E2785B0046924F /* ProfileHeaderNodeCell.swift */; };
@@ -74,6 +76,8 @@
 
 /* Begin PBXFileReference section */
 		4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.release.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.release.xcconfig"; sourceTree = "<group>"; };
+		670092FA23F6380200D92A49 /* CreateDareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDareCell.swift; sourceTree = "<group>"; };
+		670092FC23F6380D00D92A49 /* RandomDareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomDareCell.swift; sourceTree = "<group>"; };
 		670D846523F34CE800C354C0 /* CommentCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellNode.swift; sourceTree = "<group>"; };
 		670D846723F3510000C354C0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCreateInitialViewController.swift; sourceTree = "<group>"; };
@@ -119,7 +123,7 @@
 		67B042B223E278490046924F /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		67B042B323E278490046924F /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
 		67B042B623E278490046924F /* ChooseDareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseDareViewController.swift; sourceTree = "<group>"; };
-		67B042B723E278490046924F /* DareCameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DareCameraViewController.swift; sourceTree = "<group>"; };
+		67B042B723E278490046924F /* CameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraCell.swift; sourceTree = "<group>"; };
 		67B042B823E278490046924F /* DarePostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarePostViewController.swift; sourceTree = "<group>"; };
 		67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityLoadingCellNode.swift; sourceTree = "<group>"; };
 		67B042CC23E2785B0046924F /* ProfileHeaderNodeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderNodeCell.swift; sourceTree = "<group>"; };
@@ -155,11 +159,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		670092F923F637DF00D92A49 /* Initial View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				670092FA23F6380200D92A49 /* CreateDareCell.swift */,
+				67B042B723E278490046924F /* CameraCell.swift */,
+				670092FC23F6380D00D92A49 /* RandomDareCell.swift */,
+			);
+			path = "Initial View Cells";
+			sourceTree = "<group>";
+		};
 		670D846923F59DD000C354C0 /* Capture Video */ = {
 			isa = PBXGroup;
 			children = (
 				67B042E223E3698C0046924F /* VideoPlayback.swift */,
-				67B042B723E278490046924F /* DareCameraViewController.swift */,
 			);
 			path = "Capture Video";
 			sourceTree = "<group>";
@@ -317,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */,
+				670092F923F637DF00D92A49 /* Initial View Cells */,
 				670D846923F59DD000C354C0 /* Capture Video */,
 				67B042B623E278490046924F /* ChooseDareViewController.swift */,
 				67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */,
@@ -549,10 +563,12 @@
 				679FBBF923ED03B9008892EB /* EditProfileHeaderCell.swift in Sources */,
 				67B042BE23E278490046924F /* LoginViewController.swift in Sources */,
 				67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */,
+				670092FB23F6380200D92A49 /* CreateDareCell.swift in Sources */,
 				67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */,
 				67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */,
 				67B042BC23E278490046924F /* StartViewController.swift in Sources */,
 				670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */,
+				670092FD23F6380D00D92A49 /* RandomDareCell.swift in Sources */,
 				67B0430923E75F490046924F /* Profile.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
 				670D846823F3510000C354C0 /* Comment.swift in Sources */,
@@ -571,7 +587,7 @@
 				67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */,
 				67B042BA23E278490046924F /* EmailPhoneLoginViewController.swift in Sources */,
 				67B042C123E278490046924F /* ActivityViewController.swift in Sources */,
-				67B042C823E278490046924F /* DareCameraViewController.swift in Sources */,
+				67B042C823E278490046924F /* CameraCell.swift in Sources */,
 				679FBC0323ED08F3008892EB /* SavedCollectionCell.swift in Sources */,
 				67B3EDE123E7BF5F00D0C190 /* Extensions.swift in Sources */,
 				67B042B923E278490046924F /* SignUpViewController.swift in Sources */,

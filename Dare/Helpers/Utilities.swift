@@ -136,41 +136,4 @@ class Utilities {
         }
         return nil
     }
-    
-    static func showAlert(view: UIView, alert: String) {
-        print("Alert:", alert)
-        
-        let alertView = AlertView(frame: CGRect.zero)
-        alertView.alpha = 0
-        alertView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(alertView)
-        
-        let errorLabel = UILabel()
-        errorLabel.translatesAutoresizingMaskIntoConstraints = false
-        errorLabel.text = alert
-        errorLabel.textColor = .white
-        alertView.addSubview(errorLabel)
-        
-        UIView.animate(withDuration: 0.5, animations: { alertView.alpha = 1.0 })
-        
-        NSLayoutConstraint.activate([
-            errorLabel.topAnchor.constraint(equalTo: alertView.topAnchor, constant: 10),
-            errorLabel.bottomAnchor.constraint(equalTo: alertView.bottomAnchor, constant: -10),
-            errorLabel.leadingAnchor.constraint(equalTo: alertView.leadingAnchor, constant: 10),
-            errorLabel.trailingAnchor.constraint(equalTo: alertView.trailingAnchor, constant: -10),
-            errorLabel.centerXAnchor.constraint(equalTo: alertView.centerXAnchor),
-            
-            alertView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            alertView.heightAnchor.constraint(equalToConstant: 50.0),
-            alertView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
-            alertView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
-        ])
-        
-        let when = DispatchTime.now() + 4
-        DispatchQueue.main.asyncAfter(deadline: when){
-            UIView.animate(withDuration: 0.5, animations: {  alertView.alpha = 0.0 }) { (true) in
-                alertView.removeFromSuperview()
-            }
-        }
-    }
 }
