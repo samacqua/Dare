@@ -10,6 +10,9 @@
 		140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */; };
 		670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846523F34CE800C354C0 /* CommentCellNode.swift */; };
 		670D846823F3510000C354C0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846723F3510000C354C0 /* Comment.swift */; };
+		670D846B23F59E0200C354C0 /* DareCreateInitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */; };
+		670D846D23F5A18100C354C0 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846C23F5A18100C354C0 /* AlertView.swift */; };
+		670D846F23F5EC2800C354C0 /* CreateCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */; };
 		67193FF923EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */; };
 		67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */; };
 		67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFE23EF9C7D00F18787 /* PostPreview.swift */; };
@@ -73,6 +76,9 @@
 		4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.release.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.release.xcconfig"; sourceTree = "<group>"; };
 		670D846523F34CE800C354C0 /* CommentCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellNode.swift; sourceTree = "<group>"; };
 		670D846723F3510000C354C0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCreateInitialViewController.swift; sourceTree = "<group>"; };
+		670D846C23F5A18100C354C0 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCollectionViewController.swift; sourceTree = "<group>"; };
 		67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStickyHeaderCellNode.swift; sourceTree = "<group>"; };
 		67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProfileNavHeaderCellNode.swift; sourceTree = "<group>"; };
 		67193FFE23EF9C7D00F18787 /* PostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPreview.swift; sourceTree = "<group>"; };
@@ -149,6 +155,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		670D846923F59DD000C354C0 /* Capture Video */ = {
+			isa = PBXGroup;
+			children = (
+				67B042E223E3698C0046924F /* VideoPlayback.swift */,
+				67B042B723E278490046924F /* DareCameraViewController.swift */,
+			);
+			path = "Capture Video";
+			sourceTree = "<group>";
+		};
 		675215E423F09C72000537F4 /* Edit Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -169,6 +184,7 @@
 				675215E723F0A563000537F4 /* ProfilePreview.swift */,
 				67B3EDE423E886D100D0C190 /* Dare.swift */,
 				670D846723F3510000C354C0 /* Comment.swift */,
+				670D846C23F5A18100C354C0 /* AlertView.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -300,11 +316,12 @@
 		67B042B423E278490046924F /* Create */ = {
 			isa = PBXGroup;
 			children = (
-				67B042B723E278490046924F /* DareCameraViewController.swift */,
+				670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */,
+				670D846923F59DD000C354C0 /* Capture Video */,
 				67B042B623E278490046924F /* ChooseDareViewController.swift */,
 				67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */,
 				67B042B823E278490046924F /* DarePostViewController.swift */,
-				67B042E223E3698C0046924F /* VideoPlayback.swift */,
+				670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */,
 			);
 			path = Create;
 			sourceTree = "<group>";
@@ -517,6 +534,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				670D846F23F5EC2800C354C0 /* CreateCollectionViewController.swift in Sources */,
 				6794743323F3212800EEA3B6 /* CommentViewController.swift in Sources */,
 				675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */,
 				67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */,
@@ -541,6 +559,7 @@
 				679FBBF323EBF024008892EB /* PostSelectedViewController.swift in Sources */,
 				67B3EDE523E886D100D0C190 /* Dare.swift in Sources */,
 				67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */,
+				670D846D23F5A18100C354C0 /* AlertView.swift in Sources */,
 				675215E823F0A563000537F4 /* ProfilePreview.swift in Sources */,
 				678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */,
 				67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */,
@@ -566,6 +585,7 @@
 				67B042E323E3698C0046924F /* VideoPlayback.swift in Sources */,
 				679FBBFF23ED07B3008892EB /* CategoriesCollectionCell.swift in Sources */,
 				6794743523F3318E00EEA3B6 /* CommentPresenter.swift in Sources */,
+				670D846B23F59E0200C354C0 /* DareCreateInitialViewController.swift in Sources */,
 				67B0429223E277980046924F /* SceneDelegate.swift in Sources */,
 				67B042D723E2785B0046924F /* ExploreProfileHeaderNodeCell.swift in Sources */,
 				67B042DD23E278660046924F /* Constants.swift in Sources */,
