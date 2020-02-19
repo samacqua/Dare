@@ -18,15 +18,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     @available(iOS 13.0, *)
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
+        print("Current user:", Auth.auth().currentUser ?? "No current user")
+
         guard let windowScene = (scene as? UIWindowScene) else {return}
         window = UIWindow(windowScene: windowScene)
         window?.windowScene = windowScene
         let startViewController = StartViewController()
-        let homeViewController = MainTabBarController()
         if Auth.auth().currentUser == nil {
             window?.rootViewController = startViewController
             window?.makeKeyAndVisible()
         } else {
+            print("Current user:", Auth.auth().currentUser!)
+            let homeViewController = MainTabBarController()
             window?.rootViewController = homeViewController
             window?.makeKeyAndVisible()
         }

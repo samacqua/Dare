@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		140BC9AD81D4384E7B001AFB /* Pods_Dare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */; };
-		670092FB23F6380200D92A49 /* CreateDareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670092FA23F6380200D92A49 /* CreateDareCell.swift */; };
-		670092FD23F6380D00D92A49 /* RandomDareCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670092FC23F6380D00D92A49 /* RandomDareCell.swift */; };
+		670092FB23F6380200D92A49 /* CreateDareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670092FA23F6380200D92A49 /* CreateDareView.swift */; };
+		670092FD23F6380D00D92A49 /* RandomDareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670092FC23F6380D00D92A49 /* RandomDareView.swift */; };
 		670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846523F34CE800C354C0 /* CommentCellNode.swift */; };
 		670D846823F3510000C354C0 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846723F3510000C354C0 /* Comment.swift */; };
 		670D846B23F59E0200C354C0 /* DareCreateInitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */; };
 		670D846D23F5A18100C354C0 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846C23F5A18100C354C0 /* AlertView.swift */; };
-		670D846F23F5EC2800C354C0 /* CreateCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */; };
+		670D846F23F5EC2800C354C0 /* CreateScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670D846E23F5EC2800C354C0 /* CreateScrollViewController.swift */; };
 		67193FF923EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */; };
 		67193FFB23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */; };
 		67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67193FFE23EF9C7D00F18787 /* PostPreview.swift */; };
@@ -53,7 +53,7 @@
 		67B042C423E278490046924F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B223E278490046924F /* ProfileViewController.swift */; };
 		67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B323E278490046924F /* ProfileSettingsViewController.swift */; };
 		67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B623E278490046924F /* ChooseDareViewController.swift */; };
-		67B042C823E278490046924F /* CameraCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* CameraCell.swift */; };
+		67B042C823E278490046924F /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* CameraView.swift */; };
 		67B042C923E278490046924F /* DarePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B823E278490046924F /* DarePostViewController.swift */; };
 		67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */; };
 		67B042D423E2785B0046924F /* ProfileHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CC23E2785B0046924F /* ProfileHeaderNodeCell.swift */; };
@@ -72,17 +72,19 @@
 		67B3EDE123E7BF5F00D0C190 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE023E7BF5F00D0C190 /* Extensions.swift */; };
 		67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */; };
 		67B3EDE523E886D100D0C190 /* Dare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE423E886D100D0C190 /* Dare.swift */; };
+		67FD3E6A23FCEAB300A62972 /* ActivityCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD3E6923FCEAB300A62972 /* ActivityCellNode.swift */; };
+		67FD3E6C23FCEDDF00A62972 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD3E6B23FCEDDF00A62972 /* Activity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4B163FBA6F6A0ABEDD6FBC96 /* Pods-Dare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.release.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.release.xcconfig"; sourceTree = "<group>"; };
-		670092FA23F6380200D92A49 /* CreateDareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDareCell.swift; sourceTree = "<group>"; };
-		670092FC23F6380D00D92A49 /* RandomDareCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomDareCell.swift; sourceTree = "<group>"; };
+		670092FA23F6380200D92A49 /* CreateDareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateDareView.swift; sourceTree = "<group>"; };
+		670092FC23F6380D00D92A49 /* RandomDareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomDareView.swift; sourceTree = "<group>"; };
 		670D846523F34CE800C354C0 /* CommentCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCellNode.swift; sourceTree = "<group>"; };
 		670D846723F3510000C354C0 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		670D846A23F59E0100C354C0 /* DareCreateInitialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCreateInitialViewController.swift; sourceTree = "<group>"; };
 		670D846C23F5A18100C354C0 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
-		670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateCollectionViewController.swift; sourceTree = "<group>"; };
+		670D846E23F5EC2800C354C0 /* CreateScrollViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateScrollViewController.swift; sourceTree = "<group>"; };
 		67193FF823EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileStickyHeaderCellNode.swift; sourceTree = "<group>"; };
 		67193FFA23EDBF4700F18787 /* CustomProfileNavHeaderCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProfileNavHeaderCellNode.swift; sourceTree = "<group>"; };
 		67193FFE23EF9C7D00F18787 /* PostPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostPreview.swift; sourceTree = "<group>"; };
@@ -123,7 +125,7 @@
 		67B042B223E278490046924F /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		67B042B323E278490046924F /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
 		67B042B623E278490046924F /* ChooseDareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseDareViewController.swift; sourceTree = "<group>"; };
-		67B042B723E278490046924F /* CameraCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraCell.swift; sourceTree = "<group>"; };
+		67B042B723E278490046924F /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		67B042B823E278490046924F /* DarePostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarePostViewController.swift; sourceTree = "<group>"; };
 		67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityLoadingCellNode.swift; sourceTree = "<group>"; };
 		67B042CC23E2785B0046924F /* ProfileHeaderNodeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderNodeCell.swift; sourceTree = "<group>"; };
@@ -143,6 +145,8 @@
 		67B3EDE023E7BF5F00D0C190 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCategoryViewController.swift; sourceTree = "<group>"; };
 		67B3EDE423E886D100D0C190 /* Dare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dare.swift; sourceTree = "<group>"; };
+		67FD3E6923FCEAB300A62972 /* ActivityCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCellNode.swift; sourceTree = "<group>"; };
+		67FD3E6B23FCEDDF00A62972 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
 		ECE9565BB4A9B3596DF59CC1 /* Pods_Dare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Dare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -162,9 +166,9 @@
 		670092F923F637DF00D92A49 /* Initial View Cells */ = {
 			isa = PBXGroup;
 			children = (
-				670092FA23F6380200D92A49 /* CreateDareCell.swift */,
-				67B042B723E278490046924F /* CameraCell.swift */,
-				670092FC23F6380D00D92A49 /* RandomDareCell.swift */,
+				670092FA23F6380200D92A49 /* CreateDareView.swift */,
+				67B042B723E278490046924F /* CameraView.swift */,
+				670092FC23F6380D00D92A49 /* RandomDareView.swift */,
 			);
 			path = "Initial View Cells";
 			sourceTree = "<group>";
@@ -198,6 +202,7 @@
 				67B3EDE423E886D100D0C190 /* Dare.swift */,
 				670D846723F3510000C354C0 /* Comment.swift */,
 				670D846C23F5A18100C354C0 /* AlertView.swift */,
+				67FD3E6B23FCEDDF00A62972 /* Activity.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -329,7 +334,7 @@
 		67B042B423E278490046924F /* Create */ = {
 			isa = PBXGroup;
 			children = (
-				670D846E23F5EC2800C354C0 /* CreateCollectionViewController.swift */,
+				670D846E23F5EC2800C354C0 /* CreateScrollViewController.swift */,
 				670092F923F637DF00D92A49 /* Initial View Cells */,
 				670D846923F59DD000C354C0 /* Capture Video */,
 				67B042B623E278490046924F /* ChooseDareViewController.swift */,
@@ -383,6 +388,7 @@
 			isa = PBXGroup;
 			children = (
 				67B042AE23E278490046924F /* ActivityViewController.swift */,
+				67FD3E6923FCEAB300A62972 /* ActivityCellNode.swift */,
 			);
 			path = Activity;
 			sourceTree = "<group>";
@@ -548,11 +554,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				670D846F23F5EC2800C354C0 /* CreateCollectionViewController.swift in Sources */,
+				670D846F23F5EC2800C354C0 /* CreateScrollViewController.swift in Sources */,
 				6794743323F3212800EEA3B6 /* CommentViewController.swift in Sources */,
+				67FD3E6C23FCEDDF00A62972 /* Activity.swift in Sources */,
 				675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */,
 				67B0430523E3C8760046924F /* EditProfileViewController.swift in Sources */,
 				679FBC0123ED084D008892EB /* DraftsCollectionCell.swift in Sources */,
+				67FD3E6A23FCEAB300A62972 /* ActivityCellNode.swift in Sources */,
 				67B042D523E2785B0046924F /* PostCellNode.swift in Sources */,
 				679FBBFD23ED049E008892EB /* ProfileSettingsPostCell.swift in Sources */,
 				67B042C923E278490046924F /* DarePostViewController.swift in Sources */,
@@ -563,12 +571,12 @@
 				679FBBF923ED03B9008892EB /* EditProfileHeaderCell.swift in Sources */,
 				67B042BE23E278490046924F /* LoginViewController.swift in Sources */,
 				67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */,
-				670092FB23F6380200D92A49 /* CreateDareCell.swift in Sources */,
+				670092FB23F6380200D92A49 /* CreateDareView.swift in Sources */,
 				67B042BF23E278490046924F /* AlreadyRegisteredEmailPasswordViewController.swift in Sources */,
 				67B042BB23E278490046924F /* EmailPasswordSignUpViewController.swift in Sources */,
 				67B042BC23E278490046924F /* StartViewController.swift in Sources */,
 				670D846623F34CE800C354C0 /* CommentCellNode.swift in Sources */,
-				670092FD23F6380D00D92A49 /* RandomDareCell.swift in Sources */,
+				670092FD23F6380D00D92A49 /* RandomDareView.swift in Sources */,
 				67B0430923E75F490046924F /* Profile.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
 				670D846823F3510000C354C0 /* Comment.swift in Sources */,
@@ -587,7 +595,7 @@
 				67B042C523E278490046924F /* ProfileSettingsViewController.swift in Sources */,
 				67B042BA23E278490046924F /* EmailPhoneLoginViewController.swift in Sources */,
 				67B042C123E278490046924F /* ActivityViewController.swift in Sources */,
-				67B042C823E278490046924F /* CameraCell.swift in Sources */,
+				67B042C823E278490046924F /* CameraView.swift in Sources */,
 				679FBC0323ED08F3008892EB /* SavedCollectionCell.swift in Sources */,
 				67B3EDE123E7BF5F00D0C190 /* Extensions.swift in Sources */,
 				67B042B923E278490046924F /* SignUpViewController.swift in Sources */,
