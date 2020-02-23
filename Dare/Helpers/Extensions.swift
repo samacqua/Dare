@@ -14,13 +14,13 @@ extension UISegmentedControl{
         self.setBackgroundImage(backgroundImage, for: .normal, barMetrics: .default)
         self.setBackgroundImage(backgroundImage, for: .selected, barMetrics: .default)
         self.setBackgroundImage(backgroundImage, for: .highlighted, barMetrics: .default)
-
+        
         let deviderImage = UIImage.getColoredRectImageWith(color: UIColor.white.cgColor, andSize: CGSize(width: 1.0, height: self.bounds.size.height))
         self.setDividerImage(deviderImage, forLeftSegmentState: .selected, rightSegmentState: .normal, barMetrics: .default)
         self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.gray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)], for: .normal)
         self.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.orange, NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16)], for: .selected)
     }
-
+    
     func addUnderlineForSelectedSegment(){
         removeBorder()
         let underlineWidth: CGFloat = self.bounds.size.width / CGFloat(self.numberOfSegments)
@@ -34,7 +34,7 @@ extension UISegmentedControl{
         underline.layer.zPosition = 1
         self.addSubview(underline)
     }
-
+    
     func changeUnderlinePosition(){
         guard let underline = self.viewWithTag(1) else {return}
         underline.layer.zPosition = 1
@@ -46,7 +46,7 @@ extension UISegmentedControl{
 }
 
 extension UIImage{
-
+    
     class func getColoredRectImageWith(color: CGColor, andSize size: CGSize) -> UIImage{
         UIGraphicsBeginImageContextWithOptions(size, false, 0.0)
         let graphicsContext = UIGraphicsGetCurrentContext()
@@ -128,7 +128,7 @@ extension UIImage {
 }
 
 extension UIView {
-
+    
     func addConstraintsWithFormat(format: String, views: UIView...) {
         
         var viewsDict = [String: UIView]()
@@ -143,50 +143,58 @@ extension UIView {
     }
 }
 
-extension UIView {
-
-    func displayToast(_ message : String) {
-
-        guard let delegate = UIApplication.shared.delegate as? AppDelegate, let window = delegate.window else {
-            return
-        }
-        if let toast = window.subviews.first(where: { $0 is UILabel && $0.tag == -1001 }) {
-            toast.removeFromSuperview()
-        }
-
-        let toastView = UILabel()
-        toastView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-        toastView.textColor = UIColor.white
-        toastView.textAlignment = .center
-        toastView.font = UIFont(name: "Font-name", size: 17)
-        toastView.layer.cornerRadius = 25
-        toastView.text = message
-        toastView.numberOfLines = 0
-        toastView.alpha = 0
-        toastView.translatesAutoresizingMaskIntoConstraints = false
-        toastView.tag = -1001
-
-        window.addSubview(toastView)
-
-        let horizontalCenterContraint: NSLayoutConstraint = NSLayoutConstraint(item: toastView, attribute: .centerX, relatedBy: .equal, toItem: window, attribute: .centerX, multiplier: 1, constant: 0)
-
-        let widthContraint: NSLayoutConstraint = NSLayoutConstraint(item: toastView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .width, multiplier: 1, constant: (self.frame.size.width-25) )
-
-        let verticalContraint: [NSLayoutConstraint] = NSLayoutConstraint.constraints(withVisualFormat: "V:|-(>=200)-[toastView(==50)]-68-|", options: [.alignAllCenterX, .alignAllCenterY], metrics: nil, views: ["toastView": toastView])
-
-        NSLayoutConstraint.activate([horizontalCenterContraint, widthContraint])
-        NSLayoutConstraint.activate(verticalContraint)
-
-        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
-            toastView.alpha = 1
-        }, completion: nil)
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3), execute: {
-            UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseIn, animations: {
-                toastView.alpha = 0
-            }, completion: { finished in
-                toastView.removeFromSuperview()
-            })
-        })
+// Class to allow for padding on UILabel even when using autolayout. From https://stackoverflow.com/a/58876988/5416200
+class UILabelPadded: UILabel {
+    let UIEI = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+    
+    override var intrinsicContentSize:CGSize {
+        numberOfLines = 0
+        var s = super.intrinsicContentSize
+        s.height = s.height + UIEI.top + UIEI.bottom
+        s.width = s.width + UIEI.left + UIEI.right
+        return s
+    }
+    
+    override func drawText(in rect:CGRect) {
+        let r = rect.inset(by: UIEI)
+        super.drawText(in: r)
+    }
+    
+    override func textRect(forBounds bounds:CGRect, limitedToNumberOfLines n:Int) -> CGRect {
+        let b = bounds
+        let tr = b.inset(by: UIEI)
+        let ctr = super.textRect(forBounds: tr, limitedToNumberOfLines: 0)
+        return ctr
     }
 }
+
+extension UIView {
+    
+    func showToast(message : String) {
+        
+        let toastLabel = UILabelPadded()
+        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        toastLabel.textColor = UIColor.white
+        toastLabel.font = UIFont.systemFont(ofSize: 18)
+        toastLabel.textAlignment = .center
+        toastLabel.text = message
+        toastLabel.alpha = 1.0
+        toastLabel.layer.cornerRadius = 10
+        toastLabel.clipsToBounds  =  true
+        toastLabel.numberOfLines = 0
+        toastLabel.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(toastLabel)
+        
+        NSLayoutConstraint.activate([
+            toastLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
+            toastLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            toastLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
+            toastLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20)
+        ])
+        
+        UIView.animate(withDuration: 2.0, delay: 1.5, options: .curveEaseInOut, animations: {
+            toastLabel.alpha = 0.0
+        }, completion: {(isCompleted) in
+            toastLabel.removeFromSuperview()
+        })
+    } }

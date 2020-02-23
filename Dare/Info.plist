@@ -19,6 +19,10 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Facebook URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>fb1334662260068801</string>
@@ -27,6 +31,8 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Google Reversed Client ID</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.375225376203-3fsta4ho1rit4uu50auaoboi0492se7h</string>

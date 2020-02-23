@@ -8,12 +8,13 @@
 
 import UIKit
 import FBSDKCoreKit
-import FirebaseAuth
+import Firebase
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+import GoogleSignIn
+
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, GIDSignInDelegate {
     
     var window: UIWindow?
-    
     
     @available(iOS 13.0, *)
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -22,10 +23,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let windowScene = (scene as? UIWindowScene) else {return}
         window = UIWindow(windowScene: windowScene)
+        window?.tintColor = .black
         window?.windowScene = windowScene
         let startViewController = StartViewController()
         if Auth.auth().currentUser == nil {
-            window?.rootViewController = startViewController
+            let navigationController = UINavigationController()
+            navigationController.viewControllers = [startViewController]
+            window?.rootViewController = navigationController
             window?.makeKeyAndVisible()
         } else {
             print("Current user:", Auth.auth().currentUser!)
@@ -33,7 +37,49 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window?.rootViewController = homeViewController
             window?.makeKeyAndVisible()
         }
-
+        
+        // Google Sign-in Setup
+        GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
+        GIDSignIn.sharedInstance().delegate = self
+        
+    }
+    
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        if error != nil {
+            print("Error logging into google: ", error!)
+            return
+        }
+        guard let authentication = user.authentication else { return }
+        let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
+                                                       accessToken: authentication.accessToken)
+        Auth.auth().signIn(with: credential) { (result, err) in
+            if err != nil {
+                print("Error signing into firebase after google login: ", err!)
+                return
+            }
+            guard let uid = result?.user.uid else { return }
+            if result!.additionalUserInfo!.isNewUser == true {
+                let database = Firestore.firestore()
+                let fullName = user.profile.name
+                let username = (user.profile.name!).replacingOccurrences(of: " ", with: "").lowercased()
+                let firstName = user.profile.givenName
+                let lastName = user.profile.familyName
+                let email = user.profile.email
+                database.collection("users").document(uid).setData(["username": username, "email": email!, "uid": result!.user.uid, "full_name": fullName!, "first_name": firstName!, "last_name": lastName!])
+                database.collection("usernames").document(username).setData(["email": email!])
+            }
+            if Auth.auth().currentUser == nil {
+                let navigationController = UINavigationController()
+                let viewController = StartViewController()
+                navigationController.viewControllers = [viewController]
+                self.window?.rootViewController = navigationController
+            } else {
+                let viewController = MainTabBarController()
+                self.window?.rootViewController = viewController
+            }
+            self.window?.makeKeyAndVisible()
+            print("Signed in w google in scene delegate. current user:", Auth.auth().currentUser?.uid ?? "None")
+        }
     }
     
     @available(iOS 13.0, *)
@@ -46,40 +92,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             open: url,
             sourceApplication: nil,
             annotation: [UIApplication.OpenURLOptionsKey.annotation])
-        
-    }
-    
-    @available(iOS 13.0, *)
-    func sceneDidDisconnect(_ scene: UIScene) {
-        // Called as the scene is being released by the system.
-        // This occurs shortly after the scene enters the background, or when its session is discarded.
-        // Release any resources associated with this scene that can be re-created the next time the scene connects.
-        // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
-    }
-    
-    @available(iOS 13.0, *)
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-    }
-    
-    @available(iOS 13.0, *)
-    func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
-    }
-    
-    @available(iOS 13.0, *)
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        // Called as the scene transitions from the background to the foreground.
-        // Use this method to undo the changes made on entering the background.
-    }
-    
-    @available(iOS 13.0, *)
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        // Called as the scene transitions from the foreground to the background.
-        // Use this method to save data, release shared resources, and store enough scene-specific state information
-        // to restore the scene back to its current state.
     }
 }
 

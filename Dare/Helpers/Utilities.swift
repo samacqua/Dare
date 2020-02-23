@@ -11,7 +11,6 @@ import UIKit
 
 class Utilities {
     
-    
     static func returnColor() -> UIColor {
         let themeColor = UIColor.init(red: 245/255, green: 135/255, blue: 66/255, alpha: 1)
         return themeColor
@@ -36,7 +35,7 @@ class Utilities {
         
         // Filled rounded corner style
         button.backgroundColor = returnColor()
-        button.layer.cornerRadius = button.frame.size.height / 2
+        button.layer.cornerRadius = 10
         button.tintColor = UIColor.white
     }
     
@@ -46,7 +45,7 @@ class Utilities {
     
     static func styleFilledLabel(_ label: UILabel) {
         label.backgroundColor = returnColor()
-        label.layer.cornerRadius = label.frame.size.height / 2
+        label.layer.cornerRadius = 10
         label.layer.masksToBounds = true
         label.tintColor = UIColor.white
     }
@@ -56,7 +55,7 @@ class Utilities {
         // Hollow rounded corner style
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.white.cgColor
-        button.layer.cornerRadius = button.frame.size.height / 2
+        button.layer.cornerRadius = 10
         button.tintColor = UIColor.white
     }
     
@@ -65,24 +64,17 @@ class Utilities {
         // Hollow rounded corner style
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.orange.cgColor
-        button.layer.cornerRadius = button.frame.size.height / 2
+        button.layer.cornerRadius = 10
         button.tintColor = UIColor.orange
     }
     
     
     static func isPasswordValid(_ password : String?) -> Bool {
         guard password != nil else { return false }
-        let regEx = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$"
+        let regEx = "^.{8,}$"
         
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", regEx)
         return passwordTest.evaluate(with: password)
-    }
-    
-    static func isPhoneNumberValid(_ phoneNumber : String?) -> Bool {
-        guard phoneNumber != nil else { return false }
-        let regEx = "^[0-9]{9,10}"
-        let phoneNumberTest = NSPredicate(format: "SELF MATCHES %@", regEx)
-        return phoneNumberTest.evaluate(with: phoneNumber)
     }
     
     static func isEmailValid(_ email : String?) -> Bool {
