@@ -175,28 +175,40 @@ extension UIView {
         print(message)
         
         let toastLabel = UILabelPadded()
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        toastLabel.backgroundColor = UIColor.orange
         toastLabel.textColor = UIColor.white
         toastLabel.font = UIFont.systemFont(ofSize: 18)
         toastLabel.textAlignment = .center
         toastLabel.text = message
         toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 10
-        toastLabel.clipsToBounds  =  true
         toastLabel.numberOfLines = 0
         toastLabel.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(toastLabel)
         
-        NSLayoutConstraint.activate([
-            toastLabel.topAnchor.constraint(equalTo: self.safeAreaLayoutGuide.topAnchor, constant: 10),
-            toastLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            toastLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
-            toastLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20)
-        ])
+        let topConstraint = NSLayoutConstraint(item: toastLabel, attribute: .top, relatedBy: .equal, toItem: self.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0)
+        let bottomConstraint = NSLayoutConstraint(item: toastLabel, attribute: .bottom, relatedBy: .equal, toItem: self.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: 0.0)
+        self.addConstraint(bottomConstraint)
         
-        UIView.animate(withDuration: 2.0, delay: 1.5, options: .curveEaseInOut, animations: {
-            toastLabel.alpha = 0.0
+        NSLayoutConstraint.activate([
+            toastLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            toastLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            toastLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+        ])
+        self.layoutIfNeeded()
+        
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseInOut, animations: {
+            self.removeConstraint(bottomConstraint)
+            self.addConstraint(topConstraint)
+            self.layoutIfNeeded()
+            
         }, completion: {(isCompleted) in
-            toastLabel.removeFromSuperview()
+            UIView.animate(withDuration: 0.2, delay: 2.0, options: .curveEaseInOut, animations: {
+                self.removeConstraint(topConstraint)
+                self.addConstraint(bottomConstraint)
+                self.layoutIfNeeded()
+                
+            }, completion: {(isCompleted) in
+                toastLabel.removeFromSuperview()
+            })
         })
     } }

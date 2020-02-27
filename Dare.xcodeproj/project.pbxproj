@@ -233,6 +233,19 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		679228652408091C00DA6C03 /* Edit Profile */ = {
+			isa = PBXGroup;
+			children = (
+				67B0430423E3C8760046924F /* EditProfileViewController.swift */,
+				67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */,
+				67F8CB232405917E0059A624 /* ReauthorizeEmailViewController.swift */,
+				67849D6524073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift */,
+				67F7DCAE240773FF006C85B6 /* LinkEmailViewController.swift */,
+				67F7DCB024077514006C85B6 /* LinkEmailPasswordViewController.swift */,
+			);
+			path = "Edit Profile";
+			sourceTree = "<group>";
+		};
 		679FBC0623ED0DB2008892EB /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -335,16 +348,11 @@
 			isa = PBXGroup;
 			children = (
 				67B042B223E278490046924F /* ProfileViewController.swift */,
+				675215E523F09CCB000537F4 /* FollowsViewController.swift */,
 				679FBBF223EBF024008892EB /* ProfilePostSelectedViewController.swift */,
 				67B042B123E278490046924F /* ExploreProfileViewController.swift */,
-				67B0430423E3C8760046924F /* EditProfileViewController.swift */,
 				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
-				67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */,
-				67F8CB232405917E0059A624 /* ReauthorizeEmailViewController.swift */,
-				67849D6524073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift */,
-				675215E523F09CCB000537F4 /* FollowsViewController.swift */,
-				67F7DCAE240773FF006C85B6 /* LinkEmailViewController.swift */,
-				67F7DCB024077514006C85B6 /* LinkEmailPasswordViewController.swift */,
+				679228652408091C00DA6C03 /* Edit Profile */,
 			);
 			path = Profile;
 			sourceTree = "<group>";

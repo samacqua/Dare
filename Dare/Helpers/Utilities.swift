@@ -11,6 +11,8 @@ import UIKit
 
 class Utilities {
     
+    // Style UI Elements
+    
     static func returnColor() -> UIColor {
         let themeColor = UIColor.init(red: 245/255, green: 135/255, blue: 66/255, alpha: 1)
         return themeColor
@@ -68,10 +70,11 @@ class Utilities {
         button.tintColor = UIColor.orange
     }
     
+    // Validate user input
     
     static func isPasswordValid(_ password : String?) -> Bool {
         guard password != nil else { return false }
-        let regEx = "^.{8,}$"
+        let regEx = "^((?!\\s).){8,}$"
         
         let passwordTest = NSPredicate(format: "SELF MATCHES %@", regEx)
         return passwordTest.evaluate(with: password)
@@ -86,10 +89,12 @@ class Utilities {
     
     static func isUsernameValid(_ username : String?) -> Bool {
         guard username != nil else { return false }
-        let regEx = "[a-z0-9A-Z]{1,15}"
+        let regEx = "[a-zA-Z0-9_]{1,15}"
         let usernameTest = NSPredicate(format: "SELF MATCHES %@", regEx)
         return usernameTest.evaluate(with: username)
     }
+    
+    // Save/load image locally
     
     static func saveImage(imageName: String, image: UIImage) {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
@@ -127,5 +132,28 @@ class Utilities {
             return image
         }
         return nil
+    }
+    
+    // Create NSAttributes
+    
+    private static let defaultShadow: NSShadow = {
+        let shadow = NSShadow()
+        shadow.shadowBlurRadius = 5
+        shadow.shadowOffset = CGSize(width: 0, height: 0)
+        shadow.shadowColor = UIColor.black.withAlphaComponent(0.5)
+        return shadow
+    }()
+    
+    static func createAttributes(color: UIColor, fontSize: CGFloat, bold: Bool, shadow: Bool) -> [NSAttributedString.Key: Any] {
+        var attributes: [NSAttributedString.Key: Any] = [
+            .foregroundColor : color,
+            .font : UIFont.systemFont(ofSize: fontSize)
+        ]
+        if shadow {
+            attributes[.shadow] = defaultShadow
+        } else if bold {
+            attributes[.font] = UIFont.boldSystemFont(ofSize: fontSize)
+        }
+        return attributes
     }
 }
