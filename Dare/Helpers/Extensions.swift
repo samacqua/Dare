@@ -172,6 +172,8 @@ extension UIView {
     
     func showToast(message : String) {
         
+        print(message)
+        
         let toastLabel = UILabelPadded()
         toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         toastLabel.textColor = UIColor.white

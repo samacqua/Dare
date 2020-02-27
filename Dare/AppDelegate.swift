@@ -14,7 +14,7 @@ import Firebase
 import GoogleSignIn
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     let gcmMessageIDKey = "gcm.message_id"
@@ -68,58 +68,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         // Google Sign-in Setup
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
-        GIDSignIn.sharedInstance().delegate = self
         
         return true
-    }
-    
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error?) {
-        if #available(iOS 13.0, *) {    } else {
-            if error != nil {
-                print("Error logging into google: ", error!)
-                return
-            }
-            guard let authentication = user.authentication else { return }
-            let credential = GoogleAuthProvider.credential(withIDToken: authentication.idToken,
-                                                           accessToken: authentication.accessToken)
-            Auth.auth().signIn(with: credential) { (result, err) in
-                if err != nil {
-                    print("Error signing into firebase after google login: ", err!)
-                    return
-                }
-                guard let uid = result?.user.uid else { return }
-                if result!.additionalUserInfo!.isNewUser == true {
-                    let database = Firestore.firestore()
-                    let fullName = user.profile.name
-                    let username = (user.profile.name!).replacingOccurrences(of: " ", with: "").lowercased()
-                    let firstName = user.profile.givenName
-                    let lastName = user.profile.familyName
-                    let email = user.profile.email
-                    database.collection("users").document(uid).setData(["username": username, "email": email!, "uid": result!.user.uid, "full_name": fullName!, "first_name": firstName!, "last_name": lastName!])
-                    database.collection("usernames").document(username).setData(["email": email!])
-                }
-                
-                self.window = UIWindow(frame: UIScreen.main.bounds)
-                self.window?.tintColor = .black
-                
-                if Auth.auth().currentUser == nil {
-                    let navigationController = UINavigationController()
-                    let viewController = StartViewController()
-                    navigationController.viewControllers = [viewController]
-                    self.window?.rootViewController = navigationController
-                } else {
-                    let viewController = MainTabBarController()
-                    self.window?.rootViewController = viewController
-                }
-                self.window?.makeKeyAndVisible()
-                print("Signed in w google. current user:", Auth.auth().currentUser?.uid ?? "None")
-            }
-        }
-    }
-    
-    func sign(_ signIn: GIDSignIn!, didDisconnectWith user: GIDGoogleUser!, withError error: Error!) {
-        // Perform any operations when the user disconnects from app here.
-        // ...
     }
     
     func application(_ application: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any])

@@ -20,6 +20,7 @@
 		675215E623F09CCB000537F4 /* FollowsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E523F09CCB000537F4 /* FollowsViewController.swift */; };
 		675215E823F0A563000537F4 /* ProfilePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E723F0A563000537F4 /* ProfilePreview.swift */; };
 		675215EA23F23690000537F4 /* FollowsTableCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675215E923F2368F000537F4 /* FollowsTableCellNode.swift */; };
+		67849D6624073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67849D6524073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift */; };
 		678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED023E9D672002E027E /* DarePageViewController.swift */; };
 		678BAED523E9DA0E002E027E /* DarePageHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */; };
 		6794743323F3212800EEA3B6 /* CommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6794743223F3212800EEA3B6 /* CommentViewController.swift */; };
@@ -54,7 +55,6 @@
 		67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B623E278490046924F /* ChooseDareViewController.swift */; };
 		67B042C823E278490046924F /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B723E278490046924F /* CameraView.swift */; };
 		67B042C923E278490046924F /* DarePostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042B823E278490046924F /* DarePostViewController.swift */; };
-		67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */; };
 		67B042D423E2785B0046924F /* ProfileHeaderNodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CC23E2785B0046924F /* ProfileHeaderNodeCell.swift */; };
 		67B042D523E2785B0046924F /* PostCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CD23E2785B0046924F /* PostCellNode.swift */; };
 		67B042D623E2785B0046924F /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B042CE23E2785B0046924F /* MainTabBarController.swift */; };
@@ -71,10 +71,14 @@
 		67B3EDE123E7BF5F00D0C190 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE023E7BF5F00D0C190 /* Extensions.swift */; };
 		67B3EDE323E7CF4E00D0C190 /* DareCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */; };
 		67B3EDE523E886D100D0C190 /* Dare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B3EDE423E886D100D0C190 /* Dare.swift */; };
+		67F7DCAF240773FF006C85B6 /* LinkEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F7DCAE240773FF006C85B6 /* LinkEmailViewController.swift */; };
+		67F7DCB124077514006C85B6 /* LinkEmailPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F7DCB024077514006C85B6 /* LinkEmailPasswordViewController.swift */; };
 		67F8CB1424008A5B0059A624 /* ExploreCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8CB1324008A5B0059A624 /* ExploreCellNode.swift */; };
 		67F8CB1A2400C3450059A624 /* ExploreSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8CB192400C3440059A624 /* ExploreSearchViewController.swift */; };
 		67F8CB1C240235060059A624 /* PhoneConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8CB1B240235060059A624 /* PhoneConfirmationViewController.swift */; };
 		67F8CB1E2402D22E0059A624 /* ExplorePostSelectedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8CB1D2402D22E0059A624 /* ExplorePostSelectedViewController.swift */; };
+		67F8CB202402E9F70059A624 /* FirebaseUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8CB1F2402E9F70059A624 /* FirebaseUtilities.swift */; };
+		67F8CB242405917E0059A624 /* ReauthorizeEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8CB232405917E0059A624 /* ReauthorizeEmailViewController.swift */; };
 		67FD3E6A23FCEAB300A62972 /* ActivityCellNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD3E6923FCEAB300A62972 /* ActivityCellNode.swift */; };
 		67FD3E6C23FCEDDF00A62972 /* Activity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD3E6B23FCEDDF00A62972 /* Activity.swift */; };
 /* End PBXBuildFile section */
@@ -93,6 +97,7 @@
 		675215E523F09CCB000537F4 /* FollowsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsViewController.swift; sourceTree = "<group>"; };
 		675215E723F0A563000537F4 /* ProfilePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePreview.swift; sourceTree = "<group>"; };
 		675215E923F2368F000537F4 /* FollowsTableCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowsTableCellNode.swift; sourceTree = "<group>"; };
+		67849D6524073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeEmailOrPasswordViewController.swift; sourceTree = "<group>"; };
 		678BAED023E9D672002E027E /* DarePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageViewController.swift; sourceTree = "<group>"; };
 		678BAED423E9DA0E002E027E /* DarePageHeaderNodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DarePageHeaderNodeCell.swift; sourceTree = "<group>"; };
 		6794743223F3212800EEA3B6 /* CommentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewController.swift; sourceTree = "<group>"; };
@@ -129,7 +134,6 @@
 		67B042B623E278490046924F /* ChooseDareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseDareViewController.swift; sourceTree = "<group>"; };
 		67B042B723E278490046924F /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		67B042B823E278490046924F /* DarePostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarePostViewController.swift; sourceTree = "<group>"; };
-		67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityLoadingCellNode.swift; sourceTree = "<group>"; };
 		67B042CC23E2785B0046924F /* ProfileHeaderNodeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderNodeCell.swift; sourceTree = "<group>"; };
 		67B042CD23E2785B0046924F /* PostCellNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostCellNode.swift; sourceTree = "<group>"; };
 		67B042CE23E2785B0046924F /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
@@ -147,10 +151,14 @@
 		67B3EDE023E7BF5F00D0C190 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		67B3EDE223E7CF4E00D0C190 /* DareCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DareCategoryViewController.swift; sourceTree = "<group>"; };
 		67B3EDE423E886D100D0C190 /* Dare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dare.swift; sourceTree = "<group>"; };
+		67F7DCAE240773FF006C85B6 /* LinkEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkEmailViewController.swift; sourceTree = "<group>"; };
+		67F7DCB024077514006C85B6 /* LinkEmailPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkEmailPasswordViewController.swift; sourceTree = "<group>"; };
 		67F8CB1324008A5B0059A624 /* ExploreCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreCellNode.swift; sourceTree = "<group>"; };
 		67F8CB192400C3440059A624 /* ExploreSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreSearchViewController.swift; sourceTree = "<group>"; };
 		67F8CB1B240235060059A624 /* PhoneConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneConfirmationViewController.swift; sourceTree = "<group>"; };
 		67F8CB1D2402D22E0059A624 /* ExplorePostSelectedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorePostSelectedViewController.swift; sourceTree = "<group>"; };
+		67F8CB1F2402E9F70059A624 /* FirebaseUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseUtilities.swift; sourceTree = "<group>"; };
+		67F8CB232405917E0059A624 /* ReauthorizeEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReauthorizeEmailViewController.swift; sourceTree = "<group>"; };
 		67FD3E6923FCEAB300A62972 /* ActivityCellNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityCellNode.swift; sourceTree = "<group>"; };
 		67FD3E6B23FCEDDF00A62972 /* Activity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Activity.swift; sourceTree = "<group>"; };
 		DCC8AB1B99FB22B8ABF56E7C /* Pods-Dare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Dare.debug.xcconfig"; path = "Target Support Files/Pods-Dare/Pods-Dare.debug.xcconfig"; sourceTree = "<group>"; };
@@ -220,7 +228,6 @@
 				679FBC0623ED0DB2008892EB /* Profile */,
 				67B042CD23E2785B0046924F /* PostCellNode.swift */,
 				670D846523F34CE800C354C0 /* CommentCellNode.swift */,
-				67B042CB23E2785B0046924F /* ActivityLoadingCellNode.swift */,
 				67F8CB1324008A5B0059A624 /* ExploreCellNode.swift */,
 			);
 			path = Cells;
@@ -333,7 +340,11 @@
 				67B0430423E3C8760046924F /* EditProfileViewController.swift */,
 				67B042B323E278490046924F /* ProfileSettingsViewController.swift */,
 				67B0430623E5480B0046924F /* ChangeUserInfoViewController.swift */,
+				67F8CB232405917E0059A624 /* ReauthorizeEmailViewController.swift */,
+				67849D6524073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift */,
 				675215E523F09CCB000537F4 /* FollowsViewController.swift */,
+				67F7DCAE240773FF006C85B6 /* LinkEmailViewController.swift */,
+				67F7DCB024077514006C85B6 /* LinkEmailPasswordViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -378,6 +389,7 @@
 				67B042DB23E278660046924F /* Constants.swift */,
 				67B042DC23E278660046924F /* Utilities.swift */,
 				67B3EDE023E7BF5F00D0C190 /* Extensions.swift */,
+				67F8CB1F2402E9F70059A624 /* FirebaseUtilities.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -588,15 +600,16 @@
 				670092FD23F6380D00D92A49 /* RandomDareView.swift in Sources */,
 				67B0430923E75F490046924F /* Profile.swift in Sources */,
 				67B0429023E277980046924F /* AppDelegate.swift in Sources */,
+				67F8CB202402E9F70059A624 /* FirebaseUtilities.swift in Sources */,
 				670D846823F3510000C354C0 /* Comment.swift in Sources */,
 				679FBBF323EBF024008892EB /* ProfilePostSelectedViewController.swift in Sources */,
 				67B3EDE523E886D100D0C190 /* Dare.swift in Sources */,
 				670D846D23F5A18100C354C0 /* AlertView.swift in Sources */,
+				67F8CB242405917E0059A624 /* ReauthorizeEmailViewController.swift in Sources */,
 				675215E823F0A563000537F4 /* ProfilePreview.swift in Sources */,
 				678BAED123E9D672002E027E /* DarePageViewController.swift in Sources */,
 				67B0430723E5480B0046924F /* ChangeUserInfoViewController.swift in Sources */,
 				67B042C323E278490046924F /* ExploreProfileViewController.swift in Sources */,
-				67B042D323E2785B0046924F /* ActivityLoadingCellNode.swift in Sources */,
 				67F8CB1C240235060059A624 /* PhoneConfirmationViewController.swift in Sources */,
 				67193FFF23EF9C7D00F18787 /* PostPreview.swift in Sources */,
 				67193FF923EDB26D00F18787 /* ProfileStickyHeaderCellNode.swift in Sources */,
@@ -608,6 +621,7 @@
 				67B042C823E278490046924F /* CameraView.swift in Sources */,
 				679FBC0323ED08F3008892EB /* SavedCollectionCell.swift in Sources */,
 				67B3EDE123E7BF5F00D0C190 /* Extensions.swift in Sources */,
+				67849D6624073CDE0051DED3 /* ChangeEmailOrPasswordViewController.swift in Sources */,
 				67B042B923E278490046924F /* SignUpViewController.swift in Sources */,
 				67F8CB1E2402D22E0059A624 /* ExplorePostSelectedViewController.swift in Sources */,
 				679FBBF523ED0258008892EB /* ProfileCellNode.swift in Sources */,
@@ -617,6 +631,7 @@
 				67B042C023E278490046924F /* ExploreViewController.swift in Sources */,
 				67B042C723E278490046924F /* ChooseDareViewController.swift in Sources */,
 				67B042C423E278490046924F /* ProfileViewController.swift in Sources */,
+				67F7DCB124077514006C85B6 /* LinkEmailPasswordViewController.swift in Sources */,
 				67B042C223E278490046924F /* HomeViewController.swift in Sources */,
 				67B042E323E3698C0046924F /* VideoPlayback.swift in Sources */,
 				679FBBFF23ED07B3008892EB /* CategoriesCollectionCell.swift in Sources */,
@@ -626,6 +641,7 @@
 				67B042D723E2785B0046924F /* ExploreProfileHeaderNodeCell.swift in Sources */,
 				67B042DD23E278660046924F /* Constants.swift in Sources */,
 				675215E623F09CCB000537F4 /* FollowsViewController.swift in Sources */,
+				67F7DCAF240773FF006C85B6 /* LinkEmailViewController.swift in Sources */,
 				679FBBFB23ED042A008892EB /* EditProfilePostCell.swift in Sources */,
 				679FBBF723ED0352008892EB /* EditProfilePictureHeaderCell.swift in Sources */,
 			);

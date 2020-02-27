@@ -45,6 +45,10 @@
 	<string>1334662260068801</string>
 	<key>FacebookDisplayName</key>
 	<string>Dare</string>
+    <key>FacebookAutoLogAppEventsEnabled</key>
+    <false/>
+    <key>FacebookAdvertiserIDCollectionEnabled</key>
+    <true/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

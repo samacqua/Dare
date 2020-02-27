@@ -87,4 +87,23 @@ struct Constants {
         .font : UIFont.boldSystemFont(ofSize: 18)
     ]
     
+    // Edit Profile
+    
+    static let profileInfoTitle = "Profile Info"
+    static let privateInfoTitle = "Private Info"
+    static let loginTypeTitle = "Link Login Types"
+    
+    // Provider IDs
+    
+    static let passwordProviderID = "password"
+    static let facebookProviderID = "facebook.com"
+    static let googleProviderID = "google.com"
+    
+    // Edit Profile Header Titles
+    
+    static let emailPassword = "Email/Password"
+    static let facebook = "Facebook"
+    static let google = "Google"
+    static let phoneNumber = "Phone Number"
+    
 }
