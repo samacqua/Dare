@@ -620,82 +620,35 @@ class FirebaseUtilities {
             }
         }
     }
-}
+    
+    // MARK: - Dare Creation
+    
+    static func createDare(dareTitle: String, completion: @escaping(_ error: Error?) -> Void) {
+        let trimmedTitle = dareTitle.replacingOccurrences(of: " ", with: "")
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        database.collection("users").document(uid).getDocument { (snapshot, error) in
+            if error != nil {
+                return completion(error!)
+            }
+            guard let documentData = snapshot?.data() else { return }
+            let profilePictureURL = documentData["profile_image"] as? String ?? ""
+            let username = documentData["username"] as? String ?? ""
+            
+            let batch = database.batch()
 
-/*
- switch providerID {
-         case "password":
-             let credential = EmailAuthProvider.credential(withEmail: userPropertyValue, password: password)
-             currentUser.reauthenticate(with: credential) { (result, error) in
-                 if error != nil {
-                     self.view.showToast(message: error!.localizedDescription)
-                 } else {
-                     print("successfully reauthenticated email")
-                     let changeUserInfoVC = ChangeUserInfoViewController()
-                     changeUserInfoVC.userProperty = self.userProperty
-                     changeUserInfoVC.userPropertyValue = self.userPropertyValue
-                     self.show(changeUserInfoVC, sender: self)
-                 }
-             }
-         case "facebook.com":
-             let loginManager = LoginManager()
-             loginManager.authType = .reauthorize
-             loginManager.logIn(permissions: [], from: self) { (result, error) in
-                 if error != nil {
-                     self.view.showToast(message: error!.localizedDescription)
-                 } else {
-                     print("logged in")
-                     let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)
-                     currentUser.reauthenticate(with: credential) { (result, error) in
-                         if error != nil {
-                             self.view.showToast(message: error!.localizedDescription)
-                         } else {
-                             print("successfully reathenticated fb user")
-                             
-                             let emailCredential =  EmailAuthProvider.credential(withEmail: "bebe@g.com", password: "12345678")
-                             currentUser.link(with: emailCredential) { (result, error) in
-                                 if error != nil {
-                                     self.view.showToast(message: error!.localizedDescription)
-                                     print(error!)
-                                 } else {
-                                     print("complete success")
-                                 }
-                                 
-                             }
- //                            currentUser.updateEmail(to: "bebe@g.com") { (error) in
- //                                if error != nil {
- //                                    print(error!)
- //                                    return
- //                                }
- //
- //                            }
-                             
-                         }
-                     }
-                 }
-             }
-         case "google.com":
-             print(currentUser.email)
-             print(currentUser.displayName)
-             currentUser.updatePassword(to: "12345678") { (error) in
-                 if error != nil {
-                     self.view.showToast(message: error!.localizedDescription)
-                 } else {
-                     print("changed google password successfully?")
-                     print(currentUser.providerData[0].providerID)
-                     currentUser.updateEmail(to: "samuel.acqua@gmail.com", completion: nil)
-                     let emailCredential =  EmailAuthProvider.credential(withEmail: "samuel.acqua@gmai.com", password: "4")
-                     currentUser.link(with: emailCredential) { (result, error) in
-                         if error != nil {
-                             self.view.showToast(message: error!.localizedDescription)
-                             print(error!)
-                         } else {
-                             print("complete success")
-                         }
-                         
-                     }
-                 }
-             }
-         default:
-             b
- */
+            let dareDocData = ["creator_profile_picture": profilePictureURL, "creator_uid": Auth.auth().currentUser!.uid, "creator_username": username, "dare_full_name": dareTitle]
+            let dareDoc = database.collection("dares").document(trimmedTitle)
+            let userDoc = database.collection("users").document(uid).collection("dares_created").document(trimmedTitle)
+            
+            batch.setData(dareDocData, forDocument: dareDoc)
+            batch.setData(dareDocData, forDocument: userDoc)
+            
+            batch.commit { (error) in
+                if error != nil {
+                    return completion(error!)
+                }
+                return completion(nil)
+            }
+        }
+    }
+}
