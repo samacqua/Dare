@@ -16,97 +16,81 @@ import FBSDKLoginKit
 class FirebaseUtilities {
     
     private static let database = Firestore.firestore()
+    private static let currentUser = Auth.auth().currentUser!
+    private static let uid = Auth.auth().currentUser!.uid
     
     // MARK: - Sign Up/Login
     
-    static func createUserWithGoogle(credential: AuthCredential!, user: GIDGoogleUser!, completion: @escaping(_ error: Error?) -> Void) {
-        Auth.auth().signIn(with: credential) { (result, err) in
-            if err != nil {
-                print("Error signing into firebase after google login: ", err!)
-                return
-            }
-            guard let uid = result?.user.uid else { return }
-            if result!.additionalUserInfo!.isNewUser == true {
-                let database = Firestore.firestore()
-                let fullName = user.profile.name
-                let username = (user.profile.name!).replacingOccurrences(of: " ", with: "").lowercased()
-                let firstName = user.profile.givenName
-                let lastName = user.profile.familyName
-                let email = user.profile.email
-                database.collection("users").document(uid).setData(["username": username, "email": email!, "uid": result!.user.uid, "full_name": fullName!, "first_name": firstName!, "last_name": lastName!])
-                database.collection("usernames").document(username).setData(["email": email!])
-            }
-            return completion(nil)
-        }
-    }
-    
-    static func createUserWithPhone(credential: AuthCredential!, completion: @escaping(_ error: Error?) -> Void) {
-        Auth.auth().signIn(with: credential) { (authDataResult, error) in
-            if error != nil {
-                return completion(error!)
-            }
-            if authDataResult!.additionalUserInfo!.isNewUser {
-                let uid = authDataResult!.user.uid
-                self.createUsername(email: "user", appendedNumbersCount: 2) { (username, error) in
-                    if error != nil {
-                        return completion(error!)
-                    }
-                    let data: [String: Any] = ["uid": uid, "username": username!, "full_name": username!] // TODO: add phone number to data
-                    Firestore.firestore().collection("users").document(uid).setData(data)
-                    return completion(nil)
-                }
-            }
-        }
-    }
-    
-    static func createUserWithEmail(email: String!, password: String!, completion: @escaping(_ error: Error?) -> Void) {
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if error != nil {
-                return completion(error!)
+    static func handleEmailSignUp(email: String!, password: String!, completion: @escaping(_ error: Error?) -> Void) {
+        Auth.auth().createUser(withEmail: email, password: password) { (result, createError) in
+            if createError != nil {
+                return completion(createError)
             } else {
-                let database = Firestore.firestore()
-                let uid = result!.user.uid
-                FirebaseUtilities.createUsername(email: email, appendedNumbersCount: 2) { (username, usernameError) in
+                guard let newUserID = result?.user.uid else { return completion(CustomError(message: "Failed creating user."))}
+                FirebaseUtilities.createUsername(basedOn: email, appendedNumbersCount: 2) { (username, usernameError) in
                     if usernameError != nil {
-                        return completion(usernameError!)
+                        return completion(usernameError)
                     }
-                    database.collection("users").document(uid).setData(["username": username!, "email": email ?? "", "uid": result!.user.uid])
-                    return completion(nil)
+                    let batch = database.batch()    // create user doc with basic user info, and add email/username to collection
+                    
+                    let userDoc = database.collection("users").document(newUserID)
+                    batch.setData(["full_name": username!, "username": username!, "email": email ?? "", "uid": newUserID], forDocument: userDoc)
+                    let usernameEmailDoc = database.collection("usernames").document(username!)
+                    batch.setData(["email": email!], forDocument: usernameEmailDoc)
+                    
+                    batch.commit { (batchError) in
+                        if batchError != nil {
+                            return completion(batchError)
+                        }
+                        return completion(nil)
+                    }
                 }
             }
         }
     }
     
-    static func handleFacebookSignUp(viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
+    static func handleFacebookAuthentication(viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
         LoginManager().logIn(permissions: ["email", "public_profile"], from: viewController.self) { (result, permissionError) in
             if permissionError != nil {
-                return completion(permissionError!)
+                return completion(permissionError)
             }
-            
             let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)
-            Auth.auth().signIn(with: credential) { (res, signInError) in
+            Auth.auth().signIn(with: credential) { (res, signInError) in    // sign into Firebase with Facebook credential
                 if signInError != nil {
-                    return completion(signInError!)
+                    return completion(signInError)
                 }
-                if res!.additionalUserInfo!.isNewUser {
+                if let isNewUser = res?.additionalUserInfo?.isNewUser, isNewUser {
                     let graphRequestConnection = GraphRequestConnection()
                     let graphRequest = GraphRequest(graphPath: "me", parameters: ["fields": "id, email, name, first_name, last_name"], tokenString: AccessToken.current?.tokenString, version: Settings.defaultGraphAPIVersion , httpMethod: .get)
-                    graphRequestConnection.add(graphRequest) { (httpResponse, result, error) in
-                        
-                        if error != nil {
-                            return completion(error!)
+                    graphRequestConnection.add(graphRequest) { (httpResponse, result, graphReqError) in     // request information from Facebook
+                        if graphReqError != nil {
+                            return completion(graphReqError)
                         }
                         if let result = result as? [String:Any] {
-                            let database = Firestore.firestore()
-                            let uid = res!.user.uid
-                            let username: String = (result["name"] as! String).lowercased().replacingOccurrences(of: " ", with: "")
-                            let email: String = result["email"] as! String
-                            let firstName: String = result["first_name"] as! String
-                            let lastName: String = result["last_name"] as! String
-                            let fullName: String = result["name"] as! String
+                            guard let newUserID = res?.user.uid else { return completion(CustomError(message: "Failed to create user."))}
+                            let email = result["email"] as! String
+                            let fullName = result["name"] as! String
                             
-                            database.collection("users").document(uid).setData(["username": username, "email": email, "uid": res!.user.uid, "first_name": firstName, "last_name": lastName, "full_name": fullName])
-                            return completion(nil)
+                            let usernameBasis = (result["name"] as! String).lowercased().replacingOccurrences(of: " ", with: "")
+                            createUsername(basedOn: usernameBasis, appendedNumbersCount: 2) { (username, usernameError) in
+                                if usernameError != nil {
+                                    return completion(usernameError)
+                                }
+                                let batch = database.batch()    // create user doc with basic user info, and add email/username to collection
+                                
+                                let userDoc = database.collection("users").document(newUserID)
+                                batch.setData(["username": username!, "email": email, "uid": newUserID, "full_name": fullName], forDocument: userDoc)
+                                
+                                let usernameEmailDoc = database.collection("usernames").document(username!)
+                                batch.setData(["email": email], forDocument: usernameEmailDoc)
+                                
+                                batch.commit { (batchError) in
+                                    if batchError != nil {
+                                        return completion(batchError)
+                                    }
+                                    return completion(nil)
+                                }
+                            }
                         }
                     }
                     graphRequestConnection.start()
@@ -117,9 +101,65 @@ class FirebaseUtilities {
         }
     }
     
+    static func handleGoogleAuthentication(credential: AuthCredential!, user: GIDGoogleUser!, completion: @escaping(_ error: Error?) -> Void) {
+        Auth.auth().signIn(with: credential) { (result, signInError) in
+            if signInError != nil {
+                return completion(signInError)
+            }
+            guard let newUserID = result?.user.uid else { return completion(CustomError(message: "Failed creating user.")) }
+            if let isNewUser = result?.additionalUserInfo?.isNewUser, isNewUser {   // if the user is new, get info from google and send to database
+                let fullName = user.profile.name
+                let email = user.profile.email
+                
+                let usernameBasis = (user.profile.name!).replacingOccurrences(of: " ", with: "").lowercased()
+                self.createUsername(basedOn: usernameBasis, appendedNumbersCount: 2) { (username, usernameError) in
+                    if usernameError != nil {
+                        return completion(usernameError)
+                    }
+                    let batch = database.batch()
+                    
+                    let userDoc = database.collection("users").document(newUserID)
+                    batch.setData(["username": username!, "email": email!, "uid": newUserID, "full_name": fullName!], forDocument: userDoc)
+                    
+                    let usernameEmailDoc = database.collection("usernames").document(username!)
+                    batch.setData(["email": email!], forDocument: usernameEmailDoc)
+                    
+                    batch.commit { (batchError) in
+                        if batchError != nil {
+                            return completion(batchError)
+                        }
+                        return completion(nil)
+                    }
+                }
+            }
+            return completion(nil)  // if user is not new, then completion
+        }
+    }
+    
+    static func handlePhoneAuthentication(credential: AuthCredential!, completion: @escaping(_ error: Error?) -> Void) {
+        Auth.auth().signIn(with: credential) { (authDataResult, signInError) in
+            if signInError != nil {
+                return completion(signInError)
+            }
+            if authDataResult!.additionalUserInfo!.isNewUser {  // if new user, create basic user information and send to Firestore
+                let uid = authDataResult!.user.uid
+                self.createUsername(basedOn: "user", appendedNumbersCount: 2) { (username, usernameError) in
+                    if usernameError != nil {
+                        return completion(usernameError)
+                    }
+                    let data: [String: Any] = ["uid": uid, "username": username!, "full_name": username!] // TODO: add phone number to data
+                    Firestore.firestore().collection("users").document(uid).setData(data)
+                    return completion(nil)
+                }
+            } else {
+                return completion(nil)
+            }
+        }
+    }
+    
     // creates a username, then checks to make sure that no other user has used that username
-    static func createUsername(email: String!, appendedNumbersCount: Int!, completion: @escaping(_ username: String?, _ error: Error?) -> Void) {
-        let emailComponents = email.components(separatedBy: "@")
+    static func createUsername(basedOn: String!, appendedNumbersCount: Int!, completion: @escaping(_ username: String?, _ error: Error?) -> Void) {
+        let emailComponents = basedOn.components(separatedBy: "@")  // if string contains "@", takes the part of the string before the symbol
         var username = emailComponents[0]
         
         let docRef = database.collection("usernames").document(username)
@@ -133,7 +173,7 @@ class FirebaseUtilities {
                 let number = Int.random(in: bottomLimit..<upperLimit)
                 username = username + "\(number)"
                 
-                createUsername(email: username, appendedNumbersCount: (1)) { (username, error) in
+                createUsername(basedOn: username, appendedNumbersCount: (1)) { (username, error) in
                     completion(username, error)
                 } // recursive, continues calling function until correct username, then returns in completion
             } else {
@@ -144,49 +184,47 @@ class FirebaseUtilities {
     
     // MARK: - Post Interaction
     
-    static func likePost(uid: String!, postID: String!, creatoruid: String!, thumbnailPictureURL: String!, completion: @escaping(_ error: Error?) -> Void) {
-        let batch = database.batch()
+    static func likePost(postID: String!, creatoruid: String!, thumbnailPictureURL: String!, completion: @escaping(_ error: Error?) -> Void) {
+        
+        let batch = database.batch()    // increment the post's number of likes, add the likers uid to the post's list of likers, add the post to the liker's list of liked posts, add data to the post creator's activity
         
         let postStorageRef = database.collection("posts").document(postID)
         batch.updateData(["like_count": FieldValue.increment(Int64(1))], forDocument: postStorageRef)
-        
         let postLikersDoc = postStorageRef.collection("post_likers").document(uid)
-        batch.setData(["uid": uid!], forDocument: postLikersDoc)
-        
+        batch.setData(["uid": uid], forDocument: postLikersDoc)
         let likedPostsDoc = database.collection("users").document(uid).collection("liked_posts").document(postID)
         batch.setData(["post_ID": postID!], forDocument: likedPostsDoc)
         
-        database.collection("users").document(uid).getDocument { (snapshot, error) in
-            if error != nil {
-                return completion(error!)
+        database.collection("users").document(uid).getDocument { (snapshot, docError) in
+            if docError != nil {
+                return completion(docError)
             }
-            let data = snapshot?.data()
-            let profilePictureURL = data!["profile_image"] as? String ?? ""
-            let username = data!["username"] as? String ?? ""
+            guard let data = snapshot?.data() else { return completion(CustomError(message: "Error liking the post."))}
+            let profilePictureURL = data["profile_image"] as? String ?? ""
+            let username = data["username"] as? String ?? ""
             
             let docID = postID + "_" + uid
             let activityDoc = self.database.collection("users").document(creatoruid!).collection("activity").document(docID)
             let profileObject = ["profile_picture_URL": profilePictureURL, "uid": uid, "username": username]
             batch.setData(["profile": profileObject, "timestamp": Timestamp.init(), "type": "like", "thumbnail_picture_URL": thumbnailPictureURL!], forDocument: activityDoc)
             
-            batch.commit { (error) in
-                if error != nil {
-                    return completion(error!)
+            batch.commit { (batchError) in
+                if batchError != nil {
+                    return completion(batchError)
                 }
+                return completion(nil)
             }
         }
     }
     
-    static func unlikePost(uid: String!, postID: String!, creatoruid: String!, completion: @escaping(_ error: Error?) -> Void) {
+    static func unlikePost(postID: String!, creatoruid: String!, completion: @escaping(_ error: Error?) -> Void) {
         
-        let batch = database.batch()
+        let batch = database.batch()    // decrement the post's number of likes, remove the liker uid from the post's list of likers, remove the post from the liker's list of liked posts, remove the activity from the creator's profile
         
         let postStorageRef = database.collection("posts").document(postID)
         batch.updateData(["like_count": FieldValue.increment(Int64(-1))], forDocument: postStorageRef)
-        
         let postLikersDoc = postStorageRef.collection("post_likers").document(uid)
         batch.deleteDocument(postLikersDoc)
-        
         let likedPostsDoc = database.collection("users").document(uid).collection("liked_posts").document(postID)
         batch.deleteDocument(likedPostsDoc)
         
@@ -196,121 +234,66 @@ class FirebaseUtilities {
         
         batch.commit { (error) in
             if error != nil {
-                return completion(error!)
+                return completion(error)
             }
+            return completion(nil)
         }
     }
     
     // MARK: - Update User Data
     
     static func reauthenticatePasswordUser(email: String!, password: String!, completion: @escaping(_ error: Error?) -> Void) {
-        guard let currentUser = Auth.auth().currentUser else { return }
-        
         let credential = EmailAuthProvider.credential(withEmail: email, password: password)
         currentUser.reauthenticate(with: credential) { (result, error) in
             if error != nil {
-                return completion(error!)
-            } else {
+                return completion(error)
+            }
+            return completion(nil)
+        }
+    }
+    
+    private static func reauthenticateFacebookUser(viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
+        let loginManager = LoginManager()
+        loginManager.authType = .reauthorize
+        loginManager.logIn(permissions: [], from: viewController.self) { (result, logInError) in    // reauthentication only works if soon after login
+            if logInError != nil {
+                return completion(logInError)
+            }
+            let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)
+            currentUser.reauthenticate(with: credential) { (result, reAuthError) in
+                if reAuthError != nil {
+                    return completion(reAuthError)
+                }
                 return completion(nil)
             }
         }
     }
     
-    private static func reauthenticateFacebookUser(user: User!, viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
-        let loginManager = LoginManager()
-        loginManager.authType = .reauthorize
-        loginManager.logIn(permissions: [], from: viewController.self) { (result, error) in
-            if error != nil {
-                return completion(error!)
-            } else {
-                let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)
-                user.reauthenticate(with: credential) { (result, error) in
-                    if error != nil {
-                        return completion(error!)
-                    }
-                    return completion(nil)
-                }
-            }
-        }
-    }
-    
-    static func reauthenticateUser(currentUser: User, viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
-        let providerID = currentUser.providerData[0].providerID
-        for provider in currentUser.providerData {
-            print("Provider ID:", provider.providerID)
-        }
+    // TODO: Reauthenticate phone users
+    static func reauthenticateUser(viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
+        let providerID = currentUser.providerData[0].providerID     // reauthenticating with first provider type of (possible) list of providerIDs
         
-        switch providerID {     // email has own function bc needs password
+        switch providerID {     // email has own function because email reauthentication needs password
         case "facebook.com":
-            reauthenticateFacebookUser(user: currentUser, viewController: viewController) { (error) in
+            reauthenticateFacebookUser(viewController: viewController) { (error) in
                 if error != nil {
-                    return completion(error!)
+                    return completion(error)
                 }
                 return completion(nil)
             }
         case "google.com":  // must make viewController a GIDSignInDelegate and do most work from there
             GIDSignIn.sharedInstance()?.signIn()
             return completion(nil)
-        case "phone":   // TODO: Reauthenticate phone users
+        case "phone":
             break
         default:
-            break
-        }
-    }
-    
-    static func updateUserEmail(user: User, newEmail: String, completion: @escaping(_ error: Error?) -> Void) {
-        user.updateEmail(to: newEmail) { (updateEmailerror) in
-            if updateEmailerror != nil {
-                return completion(updateEmailerror!)
-            }
-            database.collection("users").document(user.uid).updateData(["email": newEmail]) { (error) in
-                if error != nil {
-                    return completion(error)
-                }
-                return completion(nil)
-            }
-        }
-    }
-    
-    static func linkEmailToAccount(currentUser: User, email: String, password: String, completion: @escaping(_ error: Error?) -> Void) {
-        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
-        currentUser.link(with: credential) { (result, error) in
-            if error != nil {
-                return completion(error!)
-            } else {
-                database.collection("users").document(currentUser.uid).updateData(["email": email]) { (dataError) in
-                    if error != nil {
-                        return completion(dataError!)
-                    }
-                    return completion(nil)
-                }
-            }
-        }
-    }
-    
-    static func linkFacebookToAccount(user: User, viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
-        let loginManager = LoginManager()
-        loginManager.authType = .reauthorize
-        loginManager.logIn(permissions: [], from: viewController.self) { (result, error) in
-            if error != nil {
-                return completion(error!)
-            } else {
-                let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)
-                user.link(with: credential) { (result, linkError) in
-                    if error != nil {
-                        return completion(linkError!)
-                    }
-                    return completion(nil)
-                }
-            }
+            return completion(CustomError(message: "Cannot reauthenticate user."))
         }
     }
     
     static func updateUserProfileData(userProperty: String!, oldData: String!, newData: String!, completion: @escaping(_ error: Error?) -> Void) {
-        let uid = Auth.auth().currentUser!.uid
         let userDocRef = database.collection("users").document(uid)
-        
-        guard let newData = newData else { return }
+        guard let newData = newData else { return completion(CustomError(message: "No new data to set."))}
         
         switch userProperty {
         case "Name":
@@ -318,26 +301,25 @@ class FirebaseUtilities {
         case "Username":
             let batch = database.batch()
             
-            // update username in user document
-            batch.updateData(["username": newData], forDocument: userDocRef)
+            batch.updateData(["username": newData], forDocument: userDocRef)     // update username in user document
             
             let usernameEmailPath = database.collection("usernames").document(oldData)
             usernameEmailPath.getDocument { (usernameEmailDoc, usernameEmailError) in
+                if usernameEmailError != nil {
+                    return completion(usernameEmailError)
+                }
                 guard let data = usernameEmailDoc?.data() else { return }
                 let email = data["email"] as? String ?? ""
-                // create new username/email doc
-                let newUsernameEmailPath = database.collection("usernames").document(newData)
+                let newUsernameEmailPath = database.collection("usernames").document(newData)    // create new username/email doc
                 batch.setData(["email": email], forDocument: newUsernameEmailPath)
                 
-                // delete old username in username-email
-                batch.deleteDocument(usernameEmailPath)
+                batch.deleteDocument(usernameEmailPath)    // delete old username in username-email
                 
-                // change username on all the users posts
-                userDocRef.collection("posts").getDocuments { (snapshot, error) in
-                    if error != nil {
-                        return completion(error!)
+                userDocRef.collection("posts").getDocuments { (snapshot, postDocError) in     // change username on all the users posts
+                    if postDocError != nil {
+                        return completion(postDocError)
                     }
-                    guard let unwrappedSnapshot = snapshot else { return }
+                    guard let unwrappedSnapshot = snapshot else { return completion(CustomError(message: "Error updating user data.")) }
                     let documents = unwrappedSnapshot.documents
                     
                     for document in documents {
@@ -348,7 +330,7 @@ class FirebaseUtilities {
                     
                     batch.commit { (batchError) in
                         if batchError != nil {
-                            return completion(batchError!)
+                            return completion(batchError)
                         }
                     }
                 }
@@ -364,19 +346,85 @@ class FirebaseUtilities {
         }
     }
     
+    static func updateUserEmail(newEmail: String, completion: @escaping(_ error: Error?) -> Void) {
+        currentUser.updateEmail(to: newEmail) { (updateEmailerror) in   // update Authentication email
+            if updateEmailerror != nil {
+                return completion(updateEmailerror)
+            }
+            
+            database.collection("users").document(uid).getDocument { (snapshot, docError) in
+                if docError != nil {
+                    return completion(docError)
+                }
+                guard let data = snapshot?.data() else { return completion(CustomError(message: "Error updating user email.")) }
+                let username = data["username"] as! String
+                
+                let batch = database.batch()
+                
+                let userDoc = database.collection("users").document(uid)
+                batch.updateData(["email": newEmail], forDocument: userDoc)
+                let usernameEmailDoc = database.collection("usernames").document(username)
+                batch.updateData(["email": newEmail], forDocument: usernameEmailDoc)
+                
+                batch.commit { (batchError) in
+                    if batchError != nil {
+                        return completion(batchError)
+                    }
+                    return completion(nil)
+                }
+            }
+        }
+    }
+    
+    // Link Login Methods
+    
+    static func linkEmailToAccount(currentUser: User, email: String, password: String, completion: @escaping(_ error: Error?) -> Void) {
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        currentUser.link(with: credential) { (result, linkError) in     // link user current account with email account
+            if linkError != nil {
+                return completion(linkError)
+            } else {
+                updateUserEmail(newEmail: email) { (updateError) in     // slightly redundant because updating email directly after linking/setting it, but updating info correctly.
+                    if updateError != nil {
+                        return completion(updateError)
+                    }
+                    return completion(nil)
+                }
+            }
+        }
+    }
+    
+    static func linkFacebookToAccount(viewController: UIViewController, completion: @escaping(_ error: Error?) -> Void) {
+        let loginManager = LoginManager()
+        loginManager.authType = .reauthorize
+        loginManager.logIn(permissions: [], from: viewController.self) { (result, logInError) in
+            if logInError != nil {
+                return completion(logInError)
+            } else {
+                let credential = FacebookAuthProvider.credential(withAccessToken: AccessToken.current!.tokenString)     // Link Facebook account with credential
+                currentUser.link(with: credential) { (result, linkError) in
+                    if linkError != nil {
+                        return completion(linkError)
+                    }
+                    return completion(nil)
+                }
+            }
+        }
+    }
+    
     // MARK: - User Interaction
     
-    static func followUser(uid: String!, uidToFollow: String!, completion: @escaping(_ error: Error?) -> Void) {
-        let batch = database.batch()
-        
-        getUsername(uid: uid) { (username, error) in
-            if error != nil {
-                return completion(error!)
-            } else {
+    static func followUser(uidToFollow: String!, completion: @escaping(_ error: Error?) -> Void) {
                 
+        getUsername(userID: uid) { (username, usernameError) in
+            if usernameError != nil {
+                return completion(usernameError)
+            } else {
+                let batch = database.batch()
+
                 // update relationship in relationships collection
-                let relationshipDocPath = database.collection("relationships").document("\(uid!)_\(uidToFollow!)")
-                batch.setData(["follower_uid": uid!, "following_uid": uidToFollow!, "follower_username": username!], forDocument: relationshipDocPath)
+                let relationshipDocPath = database.collection("relationships").document("\(uid)_\(uidToFollow!)")
+                batch.setData(["follower_uid": uid, "following_uid": uidToFollow!, "follower_username": username!], forDocument: relationshipDocPath)
                 
                 // add 1 to current user's following count
                 let userDocPath = database.collection("users").document(uid)
@@ -391,18 +439,18 @@ class FirebaseUtilities {
                 batch.setData(["following_uid": uidToFollow!], forDocument: followinguidPath)
                 
                 // add the profile user's post ids to the current user's subcollection of post ids
-                getPostIDs(userID: uidToFollow, collection: "posts") { (postIDs, error) in
-                    if error != nil {
-                        return completion(error!)
+                getPostIDs(userID: uidToFollow, collection: "posts") { (postIDs, getPostsError) in
+                    if getPostsError != nil {
+                        return completion(getPostsError)
                     }
                     for postID in postIDs! {
                         let followingPostIDsPath = userDocPath.collection("following_post_IDs").document(postID)
                         batch.setData(["following_uid": uidToFollow!], forDocument: followingPostIDsPath)
                     }
                     
-                    batch.commit { (error) in
-                        if error != nil {
-                            return completion(error!)
+                    batch.commit { (batchError) in
+                        if batchError != nil {
+                            return completion(batchError)
                         }
                         return completion(nil)
                     }
@@ -411,11 +459,11 @@ class FirebaseUtilities {
         }
     }
     
-    static func unfollowerUser(uid: String!, uidToUnfollow: String!, completion: @escaping(_ error: Error?) -> Void) {
+    static func unfollowerUser(uidToUnfollow: String!, completion: @escaping(_ error: Error?) -> Void) {
         let batch = database.batch()
         
         // delete the relationship in the relationships collection
-        let relationshipDocPath = database.collection("relationships").document("\(uid!)_\(uidToUnfollow!)")
+        let relationshipDocPath = database.collection("relationships").document("\(uid)_\(uidToUnfollow!)")
         batch.deleteDocument(relationshipDocPath)
         
         // subtract 1 from current user's following count
@@ -432,29 +480,29 @@ class FirebaseUtilities {
         
         // delete the profile user's post ids from the current user's subcollection of post ids
         // not the best, but should work for now
-        getPostIDs(userID: uidToUnfollow, collection: "posts") { (postIDs, error) in
-            if error != nil {
-                return completion(error!)
+        getPostIDs(userID: uidToUnfollow, collection: "posts") { (postIDs, getPostsError) in
+            if getPostsError != nil {
+                return completion(getPostsError)
             }
             for postID in postIDs! {
                 let followingPostIDsPath = userDocPath.collection("following_post_IDs").document(postID)
                 batch.deleteDocument(followingPostIDsPath)
             }
             
-            batch.commit { (error) in
-                if error != nil {
-                    return completion(error!)
+            batch.commit { (batchError) in
+                if batchError != nil {
+                    return completion(batchError)
                 }
             }
         }
     }
     
-    static func getUsername(uid: String, completion: @escaping(_ username:String?, _ error: Error?) -> Void) {
-        database.collection("users").document(uid).getDocument { (snapshot, error) in
+    static func getUsername(userID: String, completion: @escaping(_ username:String?, _ error: Error?) -> Void) {
+        database.collection("users").document(userID).getDocument { (snapshot, error) in
             if error != nil {
-                return completion(nil, error!)
+                return completion(nil, error)
             }
-            guard let documentData = snapshot?.data() else { return completion(nil, "There is no user corresponding to that identifier." as? Error) }
+            guard let documentData = snapshot?.data() else { return completion(nil, CustomError(message: "Failed to get user's username.")) }
             let username = documentData["username"] as? String ?? ""
             return completion(username, nil)
         }
@@ -463,10 +511,10 @@ class FirebaseUtilities {
     // MARK: - Profile Navigation
     
     static func checkIfFollowing(followeruid: String!, followinguid: String?, completion: @escaping(_ isFollowing:Bool?, _ error: Error?) -> Void) {
-        guard let followinguid = followinguid else { return }
+        guard let followinguid = followinguid else { return completion(nil, CustomError(message: "Error fetching following status.")) }
         database.collection("relationships").document("\(followeruid!)_\(followinguid)").getDocument { (document, error) in
             if error != nil {
-                return completion(nil, error!)
+                return completion(nil, error)
             }
             if document!.exists {
                 return completion(true, nil)
@@ -479,10 +527,10 @@ class FirebaseUtilities {
     // MARK: - Post Generation
     
     // Check if a user has liked a post given the post ID, returns the boolean in the completion block
-    static func checkIfLiked(uid: String, postID: String, completion: @escaping(_ isLiked:Bool?, _ error: Error?) -> Void) {
+    static func checkIfLiked(postID: String, completion: @escaping(_ isLiked:Bool?, _ error: Error?) -> Void) {
         database.collection("posts").document(postID).collection("post_likers").document(uid).getDocument { (document, error) in
             if error != nil {
-                return completion(nil, error!)
+                return completion(nil, error)
             }
             if document!.exists {
                 return completion(true, nil)
@@ -498,15 +546,13 @@ class FirebaseUtilities {
             if error != nil {
                 return completion(nil, error!)
             }
-            guard let unwrappedSnapshot = snapshot else { return }
+            guard let unwrappedSnapshot = snapshot else { return completion(nil, CustomError(message: "Error fetching posts."))}
             let documents = unwrappedSnapshot.documents
             
             var postIDs = [String]()
             
             for document in documents {
-                
                 let id = document.documentID
-                
                 postIDs.append(id)
             }
             return completion(postIDs, nil)
@@ -516,9 +562,9 @@ class FirebaseUtilities {
     static func getUserPostPreviews(profileuid: String!, completion: @escaping(_ newPostPreviews:[PostPreview]?, _ error: Error?) -> ()) {
         database.collection("users").document(profileuid).collection("posts").getDocuments { (snapshot, error) in
             if error != nil {
-                return completion(nil, error!)
+                return completion(nil, error)
             }
-            guard let unwrappedSnapshot = snapshot else { return }
+            guard let unwrappedSnapshot = snapshot else { return completion(nil, CustomError(message: "Error fetching user posts."))}
             let documents = unwrappedSnapshot.documents
             
             var postPreviews = [PostPreview]()
@@ -543,9 +589,9 @@ class FirebaseUtilities {
         
         queryRef.getDocuments { (snapshot, error) in
             if error != nil {
-                return completion(nil, error!)
+                return completion(nil, error)
             }
-            guard let unwrappedSnapshot = snapshot else { return }
+            guard let unwrappedSnapshot = snapshot else { return completion(nil, CustomError(message: "Error fetching explore posts."))}
             let documents = unwrappedSnapshot.documents
             
             var tempPostPreviews = [PostPreview]()
@@ -580,9 +626,9 @@ class FirebaseUtilities {
             
             queryRef.getDocuments { (snapshot, error) in
                 if error != nil {
-                    return completion(nil, error!)
+                    return completion(nil, error)
                 }
-                guard let unwrappedSnapshot = snapshot else { return }
+                guard let unwrappedSnapshot = snapshot else { return completion(nil, CustomError(message: "Error fetching posts."))}
                 let documents = unwrappedSnapshot.documents
                 
                 var tempPosts = [Post]()
@@ -624,12 +670,11 @@ class FirebaseUtilities {
     
     static func createDare(dareTitle: String, completion: @escaping(_ error: Error?) -> Void) {
         let trimmedTitle = dareTitle.replacingOccurrences(of: " ", with: "")
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        database.collection("users").document(uid).getDocument { (snapshot, error) in
-            if error != nil {
-                return completion(error!)
+        database.collection("users").document(uid).getDocument { (snapshot, userDocError) in
+            if userDocError != nil {
+                return completion(userDocError)
             }
-            guard let documentData = snapshot?.data() else { return }
+            guard let documentData = snapshot?.data() else { return completion(CustomError(message: "Error creating dare."))}
             let profilePictureURL = documentData["profile_image"] as? String ?? ""
             let username = documentData["username"] as? String ?? ""
             
@@ -642,9 +687,9 @@ class FirebaseUtilities {
             batch.setData(dareDocData, forDocument: dareDoc)
             batch.setData(dareDocData, forDocument: userDoc)
             
-            batch.commit { (error) in
-                if error != nil {
-                    return completion(error!)
+            batch.commit { (batchError) in
+                if batchError != nil {
+                    return completion(batchError)
                 }
                 return completion(nil)
             }

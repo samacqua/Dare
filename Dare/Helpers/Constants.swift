@@ -15,7 +15,7 @@ struct Constants {
     
     // Colors
     
-    static let collectionViewBackgroundColor = UIColor(white: 0.1, alpha: 1.0)
+    static let realDarkGray = UIColor(white: 0.1, alpha: 1.0)
     
     // Edit Profile
     
@@ -39,10 +39,4 @@ struct Constants {
     // Example Dares
     
     static let exampleDares: [String] = ["Streak across Briggs 🤫", "Play wiffel ball in Lobby 10", "Hack to the top of the Dome", "Spend 24 hours in Maseeh D"]
-    
-    // Algolia
-    
-    static let algoliaAppID = "XRBQ9N6GVU"
-    static let algoliaReadAPIKey = "bdaee368ff1c8b1924aab8f0f5d1954a"
-    
 }

@@ -1,5 +1,5 @@
 //
-//  SegmentedControlExtension.swift
+//  Extensions.swift
 //  Dare
 //
 //  Created by Sam Acquaviva on 2/2/20.
@@ -9,6 +9,7 @@
 import UIKit
 
 extension UISegmentedControl{
+    
     func removeBorder(){
         let backgroundImage = UIImage.getColoredRectImageWith(color: UIColor.white.cgColor, andSize: self.bounds.size)
         self.setBackgroundImage(backgroundImage, for: .normal, barMetrics: .default)
@@ -56,6 +57,17 @@ extension UIImage{
         let rectangleImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return rectangleImage!
+    }
+    
+    static func from(color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+        context!.setFillColor(color.cgColor)
+        context!.fill(rect)
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return img!
     }
 }
 
@@ -114,35 +126,6 @@ extension Date {
     }
 }
 
-extension UIImage {
-    static func from(color: UIColor) -> UIImage {
-        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        UIGraphicsBeginImageContext(rect.size)
-        let context = UIGraphicsGetCurrentContext()
-        context!.setFillColor(color.cgColor)
-        context!.fill(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return img!
-    }
-}
-
-extension UIView {
-    
-    func addConstraintsWithFormat(format: String, views: UIView...) {
-        
-        var viewsDict = [String: UIView]()
-        
-        for (index, view) in views.enumerated() {
-            
-            view.translatesAutoresizingMaskIntoConstraints = false
-            viewsDict["v\(index)"] = view
-        }
-        
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict))
-    }
-}
-
 // Class to allow for padding on UILabel even when using autolayout. From https://stackoverflow.com/a/58876988/5416200
 class UILabelPadded: UILabel {
     let UIEI = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
@@ -170,8 +153,16 @@ class UILabelPadded: UILabel {
 
 extension UIView {
     
+    func addConstraintsWithFormat(format: String, views: UIView...) {
+        var viewsDict = [String: UIView]()
+        for (index, view) in views.enumerated() {
+            view.translatesAutoresizingMaskIntoConstraints = false
+            viewsDict["v\(index)"] = view
+        }
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: format, options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: viewsDict))
+    }
+    
     func showToast(message : String) {
-        
         print(message)
         
         let toastLabel = UILabelPadded()
@@ -211,4 +202,7 @@ extension UIView {
                 toastLabel.removeFromSuperview()
             })
         })
-    } }
+    }
+}
+
+
