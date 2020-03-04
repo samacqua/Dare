@@ -529,7 +529,6 @@ class FirebaseUtilities {
                 let thumbnail = documentData["thumbnail_image"] as? String ?? ""
                 
                 let postPreview = PostPreview(postID: id, thumbnailImageURL: thumbnail)
-                
                 postPreviews.append(postPreview)
             }
             return completion(postPreviews, nil)
