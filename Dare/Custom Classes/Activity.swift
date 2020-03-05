@@ -17,6 +17,7 @@ class Activity: NSObject {
     
     var thumbnailPictureURL: String!
     var comment: String!
+    var postID: String!
     
     var isCurrentUserFollowing: Bool!
     

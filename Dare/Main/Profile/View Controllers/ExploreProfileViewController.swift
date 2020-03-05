@@ -28,7 +28,7 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
     let uid = Auth.auth().currentUser!.uid
     
     var needsToLoad: Bool = true
-    
+        
     // MARK: - Initialization and Setup
     
     init() {
@@ -56,9 +56,7 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
         self.view.addSubnode(collectionNode)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
-        
+    override func viewWillAppear(_ animated: Bool) {        
         if needsToLoad {
             fetchUserData()
             FirebaseUtilities.getUserPostPreviews(profileuid: creatoruid) { (postPreviews, error) in
@@ -281,7 +279,11 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
             return
         } else if indexPath.section == 1 {
             let postSelectedVC = ProfilePostSelectedViewController()
-            postSelectedVC.postPreviews = userPosts
+            var postIDs = [""]
+            for post in userPosts {
+                postIDs.append(post.postID)
+            }
+            postSelectedVC.postIDs = postIDs
             postSelectedVC.postIndexPathRow = indexPath.row
             self.navigationController?.show(postSelectedVC, sender: self)
         } else {

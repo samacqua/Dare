@@ -19,7 +19,7 @@ class StartViewController: UIViewController {
     var loginButton: UIButton!
     
     var initial = true
-    
+        
     // MARK: - Setup
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,7 +43,6 @@ class StartViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print("View will disappear")
         videoPlayer?.pause()
     }
     

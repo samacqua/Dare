@@ -27,7 +27,7 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     let db = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
     let database = Firestore.firestore()
-        
+            
     // MARK: - Initialization and Setup
 
     init() {
@@ -356,7 +356,11 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
             print("------------profile--------------")
             print(userPosts)
             let postSelectedVC = ProfilePostSelectedViewController()
-            postSelectedVC.postPreviews = userPosts
+            var postIDs = [""]
+            for post in userPosts {
+                postIDs.append(post.postID)
+            }
+            postSelectedVC.postIDs = postIDs
             postSelectedVC.postIndexPathRow = indexPath.row
             navigationController?.show(postSelectedVC, sender: self)
         } else if indexPath.section == 1  && !onCompleted {

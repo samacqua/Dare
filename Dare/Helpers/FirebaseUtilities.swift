@@ -206,7 +206,7 @@ class FirebaseUtilities {
             let docID = postID + "_" + uid
             let activityDoc = self.database.collection("users").document(creatoruid!).collection("activity").document(docID)
             let profileObject = ["profile_picture_URL": profilePictureURL, "uid": uid, "username": username]
-            batch.setData(["profile": profileObject, "timestamp": Timestamp.init(), "type": "like", "thumbnail_picture_URL": thumbnailPictureURL!], forDocument: activityDoc)
+            batch.setData(["profile": profileObject, "timestamp": FieldValue.serverTimestamp(), "type": "like", "thumbnail_picture_URL": thumbnailPictureURL!, "post_ID": postID!], forDocument: activityDoc)
             
             batch.commit { (batchError) in
                 if batchError != nil {
@@ -415,13 +415,13 @@ class FirebaseUtilities {
     // MARK: - User Interaction
     
     static func followUser(uidToFollow: String!, completion: @escaping(_ error: Error?) -> Void) {
-                
+        
         getUsername(userID: uid) { (username, usernameError) in
             if usernameError != nil {
                 return completion(usernameError)
             } else {
-                let batch = database.batch()
-
+                let batch = database.batch()    // activity update done over cloud function
+                
                 // update relationship in relationships collection
                 let relationshipDocPath = database.collection("relationships").document("\(uid)_\(uidToFollow!)")
                 batch.setData(["follower_uid": uid, "following_uid": uidToFollow!, "follower_username": username!], forDocument: relationshipDocPath)
@@ -477,6 +477,10 @@ class FirebaseUtilities {
         // delete the uid of profile user from the subcollection of following uids in current user's document
         let followinguidPath = userDocPath.collection("following").document(uidToUnfollow)
         batch.deleteDocument(followinguidPath)
+        
+        // delete the activity document in the unfollowed users data
+        let activityDocPath = followingUserDocPath.collection("activity").document("\(uid)_\(uidToUnfollow!)")
+        batch.deleteDocument(activityDocPath)
         
         // delete the profile user's post ids from the current user's subcollection of post ids
         // not the best, but should work for now
@@ -679,7 +683,7 @@ class FirebaseUtilities {
             let username = documentData["username"] as? String ?? ""
             
             let batch = database.batch()
-
+            
             let dareDocData = ["creator_profile_picture": profilePictureURL, "creator_uid": Auth.auth().currentUser!.uid, "creator_username": username, "dare_full_name": dareTitle]
             let dareDoc = database.collection("dares").document(trimmedTitle)
             let userDoc = database.collection("users").document(uid).collection("dares_created").document(trimmedTitle)
@@ -692,6 +696,66 @@ class FirebaseUtilities {
                     return completion(batchError)
                 }
                 return completion(nil)
+            }
+        }
+    }
+    
+    // MARK: - Activity
+    
+    static func fetchRecentActivity(completion: @escaping(_ activityInstances: [Activity]?, _ error: Error?) -> Void) {
+        
+        let activityRef = database.collection("users").document(uid).collection("activity")
+        var queryRef: Query
+        
+        queryRef = activityRef.order(by: "timestamp", descending: true).limit(to: 10)   // get the 10 most recent activities
+        queryRef.getDocuments { (snapshot, queryError) in
+            if queryError != nil {
+                return completion(nil, queryError)
+            }
+            guard let unwrappedSnapshot = snapshot else { return }
+            let documents = unwrappedSnapshot.documents
+            
+            var activitiesCheckedCount = 0  // since it is necessary to do an asynchronous function within the for loop, the for loop may complete before the asynchronous function is complete. So, there has to be a check to ensure async functions completed.
+            var activities = [Activity]()
+            
+            for document in documents {
+                let documentData = document.data()
+                
+                let postID = documentData["post_ID"] as? String ?? ""
+                let timestamp = documentData["timestamp"] as! Timestamp? ?? Timestamp(date: Date(timeIntervalSince1970: 0))
+                let timestampDate = Date(timeIntervalSince1970: TimeInterval(timestamp.seconds))
+                
+                let profileData = documentData["profile"] as? [String: Any] ?? ["":""]
+                let profilePictureURL = profileData["profile_picture_URL"] as? String ?? ""
+                let notificationuid = profileData["uid"] as? String ?? ""
+                let username = profileData["username"] as? String ?? ""
+                
+                let type = documentData["type"] as? String ?? ""
+                
+                let activity = Activity(uid: notificationuid, profilePictureURL: profilePictureURL, username: username, type: type, timestamp: timestampDate)
+                
+                if type == "like" || type == "comment" {
+                    let thumbnailPictureURL = documentData["thumbnail_picture_URL"] as? String ?? ""
+                    activity.thumbnailPictureURL = thumbnailPictureURL
+                    activity.postID = postID
+                    
+                    activities.append(activity)
+                    activitiesCheckedCount += 1
+                } else if type == "follow" {
+                    FirebaseUtilities.checkIfFollowing(followeruid: self.uid, followinguid: notificationuid) { (isFollowing, followingError) in
+                        if followingError != nil {
+                            return completion(nil, followingError)
+                        }
+                        activity.isCurrentUserFollowing = isFollowing!
+                        activities.append(activity)
+                        activitiesCheckedCount += 1
+                        
+                        if activitiesCheckedCount >= documents.count {  // @ the end of each for loop, adds 1 to activitiesCheckedCount. if this number is >= number of documents, completed query and can return
+                            activities.sort(by: {$0.timestamp.timeIntervalSinceReferenceDate > $1.timestamp.timeIntervalSinceReferenceDate})    // since async functions may finish after for loop completed, despite query being reversed timestamp, the returned array may be out of order. So, sorting it.
+                            return completion(activities, nil)
+                        }
+                    }
+                }
             }
         }
     }

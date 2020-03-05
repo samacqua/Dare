@@ -16,6 +16,7 @@ class CreateScrollViewController: UIViewController {
     var cameraView: CameraView!
     var randomDareView: RandomDareView!
     
+    
     override var prefersStatusBarHidden: Bool { return true }
     
     override func viewDidLoad() {
@@ -34,6 +35,7 @@ class CreateScrollViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
         self.tabBarController?.tabBar.isHidden = false
     }
     

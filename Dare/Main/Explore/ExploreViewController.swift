@@ -21,7 +21,7 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     let database = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
     let storageRef = Storage.storage().reference()
-    
+        
     // MARK: - Initialization and Setup
     
     // Setup collectionNode layout
@@ -35,7 +35,6 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
         flowLayout.minimumLineSpacing = 1
         flowLayout.itemSize.width = self.view.bounds.width / 3 - 1
         flowLayout.itemSize.height = flowLayout.itemSize.width * 1.5
-
     }
     
     required init?(coder: NSCoder) {
@@ -46,31 +45,27 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Explore"
+        self.tabBarItem.title = nil
+        
         collectionNode.delegate = self
         collectionNode.dataSource = self
         collectionNode.view.allowsSelection = true
         collectionNode.view.backgroundColor = UIColor.white
         collectionNode.showsVerticalScrollIndicator = false
         collectionNode.leadingScreensForBatching = 2.0
-        
-        self.title = "Explore"
-        self.tabBarItem.title = nil
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         setUpNavBar()
     }
     
-    func setUpNavBar() {
-        self.tabBarController?.tabBar.isHidden = false
-        
+    func setUpNavBar() {        
         let searchController = UISearchController(searchResultsController: ExploreSearchViewController())
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = true
         
-//        searchController.searchResultsUpdater = 
         searchController.searchBar.placeholder = "Search"
         definesPresentationContext = true
     }
@@ -79,7 +74,7 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     
     func collectionNode(_ collectionNode: ASCollectionNode, nodeForItemAt indexPath: IndexPath) -> ASCellNode {
         let cellNode = ExploreCellNode()
-//        cellNode.thumbnailImage.url = URL(string: self.postPreviews[indexPath.row].thumbnailImageURL)     // TODO: Cloud function to reduce size of thumbnail images
+        cellNode.thumbnailImage.url = URL(string: self.postPreviews[indexPath.row].thumbnailImageURL)     // TODO: Cloud function to reduce size of thumbnail images
         return cellNode
     }
     

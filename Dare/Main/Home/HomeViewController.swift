@@ -61,7 +61,7 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
     
     var tabBarBackgroundImage = UIImage()
     var tabBarShadowImage = UIImage()
-    
+        
     // MARK: - Initialization and Setup
     
     // Setup collectionNode layout
@@ -93,8 +93,6 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
         collectionNode.view.decelerationRate = UIScrollView.DecelerationRate.fast
         collectionNode.showsVerticalScrollIndicator = false
         collectionNode.leadingScreensForBatching = 2.0
-        
-        self.tabBarController?.tabBar.isHidden = false
     }
     
     override var prefersStatusBarHidden: Bool { true }
@@ -116,6 +114,8 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
     // Format tab bar for other views
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
         let tabBar = self.tabBarController!.tabBar
         
         tabBar.barTintColor = .black

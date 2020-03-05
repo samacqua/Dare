@@ -10,13 +10,9 @@ import AsyncDisplayKit
 import FirebaseFirestore
 import FirebaseAuth
 
-class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, ASTableDataSource, UITextViewDelegate {
+class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, ASTableDataSource, UITextViewDelegate, HalfModalPresentable {
     
     var postID: String!
-    
-    var headerView: UIView!
-    var exitButton: UIButton!
-    var headerTitle: UILabel!
     
     var footerView: UIView!
     var textView: UITextView!
@@ -44,7 +40,6 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
         super.init(node: ASTableNode())
         tableNode.delegate = self
         tableNode.dataSource = self
-        setUpHeaderView()
         setUpFooterView()
     }
     
@@ -59,9 +54,11 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Comments"
+        
         tableNode.view.allowsSelection = true
         tableNode.view.separatorStyle = .singleLine
-        tableNode.view.backgroundColor = .gray
+        tableNode.view.backgroundColor = UIColor(white: 0.92, alpha: 1.0)
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotification), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotification), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -72,34 +69,6 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    func setUpHeaderView() {
-        headerView = UIView()
-        headerView.backgroundColor = .white
-        
-        exitButton = UIButton(type: .system)
-        let exitImage = UIImage(named: "exit_cross")
-        exitButton.setImage(exitImage, for: .normal)
-        exitButton.translatesAutoresizingMaskIntoConstraints = false
-        exitButton.addTarget(self, action: #selector(exitTouchUpInside), for: .touchUpInside)
-        headerView.addSubview(exitButton)
-        
-        headerTitle = UILabel()
-        headerTitle.text = "Comments"
-        headerTitle.font = UIFont.boldSystemFont(ofSize: 20)
-        headerTitle.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(headerTitle)
-        
-        NSLayoutConstraint.activate([
-            exitButton.heightAnchor.constraint(equalToConstant: 30),
-            exitButton.widthAnchor.constraint(equalToConstant: 30),
-            exitButton.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
-            exitButton.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10),
-            
-            headerTitle.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10),
-            headerTitle.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
-        ])
     }
     
     var bottomConstraint: NSLayoutConstraint?
@@ -297,59 +266,26 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
         cellNode.commentLabel.attributedText = NSAttributedString(string: commentText, attributes: commentAttributes)
         cellNode.profileImageView.url = URL(string: comments[indexPath.row].profilePictureURL)
         
-        let likeCountText = self.comments[indexPath.row].numberOfLikes
-        cellNode.likeCountLabel.attributedText = NSAttributedString(string: String(likeCountText), attributes: usernameAttributes)
-        
         return cellNode
     }
     
     func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
-        print("selected comment at \(indexPath.row)")
-//        let commenteruid = self.comments[indexPath.row].uid
-//        if commenteruid != uid {
-//            let exploreProfileVC = ExploreProfileViewController()
-//            exploreProfileVC.creatoruid = commenteruid
-//            show(exploreProfileVC, sender: self)
-//        } else {
-//            let profileVC = ProfileViewController()
-//            show(profileVC, sender: self)
-//        }
+        let commenteruid = self.comments[indexPath.row].uid
+        if commenteruid != uid {
+            let exploreProfileVC = ExploreProfileViewController()
+            exploreProfileVC.creatoruid = commenteruid
+            maximizeToFullScreen()
+            navigationController?.show(exploreProfileVC, sender: self)
+        } else {
+            let profileVC = ProfileViewController()
+            maximizeToFullScreen()
+            navigationController?.show(profileVC, sender: self)
+        }
     }
     
     func tableNode(_ tableNode: ASTableNode, numberOfRowsInSection section: Int) -> Int {
         return self.comments.count
     }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return headerView
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
-    
-//     trying to get comments header to stick to top of half view
-    
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print(scrollView.contentOffset.y)
-//        if scrollView.contentOffset.y < 0.0 {
-////            if let cell = tableNode.view.headerView(forSection: 0) {
-////                print("cell exists")
-//                headerView.frame.origin.y = scrollView.contentOffset.y
-//            headerView.frame.size.height += scrollView.contentOffset.y * (-1.0)
-//            tableNode.relayoutItems()
-//            print("Header view origin y:", headerView.frame.origin.y)
-////            }
-//        }
-//    }
-    
-//    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-//        return footerView
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 40
-//    }
     
     // MARK: - Texture Batch Fetch
     

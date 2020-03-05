@@ -29,7 +29,6 @@ class MainTabBarController: UITabBarController {
         homeVC.tabBarItem.imageInsets = UIEdgeInsets(top: offset, left: 0, bottom: -offset, right: 0)
         homeVC.tabBarItem.tag = 0
         
-        
         let exploreVC = ExploreViewController()
         let exploreTabBarImageUnselected = UIImage(named: "search_unselected")
         let exploreTabBarImageSelected = UIImage(named: "search_selected")
@@ -79,9 +78,6 @@ extension MainTabBarController: UITabBarControllerDelegate {
 
 final class TabBarAnimatedTransitioning: NSObject, UIViewControllerAnimatedTransitioning {
 
-    /*
-     Tells your animator object to perform the transition animations.
-     */
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         guard let destination = transitionContext.view(forKey: UITransitionContextViewKey.to) else { return }
 
@@ -94,10 +90,7 @@ final class TabBarAnimatedTransitioning: NSObject, UIViewControllerAnimatedTrans
             destination.transform = .identity
         }, completion: { transitionContext.completeTransition($0) })
     }
-
-    /*
-     Asks your animator object for the duration (in seconds) of the transition animation.
-     */
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.25
     }

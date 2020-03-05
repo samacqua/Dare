@@ -6,15 +6,14 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import UIKit
-import AVFoundation
 import AsyncDisplayKit
+import AVFoundation
 import FirebaseFirestore
 import FirebaseAuth
 
 class PostCellNode: ASCellNode {
     
-    private var detailsTransitioningDelegate: InteractiveModalTransitioningDelegate!
+    var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
     
     var dareButton = ASButtonNode()
     
@@ -46,7 +45,7 @@ class PostCellNode: ASCellNode {
     let profileImageDimension = 50.0
     
     var thumbnailPictureURL: String!
-        
+            
     // MARK: - Initialization and setup
     
     override init() {
@@ -58,7 +57,7 @@ class PostCellNode: ASCellNode {
     override func didLoad() {
         super.didLoad()
         checkIfLiked()
-//        playVideo()
+        playVideo()
     }
     
     func setUpElements() {
@@ -182,12 +181,15 @@ class PostCellNode: ASCellNode {
     }
     
     @objc func commentButtonTapped() {
-        let commentVC = CommentViewController()
-        detailsTransitioningDelegate = InteractiveModalTransitioningDelegate(from: parentViewController!, to: commentVC)
-        commentVC.modalPresentationStyle = .custom
-        commentVC.transitioningDelegate = detailsTransitioningDelegate
-        commentVC.postID = postID
-        parentViewController?.present(commentVC, animated: true, completion: nil)
+        
+        let vc = CommentViewController()
+        vc.postID = postID
+        let destination = UINavigationController(rootViewController: vc)
+        self.halfModalTransitioningDelegate = HalfModalTransitioningDelegate(viewController: parentViewController!.self, presentingViewController: destination)
+        
+        destination.modalPresentationStyle = .custom
+        destination.transitioningDelegate = self.halfModalTransitioningDelegate
+        parentViewController!.present(destination, animated: true, completion: nil)
     }
     
     @objc func shareButtonTapped() {

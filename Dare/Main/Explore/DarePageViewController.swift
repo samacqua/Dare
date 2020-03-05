@@ -54,7 +54,6 @@ class DarePageViewController: ASViewController<ASDisplayNode>, ASCollectionDataS
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.navigationController?.setNavigationBarHidden(false, animated: animated)
         fetchDare()
         self.navigationItem.title = dare.dareNameFull
     }

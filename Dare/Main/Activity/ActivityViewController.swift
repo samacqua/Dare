@@ -42,85 +42,27 @@ final class ActivityViewController: ASViewController<ASDisplayNode>, ASTableData
         
         tableNode.view.allowsSelection = true
         tableNode.view.separatorStyle = .singleLine
-        tableNode.view.backgroundColor = .white
+        tableNode.view.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         
-        fetchRecentActivity()
-    }
-
-    // MARK: - Functions
-    
-    func fetchRecentActivity() {
-        
-        print("Fetching recent activity")
-        
-        let activityRef = database.collection("users").document(uid).collection("activity")
-        var queryRef: Query
-        
-        queryRef = activityRef.order(by: "timestamp", descending: true).limit(to: 10)
-        queryRef.getDocuments { (snapshot, error) in
+        FirebaseUtilities.fetchRecentActivity { (activities, error) in  // TODO: Update based on scroll
             if error != nil {
-                print("Error retrieving recent activity: ", error!)
+                self.view.showToast(message: error!.localizedDescription)
             }
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-                        
-            print("Got activity documents. There are " + String(documents.count) + " documents")
-            
-            for document in documents {
-                let documentData = document.data()
-                
-                print("Document data:", documentData)
-                
-                let timestamp = documentData["timestamp"] as! Timestamp? ?? Timestamp(date: Date(timeIntervalSince1970: 0))
-                let timestampDate = Date(timeIntervalSince1970: TimeInterval(timestamp.seconds))
-                
-                let profileData = documentData["profile"] as? [String: Any] ?? ["":""]
-                let profilePictureURL = profileData["profile_picture_URL"] as? String ?? ""
-                let notificationuid = profileData["uid"] as? String ?? ""
-                let username = profileData["username"] as? String ?? ""
-                
-                let type = documentData["type"] as? String ?? ""
-                
-                let activity = Activity(uid: notificationuid, profilePictureURL: profilePictureURL, username: username, type: type, timestamp: timestampDate)
-
-                if type == "like" || type == "comment" {
-                    let thumbnailPictureURL = documentData["thumbnail_picture_URL"] as? String ?? "No thumbnail picture URL"
-                    activity.thumbnailPictureURL = thumbnailPictureURL
-                    self.activityInstances.append(activity)
-                    self.tableNode.reloadData()
-                } else if type == "follow" {
-                    FirebaseUtilities.checkIfFollowing(followeruid: self.uid, followinguid: notificationuid) { (isFollowing, error) in
-                        if error != nil {
-                            self.view.showToast(message: error!.localizedDescription)
-                        }
-                        activity.isCurrentUserFollowing = isFollowing!
-                        self.activityInstances.append(activity)
-                        self.tableNode.reloadData()
-                    }
-                }
-            }
+            self.activityInstances = activities!
+            self.tableNode.reloadData()
         }
     }
-
+    
     // MARK: - TableNode
     
-     func tableNode(_ tableNode: ASTableNode, nodeForRowAt indexPath: IndexPath) -> ASCellNode {
+    func tableNode(_ tableNode: ASTableNode, nodeForRowAt indexPath: IndexPath) -> ASCellNode {
         let cellNode = ActivityCellNode()
         
-        let usernameBoldLabelAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor : UIColor.black,
-            .font : UIFont.boldSystemFont(ofSize: 16)
-        ]
+        cellNode.parentVC = self
         
-        let descriptionAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor : UIColor.darkGray,
-            .font : UIFont.systemFont(ofSize: 16)
-        ]
-        
-        let timestampAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor : UIColor.lightGray,
-            .font : UIFont.systemFont(ofSize: 10),
-        ]
+        let usernameBoldLabelAttributes = Utilities.createAttributes(color: .black, fontSize: 16, bold: true, shadow: false)
+        let descriptionAttributes = Utilities.createAttributes(color: .darkGray, fontSize: 16, bold: false, shadow: false)
+        let timestampAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 10, bold: false, shadow: false)
         
         cellNode.profileImageView.url = URL(string: self.activityInstances[indexPath.row].profilePictureURL)
         cellNode.otheruid = self.activityInstances[indexPath.row].uid
@@ -130,36 +72,48 @@ final class ActivityViewController: ASViewController<ASDisplayNode>, ASTableData
         let type = self.activityInstances[indexPath.row].type
         let usernameText = NSMutableAttributedString(string: self.activityInstances[indexPath.row].username, attributes: usernameBoldLabelAttributes)
         
-        if type == "follow" {
+        switch type {
+        case "follow":
             cellNode.type = "follow"
             let descriptionText = NSMutableAttributedString(string: " followed you", attributes: descriptionAttributes)
             usernameText.append(descriptionText)
-            cellNode.activityLabel.attributedText = usernameText
             cellNode.isFollowing = self.activityInstances[indexPath.row].isCurrentUserFollowing
-        } else if type == "comment" {
+        case "comment":     // TODO: add cloud function
             cellNode.type = "comment"
             cellNode.postThumbnailImageView.url = URL(string: self.activityInstances[indexPath.row].thumbnailPictureURL)
             let descriptionText = NSMutableAttributedString(string: " commented '\(self.activityInstances[indexPath.row].comment!)' on your post", attributes: descriptionAttributes)
             usernameText.append(descriptionText)
-            cellNode.activityLabel.attributedText = usernameText
-        } else if type == "like" {
+        case "like":
             cellNode.type = "like"
             cellNode.postThumbnailImageView.url = URL(string: self.activityInstances[indexPath.row].thumbnailPictureURL)
             let descriptionText = NSMutableAttributedString(string: " liked your post", attributes: descriptionAttributes)
             usernameText.append(descriptionText)
-            cellNode.activityLabel.attributedText = usernameText
-        } else if type == "mention" {
+        case "mention":     // TODO: add cloud function
             cellNode.type = "mention"
             cellNode.postThumbnailImageView.url = URL(string: self.activityInstances[indexPath.row].thumbnailPictureURL)
             let descriptionText = NSMutableAttributedString(string: " mentioned you in a comment: \(self.activityInstances[indexPath.row].comment!)", attributes: descriptionAttributes)
             usernameText.append(descriptionText)
-            cellNode.activityLabel.attributedText = usernameText
+        default:
+            break
         }
+        cellNode.activityLabel.attributedText = usernameText
         return cellNode
     }
     
     func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
+        let activity = self.activityInstances[indexPath.row]
+        let type = activity.type
         
+        switch type {
+        case "follow":
+            let exploreProfileVC = ExploreProfileViewController()
+            exploreProfileVC.creatoruid = activity.uid
+            self.navigationController?.show(exploreProfileVC, sender: self)
+        default: // TODO: Rename ProfilePostSelectedViewController
+            let postSelectedVC = ProfilePostSelectedViewController()    // A bit awkward because only one post, but prefer this awkwardness over having an entire VC for basically the same functionality
+            postSelectedVC.postIDs = [activity.postID]
+            self.navigationController?.show(postSelectedVC, sender: self)
+        }
     }
     
     func tableNode(_ tableNode: ASTableNode, numberOfRowsInSection section: Int) -> Int {

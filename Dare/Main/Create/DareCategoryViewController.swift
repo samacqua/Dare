@@ -21,11 +21,7 @@ class DareCategoryViewController: ASViewController<ASDisplayNode>, ASTableDelega
     
     let database = Firestore.firestore()
     let storageRef = Storage.storage().reference()
-    
-    override var prefersStatusBarHidden: Bool {
-        return true
-    }
-    
+
     var tableNode: ASTableNode {
         return node as! ASTableNode
     }

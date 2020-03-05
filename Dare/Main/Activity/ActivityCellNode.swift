@@ -12,6 +12,8 @@ import FirebaseFirestore
 
 class ActivityCellNode: ASCellNode {
     
+    var parentVC: UIViewController!
+    
     var profileImageView = ASNetworkImageNode()
     var activityLabel = ASTextNode()
     var timestampLabel = ASTextNode()
@@ -20,22 +22,14 @@ class ActivityCellNode: ASCellNode {
     var followButton = ASButtonNode()
     
     var isFollowing = false
-    var type = ""
+    var type: String!
     
     var otheruid: String!
     let uid = Auth.auth().currentUser!.uid
-    
     let database = Firestore.firestore()
     
-    let followAttributes: [NSAttributedString.Key: Any] = [
-        .foregroundColor : UIColor.white,
-        .font : UIFont.boldSystemFont(ofSize: 16)
-    ]
-    
-    let followingAttributes: [NSAttributedString.Key: Any] = [
-         .foregroundColor : UIColor.orange,
-         .font : UIFont.boldSystemFont(ofSize: 16)
-     ]
+    let followAttributes = Utilities.createAttributes(color: .white, fontSize: 16, bold: true, shadow: false)
+    let followingAttributes = Utilities.createAttributes(color: .orange, fontSize: 16, bold: true, shadow: false)
     
     // MARK: - Initalization and Setup
     
@@ -54,15 +48,21 @@ class ActivityCellNode: ASCellNode {
         profileImageView.layer.masksToBounds = true
         profileImageView.layer.cornerRadius = 45 / 2
         
-        followButton.addTarget(self, action: #selector(followButtonTouchUpInside), forControlEvents: .touchUpInside)
-        followButton.cornerRoundingType = .defaultSlowCALayer
-        followButton.cornerRadius = 5.0
-        
-        followButton.isHidden = true
-        postThumbnailImageView.isHidden = true
+        let userTapped = UITapGestureRecognizer(target: self, action: #selector(profileTapped))
+        activityLabel.view.isUserInteractionEnabled = true
+        activityLabel.view.addGestureRecognizer(userTapped)
+        let profileImageTapped = UITapGestureRecognizer(target: self, action: #selector(profileTapped))
+        profileImageView.view.isUserInteractionEnabled = true
+        profileImageView.view.addGestureRecognizer(profileImageTapped)
         
         if type == "follow" {
+            postThumbnailImageView.isHidden = true
+            
             followButton.isHidden = false
+            followButton.addTarget(self, action: #selector(followButtonTouchUpInside), forControlEvents: .touchUpInside)
+            followButton.cornerRoundingType = .defaultSlowCALayer
+            followButton.cornerRadius = 5.0
+            
             if isFollowing {
                 followButton.setAttributedTitle(NSAttributedString(string: "Following", attributes: followingAttributes), for: .normal)
                 followButton.backgroundColor = .white
@@ -73,19 +73,23 @@ class ActivityCellNode: ASCellNode {
                 followButton.borderWidth = 0.0
                 followButton.backgroundColor = .orange
             }
-        } else if type == "comment" {
+        } else {
+            followButton.isHidden = true
+            
             postThumbnailImageView.isHidden = false
-        } else if type == "like" {
-            postThumbnailImageView.isHidden = false
-        } else if type == "mention" {
-            postThumbnailImageView.isHidden = false
+            postThumbnailImageView.backgroundColor = .lightGray
         }
     }
     
     // MARK: - Actions
     
+    @objc func profileTapped() {
+        let exploreProfileVC = ExploreProfileViewController()
+        exploreProfileVC.creatoruid = otheruid
+        parentVC.self.navigationController?.show(exploreProfileVC, sender: self)
+    }
+    
     @objc func followButtonTouchUpInside() {
-        print("is following?", isFollowing)
         if isFollowing {
             followButton.setAttributedTitle(NSAttributedString(string: "Follow", attributes: followAttributes), for: .normal)
             followButton.borderWidth = 0.0
@@ -109,27 +113,6 @@ class ActivityCellNode: ASCellNode {
                 }
             }
             self.isFollowing = true
-        }
-    }
-    
-    // MARK: - Functions
-    
-    func getUserPostIDs(completion: @escaping(_ postIDs:[String]) -> ()) {
-        database.collection("users").document(otheruid).collection("posts").getDocuments { (snapshot, error) in
-            if error != nil {
-                print("Error retrieving user posts:", error!)
-            }
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-            
-            var postIDs = [String]()
-            
-            for document in documents {
-                
-                let id = document.documentID
-                postIDs.append(id)
-            }
-            return completion(postIDs)
         }
     }
     
@@ -163,12 +146,11 @@ class ActivityCellNode: ASCellNode {
         } else {
             postThumbnailImageView.style.spacingBefore = 10.0
             postThumbnailImageView.style.spacingAfter = 10.0
-            postThumbnailImageView.style.preferredSize = CGSize(width: 30, height: 40)
-            headerChildren.append(followButton)
+            postThumbnailImageView.style.preferredSize = CGSize(width: 40, height: 50)
+            headerChildren.append(postThumbnailImageView)
         }
-
+        
         headerStack.children = headerChildren
-            
         return ASCenterLayoutSpec(centeringOptions: .Y, sizingOptions: .minimumX, child: headerStack)
     }
 }

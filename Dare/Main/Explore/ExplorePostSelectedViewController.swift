@@ -26,7 +26,7 @@ class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     let uid = Auth.auth().currentUser!.uid
     
     var reachedEnd = false
-    
+        
     // MARK: Initialization and Setup
     
     // Setup collectionNode layout
@@ -58,8 +58,6 @@ class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
         collectionNode.view.decelerationRate = UIScrollView.DecelerationRate.fast
         collectionNode.showsVerticalScrollIndicator = false
         collectionNode.leadingScreensForBatching = 2.0
-        
-        self.tabBarController?.tabBar.isHidden = false
     }
     
     override var prefersStatusBarHidden: Bool { true }
@@ -68,7 +66,7 @@ class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         let tabBar = self.tabBarController!.tabBar
         
         tabBar.barTintColor = .clear
@@ -81,6 +79,8 @@ class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     // Format tab bar for other views
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         let tabBar = self.tabBarController!.tabBar
         
         tabBar.barTintColor = .black

@@ -17,7 +17,7 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     var flowLayout: UICollectionViewFlowLayout!
     var collectionNode: ASCollectionNode!
     
-    var postPreviews = [PostPreview]()
+    var postIDs = [""]
     var posts = [Post]()
     var postIndexPathRow = 0
     
@@ -26,6 +26,8 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     let uid = Auth.auth().currentUser!.uid
     
     var reachedEnd = false
+    
+    override var prefersStatusBarHidden: Bool { true }
     
     // MARK: Initialization and Setup
     
@@ -51,6 +53,8 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("🌺", postIDs)
+        
         collectionNode.delegate = self
         collectionNode.dataSource = self
         collectionNode.view.allowsSelection = false
@@ -58,12 +62,8 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
         collectionNode.view.decelerationRate = UIScrollView.DecelerationRate.fast
         collectionNode.showsVerticalScrollIndicator = false
         collectionNode.leadingScreensForBatching = 2.0
-        
-        self.tabBarController?.tabBar.isHidden = false
     }
-    
-    override var prefersStatusBarHidden: Bool { true }
-    
+        
     // Hide navigation bar, set up tab bar
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -76,11 +76,14 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
         tabBar.backgroundImage = UIImage.from(color: backgroundColor)
         tabBar.unselectedItemTintColor = .white
         tabBar.shadowImage = UIImage.from(color: UIColor(white: 1.0, alpha: 0.6))
+        
     }
     
     // Format tab bar for other views
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
         guard let tabBar = self.tabBarController?.tabBar else { return }
 
         tabBar.barTintColor = .black
@@ -101,15 +104,6 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     }
     
     // MARK: Functions
-    
-    // Fetches postIDs from given class postPreviews
-    func fetchPostIDs(completion: @escaping(_ postIDs:[String]) -> ()) {
-        var postIDs = [String]()
-        for post in postPreviews {
-            postIDs.append(post.postID)
-        }
-        return completion(postIDs)
-    }
     
     // given a set of postIDs, it returns 3 more posts on the first call, then 5 more posts.
     // TODO: Won't scroll to post if is not one of the first three
@@ -156,11 +150,8 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
                 
                 let numberOfLikes = documentData["like_count"] as? Int ?? 0
                 let numberOfComments = documentData["comment_count"] as? Int ?? 0
-                
-                let pathToThumbnail = documentData["thumbnail_image"] as? String ?? ""
-                
+                                
                 let post = Post(postID: postID, creatoruid: creatoruid, dareID: dareID, pathToVideo: pathToVideo, timestamp: timestampDate, pathToProfileImage: pathToProfileImage, creatorUsername: creatorUsername, caption: caption, dareFullName: dareFullName, numberOfLikes: numberOfLikes, numberOfComments: numberOfComments)
-                post.pathToThumbnail = pathToThumbnail
                 tempPosts.append(post)
             }
             return completion(tempPosts)
@@ -222,27 +213,25 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     
     // Load new posts if hasn't reached end, checks if reached end
     func collectionNode(_ collectionNode: ASCollectionNode, willBeginBatchFetchWith context: ASBatchContext) {
-        fetchPostIDs { (postIDs) in
-            self.fetchPosts(postIDs: postIDs) { (newPosts) in
-                self.posts.append(contentsOf: newPosts)
+        self.fetchPosts(postIDs: postIDs) { (newPosts) in
+            self.posts.append(contentsOf: newPosts)
+            
+            self.reachedEnd = newPosts.count == 0
+            if !self.reachedEnd {
+                let newPostsCount = newPosts.count
                 
-                self.reachedEnd = newPosts.count == 0
-                if !self.reachedEnd {
-                    let newPostsCount = newPosts.count
-                                        
-                    if self.posts.count - newPostsCount > 0 {
-                        let indexRange = (self.posts.count - newPostsCount..<self.posts.count)
-                        let indexPaths = indexRange.map { IndexPath(row: $0, section: 0) }
-                        collectionNode.insertItems(at: indexPaths)
-                        self.collectionNode.reloadItems(at: indexPaths)
-                        context.completeBatchFetching(true)
-                    } else {
-                        self.collectionNode.reloadData()
-                        context.completeBatchFetching(true)
-                    }
+                if self.posts.count - newPostsCount > 0 {
+                    let indexRange = (self.posts.count - newPostsCount..<self.posts.count)
+                    let indexPaths = indexRange.map { IndexPath(row: $0, section: 0) }
+                    collectionNode.insertItems(at: indexPaths)
+                    self.collectionNode.reloadItems(at: indexPaths)
+                    context.completeBatchFetching(true)
                 } else {
+                    self.collectionNode.reloadData()
                     context.completeBatchFetching(true)
                 }
+            } else {
+                context.completeBatchFetching(true)
             }
         }
     }

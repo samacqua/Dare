@@ -177,7 +177,11 @@ extension ProfileHeaderNodeCell: ASCollectionDataSource, ASCollectionDelegate {
             self.parentVC.self.tabBarController?.selectedIndex = 2
         }
         let postSelectedVC = ProfilePostSelectedViewController()
-        postSelectedVC.postPreviews = topDaresPostPreviews
+        var postIDs = [""]
+        for post in topDaresPostPreviews {
+            postIDs.append(post.postID)
+        }
+        postSelectedVC.postIDs = postIDs
         postSelectedVC.postIndexPathRow = indexPath.row - 1
         parentVC.navigationController?.show(postSelectedVC, sender: self)
         

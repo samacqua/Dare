@@ -50,7 +50,6 @@ class FollowsViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.title = followersOrFollowing
-        self.navigationController?.navigationBar.isHidden = false
     }
     
     // MARK: - Actions

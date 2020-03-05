@@ -38,9 +38,7 @@ class ChooseDareViewController: UIViewController {
     
     var savedCollectionView: UICollectionView!
     var savedCollectionDataDelegate = SavedCollectionDataDelegate()
-    
-    override var prefersStatusBarHidden: Bool { return true }
-    
+        
     // MARK: - Setup
     
     override func viewDidLoad() {
@@ -56,7 +54,6 @@ class ChooseDareViewController: UIViewController {
     
     func setUpExploreElements() {
         view.backgroundColor = .white
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         exitButton = UIButton(type: .system)
         let exitImage = UIImage(named: "exit_cross")
