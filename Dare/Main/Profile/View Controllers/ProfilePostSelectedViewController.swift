@@ -6,10 +6,6 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import UIKit
-import FirebaseFirestore
-import FirebaseStorage
-import FirebaseAuth
 import AsyncDisplayKit
 
 class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASCollectionDataSource, ASCollectionDelegate {
@@ -20,10 +16,6 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     var postIDs = [""]
     var posts = [Post]()
     var postIndexPathRow = 0
-    
-    let database = Firestore.firestore()
-    let storageRef = Storage.storage().reference()
-    let uid = Auth.auth().currentUser!.uid
     
     var reachedEnd = false
     
@@ -52,9 +44,7 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     // Set up collectionNode delegate/datasource and view properties
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("🌺", postIDs)
-        
+                
         collectionNode.delegate = self
         collectionNode.dataSource = self
         collectionNode.view.allowsSelection = false
@@ -103,61 +93,6 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
         self.collectionNode.scrollToItem(at: IndexPath(row: self.postIndexPathRow, section: 0), at: .centeredVertically, animated: false)
     }
     
-    // MARK: Functions
-    
-    // given a set of postIDs, it returns 3 more posts on the first call, then 5 more posts.
-    // TODO: Won't scroll to post if is not one of the first three
-    func fetchPosts(postIDs: [String], completion: @escaping(_ posts:[Post]) -> ()) {
-        
-        let postsRef = self.database.collection("posts").whereField("post_ID", in: postIDs)
-        let lastPost = self.posts.last
-        var queryRef: Query
-        
-        if lastPost == nil {
-            queryRef = postsRef.order(by: "timestamp", descending: true).limit(to: 5)
-        } else {
-            let lastTimestamp = lastPost!.timestamp
-            queryRef = postsRef.order(by: "timestamp", descending: true).start(after: [lastTimestamp]).limit(to: 5)
-        }
-
-        queryRef.getDocuments { (snapshot, error) in
-            if error != nil {
-                print("Error listening for new posts:", error!)
-            }
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-            
-            var tempPosts = [Post]()
-            
-            for document in documents {
-                let documentData = document.data()
-                
-                let postID = documentData["post_ID"] as? String ?? ""
-                let dareID = documentData["dare_ID"] as? String ?? ""
-                
-                let timestamp = documentData["timestamp"] as! Timestamp? ?? Timestamp(date: Date(timeIntervalSince1970: 0))
-                let timestampDate = Date(timeIntervalSince1970: TimeInterval(timestamp.seconds))
-                
-                let pathToVideo = documentData["video_URL"] as? String ?? ""
-                
-                let caption = documentData["caption"] as? String ?? ""
-                let dareFullName = documentData["dare_full_name"] as? String ?? ""
-                
-                let creatorData = documentData["creator"] as? [String: Any] ?? ["": ""]
-                let creatoruid = creatorData["uid"] as? String ?? ""
-                let pathToProfileImage = creatorData["profile_picture_URL"] as? String ?? ""
-                let creatorUsername = creatorData["username"] as? String ?? ""
-                
-                let numberOfLikes = documentData["like_count"] as? Int ?? 0
-                let numberOfComments = documentData["comment_count"] as? Int ?? 0
-                                
-                let post = Post(postID: postID, creatoruid: creatoruid, dareID: dareID, pathToVideo: pathToVideo, timestamp: timestampDate, pathToProfileImage: pathToProfileImage, creatorUsername: creatorUsername, caption: caption, dareFullName: dareFullName, numberOfLikes: numberOfLikes, numberOfComments: numberOfComments)
-                tempPosts.append(post)
-            }
-            return completion(tempPosts)
-        }
-    }
-    
     // MARK: CollectionNode
     
     func collectionNode(_ collectionNode: ASCollectionNode, nodeForItemAt indexPath: IndexPath) -> ASCellNode {
@@ -170,9 +105,9 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
         cellNode.postID = self.posts[indexPath.row].postID
         cellNode.creatoruid = self.posts[indexPath.row].creatoruid
         
-        let boldLabelAttributes = Utilities.createAttributes(color: .white, fontSize: 18, bold: true, shadow: true)
-        let captionAttributes = Utilities.createAttributes(color: .white, fontSize: 16, bold: false, shadow: true)
-        let timestampAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 14, bold: false, shadow: true)
+        let boldLabelAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: true)
+        let captionAttributes = Utilities.createAttributes(color: .white, font: .systemFont(ofSize: 16), shadow: true)
+        let timestampAttributes = Utilities.createAttributes(color: .lightGray, font: .systemFont(ofSize: 14), shadow: true)
         
         cellNode.profileImage.url = URL(string: self.posts[indexPath.row].pathToProfileImage)
         cellNode.commentCountLabel.attributedText = NSAttributedString(string: String(self.posts[indexPath.row].numberOfComments), attributes: boldLabelAttributes)
@@ -213,7 +148,11 @@ class ProfilePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     
     // Load new posts if hasn't reached end, checks if reached end
     func collectionNode(_ collectionNode: ASCollectionNode, willBeginBatchFetchWith context: ASBatchContext) {
-        self.fetchPosts(postIDs: postIDs) { (newPosts) in
+        FirebaseUtilities.fetchPosts(postIDs: postIDs, lastPost: self.posts.last, postsToLoadInitial: 3, postsToLoad: 5) { (fetchedPosts, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+            }
+            guard let newPosts = fetchedPosts else { return }
             self.posts.append(contentsOf: newPosts)
             
             self.reachedEnd = newPosts.count == 0

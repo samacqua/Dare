@@ -42,10 +42,7 @@ class HalfModalPresentationController : UIPresentationController {
     }
     
     @objc func didTap(tap: UITapGestureRecognizer) {
-        print("tapped")
-//        DispatchQueue.main.async {
             self.presentedViewController.dismiss(animated: true, completion: nil)
-//        }
     }
     
     @objc func onPan(pan: UIPanGestureRecognizer) -> Void {
@@ -67,7 +64,6 @@ class HalfModalPresentationController : UIPresentationController {
             break
         case .ended:
             if direction < 0 {
-                print("less than 0")
                 changeScale(to: .adjustedOnce)      // maximize if swiping up
             } else {
                 if state == .adjustedOnce {     // if maximized, bring down to normal
@@ -130,9 +126,7 @@ class HalfModalPresentationController : UIPresentationController {
             coordinator.animate(alongsideTransition: { (context) -> Void in
                 self.dimmingView.alpha = 0
                 self.presentingViewController.view.transform = CGAffineTransform.identity
-            }, completion: { (completed) -> Void in
-                print("done dismiss animation")
-            })
+            }, completion: nil)
         }
     }
     

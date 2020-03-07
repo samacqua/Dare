@@ -6,16 +6,7 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-//
-//  ReauthorizeEmailViewController.swift
-//  Dare
-//
-//  Created by Sam Acquaviva on 2/25/20.
-//  Copyright © 2020 Sam Acquaviva. All rights reserved.
-//
-
 import UIKit
-import FirebaseAuth
 
 class LinkEmailViewController: UIViewController {
     

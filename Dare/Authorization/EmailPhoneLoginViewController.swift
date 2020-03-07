@@ -118,7 +118,6 @@ class EmailPhoneLoginViewController: UIViewController, FPNTextFieldDelegate {
         passwordTextField.placeholder = "password"
         passwordTextField.isSecureTextEntry = true
         passwordTextField.translatesAutoresizingMaskIntoConstraints = false
-        passwordTextField.addTarget(self, action: #selector(passwordTextFieldChanged), for: .editingChanged)
         passwordTextField.layer.zPosition = 1.0
         passwordTextField.backgroundColor = .white
         view.addSubview(passwordTextField)
@@ -216,10 +215,6 @@ class EmailPhoneLoginViewController: UIViewController, FPNTextFieldDelegate {
         }
     }
     
-    @objc func passwordTextFieldChanged(_ textField: UITextField) {
-        print("password changed")
-    }
-    
     @objc func continueTouchUpInside() {
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         let email = emailTextField.text!.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
@@ -246,12 +241,10 @@ class EmailPhoneLoginViewController: UIViewController, FPNTextFieldDelegate {
                    let phoneNumber = phoneNumberTextField.getFormattedPhoneNumber(format: .E164)!
                     PhoneAuthProvider.provider().verifyPhoneNumber(phoneNumber, uiDelegate: nil) { (verificationID, error) in
                         if error != nil {
-                            print(error!)
                             self.view.showToast(message: error!.localizedDescription)
                         } else {
                             UserDefaults.standard.set(verificationID, forKey: "authVerificationID")
                             self.navigationController?.show(PhoneConfirmationViewController(), sender: self)
-                            print(verificationID!)
                         }
                     }
                 }

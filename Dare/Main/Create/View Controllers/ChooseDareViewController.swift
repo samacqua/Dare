@@ -24,11 +24,7 @@ class ChooseDareViewController: UIViewController {
         return view
     }()
     
-    var daresLabel: UILabel!
-    var exitButton: UIButton!
-    var searchBar: UISearchBar!
     var segmentedControl: UISegmentedControl!
-    
     var randomDareImageButton: UIButton!
     var categoriesLabel: UILabel!
     var categoriesCollectionView: UICollectionView!
@@ -52,28 +48,24 @@ class ChooseDareViewController: UIViewController {
         hideKeyboardWhenTappedAround()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setUpNavBar()
+    }
+    
+    func setUpNavBar() {
+        let searchController = UISearchController(searchResultsController: ExploreSearchViewController())
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = true
+        
+        searchController.searchBar.placeholder = "Search"
+        definesPresentationContext = true
+    }
+    
     func setUpExploreElements() {
         view.backgroundColor = .white
-        
-        exitButton = UIButton(type: .system)
-        let exitImage = UIImage(named: "exit_cross")
-        exitButton.setImage(exitImage, for: .normal)
-        exitButton.translatesAutoresizingMaskIntoConstraints = false
-        exitButton.addTarget(self, action: #selector(exitTouchUpInside), for: .touchUpInside)
-        view.addSubview(exitButton)
-        
-        daresLabel = UILabel()
-        daresLabel.text = "Dares"
-        daresLabel.font = UIFont.boldSystemFont(ofSize: 20)
-        daresLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(daresLabel)
-        
-        searchBar = UISearchBar()
-        searchBar.tintColor = .gray
-        searchBar.barTintColor = .white
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(searchBar)
-        
+        self.title = "Dares"
+
         segmentedControl = UISegmentedControl(items: ["Discover", "Saved"])
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.setWidth(view.bounds.width / 2 - 15, forSegmentAt: 0)
@@ -88,7 +80,6 @@ class ChooseDareViewController: UIViewController {
             rect = rect.union(view.frame)
         }
         scrollView.contentSize = contentRect.size
-        print(contentRect.size.height)
         
         randomDareImageButton = UIButton()
         let randomDareImage = UIImage(named: "Random_Dare")
@@ -140,24 +131,13 @@ class ChooseDareViewController: UIViewController {
         view.addSubview(savedCollectionView)
     }
     
-    // MARK:-Layout
+    // MARK: - Layout
     
     func setUpExploreConstraints() {
         let randomDareWidth = self.view.bounds.width - 20.0
         NSLayoutConstraint.activate([
-            exitButton.heightAnchor.constraint(equalToConstant: 30),
-            exitButton.widthAnchor.constraint(equalToConstant: 30),
-            exitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            exitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10),
             
-            daresLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            daresLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            searchBar.topAnchor.constraint(equalTo: daresLabel.bottomAnchor, constant: 10),
-            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            segmentedControl.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 10),
+            segmentedControl.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
             segmentedControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             scrollView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor),
@@ -198,7 +178,7 @@ class ChooseDareViewController: UIViewController {
         ])
     }
     
-    // MARK:-Buttons and Actions
+    // MARK: - Buttons and Actions
     
     @objc func exitTouchUpInside() {
         self.navigationController?.popViewController(animated: true)
@@ -223,7 +203,7 @@ class ChooseDareViewController: UIViewController {
     }
 }
 
-// MARK:-Explore CollectionView
+// MARK: - Explore CollectionView
 
 extension ChooseDareViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
@@ -245,7 +225,6 @@ extension ChooseDareViewController: UICollectionViewDataSource, UICollectionView
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Selected item at \(indexPath.row)")
         let dareCategoryVC = DareCategoryViewController()
         dareCategoryVC.category = cellText[indexPath.row]
         self.navigationController?.show(dareCategoryVC, sender: self)
@@ -268,67 +247,5 @@ extension ChooseDareViewController: UICollectionViewDataSource, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 8
-    }
-}
-
-// MARK: - Drafts CollectionView
-
-class DraftsCollectionDataDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let categoriesCell = collectionView.dequeueReusableCell(withReuseIdentifier: draftsCellID, for: indexPath) as! DraftsCollectionCell
-        categoriesCell.backgroundColor = .gray
-        return categoriesCell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = collectionView.bounds.width/3.0 - 4
-        let cellHeight = cellWidth * 1.5
-        
-        return CGSize(width: cellWidth, height: cellHeight)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 4
-    }
-}
-
-// MARK: - Saved CollectionView
-
-class SavedCollectionDataDelegate: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let categoriesCell = collectionView.dequeueReusableCell(withReuseIdentifier: savedCellID, for: indexPath) as! SavedCollectionCell
-        return categoriesCell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("selected \(indexPath.row) dare")
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = collectionView.bounds.width
-        let cellHeight = cellWidth / 6
-        
-        return CGSize(width: cellWidth, height: cellHeight)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 1
     }
 }

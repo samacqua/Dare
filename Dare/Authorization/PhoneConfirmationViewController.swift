@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import FirebaseAuth
-import FirebaseFirestore
 
 class PhoneConfirmationViewController: UIViewController {
     
@@ -116,10 +114,8 @@ class PhoneConfirmationViewController: UIViewController {
 
         guard let verificationCode = confirmationCodeTextField.text else { return }
         guard let verificationID = UserDefaults.standard.string(forKey: "authVerificationID") else { return }
-        
-        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: verificationCode)
-        
-        FirebaseUtilities.handlePhoneAuthentication(credential: credential) { (error) in
+                
+        FirebaseUtilities.handlePhoneAuthentication(verificationCode: verificationCode, verificationID: verificationID) { (error) in
             if error != nil {
                 self.view.showToast(message: error!.localizedDescription)
             }

@@ -13,6 +13,9 @@
 		674D85492410788A00320D1B /* HalfModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674D85482410788A00320D1B /* HalfModalPresentationController.swift */; };
 		67625AA4240F65F4006A1D92 /* CustomError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67625AA3240F65F4006A1D92 /* CustomError.swift */; };
 		6766B183240F575F00563B90 /* hills.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6766B182240F575F00563B90 /* hills.mp4 */; };
+		67981B3424121AC000FDA39C /* DraftsCollectionDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67981B3324121AC000FDA39C /* DraftsCollectionDataDelegate.swift */; };
+		67981B3824121BAD00FDA39C /* SavedCollectionDataDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67981B3724121BAD00FDA39C /* SavedCollectionDataDelegate.swift */; };
+		679CADB42414229700BB2875 /* TravelingTypewriter.otf in Resources */ = {isa = PBXBuildFile; fileRef = 679CADB32414229600BB2875 /* TravelingTypewriter.otf */; };
 		67B0429923E2779A0046924F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67B0429823E2779A0046924F /* Assets.xcassets */; };
 		67B0429C23E2779A0046924F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67B0429A23E2779A0046924F /* LaunchScreen.storyboard */; };
 		67B042E023E279390046924F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 67B042DF23E279390046924F /* GoogleService-Info.plist */; };
@@ -58,7 +61,6 @@
 		67D27ACC240F6003005EACEC /* ProfileSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A52240F5FE1005EACEC /* ProfileSettingsViewController.swift */; };
 		67D27ACD240F6003005EACEC /* CreateScrollViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A54240F5FE1005EACEC /* CreateScrollViewController.swift */; };
 		67D27ACE240F6003005EACEC /* DraftsCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A55240F5FE1005EACEC /* DraftsCollectionCell.swift */; };
-		67D27ACF240F6003005EACEC /* DareCreateInitialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A56240F5FE1005EACEC /* DareCreateInitialViewController.swift */; };
 		67D27AD0240F6003005EACEC /* ChooseDareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A57240F5FE1005EACEC /* ChooseDareViewController.swift */; };
 		67D27AD1240F6003005EACEC /* VideoPlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A59240F5FE1005EACEC /* VideoPlayback.swift */; };
 		67D27AD2240F6003005EACEC /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D27A5B240F5FE1005EACEC /* CameraView.swift */; };
@@ -93,6 +95,9 @@
 		674D85482410788A00320D1B /* HalfModalPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalPresentationController.swift; sourceTree = "<group>"; };
 		67625AA3240F65F4006A1D92 /* CustomError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomError.swift; sourceTree = "<group>"; };
 		6766B182240F575F00563B90 /* hills.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = hills.mp4; sourceTree = "<group>"; };
+		67981B3324121AC000FDA39C /* DraftsCollectionDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DraftsCollectionDataDelegate.swift; sourceTree = "<group>"; };
+		67981B3724121BAD00FDA39C /* SavedCollectionDataDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedCollectionDataDelegate.swift; sourceTree = "<group>"; };
+		679CADB32414229600BB2875 /* TravelingTypewriter.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = TravelingTypewriter.otf; sourceTree = "<group>"; };
 		67B0428C23E277980046924F /* Dare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67B0428F23E277980046924F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67B0429123E277980046924F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -146,7 +151,6 @@
 		67D27A52240F5FE1005EACEC /* ProfileSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSettingsViewController.swift; sourceTree = "<group>"; };
 		67D27A54240F5FE1005EACEC /* CreateScrollViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateScrollViewController.swift; sourceTree = "<group>"; };
 		67D27A55240F5FE1005EACEC /* DraftsCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraftsCollectionCell.swift; sourceTree = "<group>"; };
-		67D27A56240F5FE1005EACEC /* DareCreateInitialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DareCreateInitialViewController.swift; sourceTree = "<group>"; };
 		67D27A57240F5FE1005EACEC /* ChooseDareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChooseDareViewController.swift; sourceTree = "<group>"; };
 		67D27A59240F5FE1005EACEC /* VideoPlayback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPlayback.swift; sourceTree = "<group>"; };
 		67D27A5B240F5FE1005EACEC /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
@@ -217,12 +221,37 @@
 			path = "View Controllers";
 			sourceTree = "<group>";
 		};
-		6766B181240F575F00563B90 /* Media */ = {
+		6766B181240F575F00563B90 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				679CADB32414229600BB2875 /* TravelingTypewriter.otf */,
 				6766B182240F575F00563B90 /* hills.mp4 */,
 			);
-			path = Media;
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		67981B3524121B0500FDA39C /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				67D27A54240F5FE1005EACEC /* CreateScrollViewController.swift */,
+				67D27A57240F5FE1005EACEC /* ChooseDareViewController.swift */,
+				67D27A60240F5FE1005EACEC /* DareCategoryViewController.swift */,
+				67D27A59240F5FE1005EACEC /* VideoPlayback.swift */,
+				67D27A61240F5FE2005EACEC /* DarePostViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		67981B3624121B6900FDA39C /* Cell Classes */ = {
+			isa = PBXGroup;
+			children = (
+				67D27A62240F5FE2005EACEC /* DarePageHeaderNodeCell.swift */,
+				67D27A63240F5FE2005EACEC /* SavedCollectionCell.swift */,
+				67D27A55240F5FE1005EACEC /* DraftsCollectionCell.swift */,
+				67D27A5E240F5FE1005EACEC /* CategoryTableCellNode.swift */,
+				67D27A5F240F5FE1005EACEC /* CategoriesCollectionCell.swift */,
+			);
+			path = "Cell Classes";
 			sourceTree = "<group>";
 		};
 		67B0428323E277980046924F = {
@@ -247,7 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				67B042E123E287220046924F /* Dare.entitlements */,
-				6766B181240F575F00563B90 /* Media */,
+				6766B181240F575F00563B90 /* Assets */,
 				67B042DA23E278660046924F /* Helpers */,
 				67D27A93240F5FEB005EACEC /* Custom Classes */,
 				67D27A2C240F5FE1005EACEC /* Main */,
@@ -291,10 +320,10 @@
 		67D27A2C240F5FE1005EACEC /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				67D27A3C240F5FE1005EACEC /* MainTabBarController.swift */,
 				67D27A2D240F5FE1005EACEC /* Home */,
 				67D27A33240F5FE1005EACEC /* Activity */,
 				67D27A36240F5FE1005EACEC /* Explore */,
-				67D27A3C240F5FE1005EACEC /* MainTabBarController.swift */,
 				67D27A3D240F5FE1005EACEC /* Profile */,
 				67D27A53240F5FE1005EACEC /* Create */,
 			);
@@ -316,8 +345,8 @@
 		67D27A33240F5FE1005EACEC /* Activity */ = {
 			isa = PBXGroup;
 			children = (
-				67D27A34240F5FE1005EACEC /* ActivityCellNode.swift */,
 				67D27A35240F5FE1005EACEC /* ActivityViewController.swift */,
+				67D27A34240F5FE1005EACEC /* ActivityCellNode.swift */,
 			);
 			path = Activity;
 			sourceTree = "<group>";
@@ -326,10 +355,10 @@
 			isa = PBXGroup;
 			children = (
 				67D27A37240F5FE1005EACEC /* ExploreViewController.swift */,
+				67D27A3B240F5FE1005EACEC /* ExploreCellNode.swift */,
 				67D27A38240F5FE1005EACEC /* ExplorePostSelectedViewController.swift */,
 				67D27A39240F5FE1005EACEC /* ExploreSearchViewController.swift */,
 				67D27A3A240F5FE1005EACEC /* DarePageViewController.swift */,
-				67D27A3B240F5FE1005EACEC /* ExploreCellNode.swift */,
 			);
 			path = Explore;
 			sourceTree = "<group>";
@@ -364,28 +393,13 @@
 		67D27A53240F5FE1005EACEC /* Create */ = {
 			isa = PBXGroup;
 			children = (
-				67D27A54240F5FE1005EACEC /* CreateScrollViewController.swift */,
-				67D27A55240F5FE1005EACEC /* DraftsCollectionCell.swift */,
-				67D27A56240F5FE1005EACEC /* DareCreateInitialViewController.swift */,
-				67D27A57240F5FE1005EACEC /* ChooseDareViewController.swift */,
-				67D27A58240F5FE1005EACEC /* Capture Video */,
+				67981B3524121B0500FDA39C /* View Controllers */,
 				67D27A5A240F5FE1005EACEC /* Initial View Cells */,
-				67D27A5E240F5FE1005EACEC /* CategoryTableCellNode.swift */,
-				67D27A5F240F5FE1005EACEC /* CategoriesCollectionCell.swift */,
-				67D27A60240F5FE1005EACEC /* DareCategoryViewController.swift */,
-				67D27A61240F5FE2005EACEC /* DarePostViewController.swift */,
-				67D27A62240F5FE2005EACEC /* DarePageHeaderNodeCell.swift */,
-				67D27A63240F5FE2005EACEC /* SavedCollectionCell.swift */,
+				67981B3624121B6900FDA39C /* Cell Classes */,
+				67981B3324121AC000FDA39C /* DraftsCollectionDataDelegate.swift */,
+				67981B3724121BAD00FDA39C /* SavedCollectionDataDelegate.swift */,
 			);
 			path = Create;
-			sourceTree = "<group>";
-		};
-		67D27A58240F5FE1005EACEC /* Capture Video */ = {
-			isa = PBXGroup;
-			children = (
-				67D27A59240F5FE1005EACEC /* VideoPlayback.swift */,
-			);
-			path = "Capture Video";
 			sourceTree = "<group>";
 		};
 		67D27A5A240F5FE1005EACEC /* Initial View Cells */ = {
@@ -493,6 +507,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6766B183240F575F00563B90 /* hills.mp4 in Resources */,
+				679CADB42414229700BB2875 /* TravelingTypewriter.otf in Resources */,
 				67B0429C23E2779A0046924F /* LaunchScreen.storyboard in Resources */,
 				67B042E023E279390046924F /* GoogleService-Info.plist in Resources */,
 				67B0429923E2779A0046924F /* Assets.xcassets in Resources */,
@@ -577,6 +592,7 @@
 				67D27AAE240F6003005EACEC /* CommentCellNode.swift in Sources */,
 				67D27AAF240F6003005EACEC /* CommentViewController.swift in Sources */,
 				67D27AB0240F6003005EACEC /* PostCellNode.swift in Sources */,
+				67981B3424121AC000FDA39C /* DraftsCollectionDataDelegate.swift in Sources */,
 				67D27AB1240F6003005EACEC /* ActivityCellNode.swift in Sources */,
 				67D27AB2240F6003005EACEC /* ActivityViewController.swift in Sources */,
 				67D27AB3240F6003005EACEC /* ExploreViewController.swift in Sources */,
@@ -609,7 +625,6 @@
 				67D27ACC240F6003005EACEC /* ProfileSettingsViewController.swift in Sources */,
 				67D27ACD240F6003005EACEC /* CreateScrollViewController.swift in Sources */,
 				67D27ACE240F6003005EACEC /* DraftsCollectionCell.swift in Sources */,
-				67D27ACF240F6003005EACEC /* DareCreateInitialViewController.swift in Sources */,
 				67D27AD0240F6003005EACEC /* ChooseDareViewController.swift in Sources */,
 				67D27AD1240F6003005EACEC /* VideoPlayback.swift in Sources */,
 				67D27AD2240F6003005EACEC /* CameraView.swift in Sources */,
@@ -622,6 +637,7 @@
 				67D27AD8240F6003005EACEC /* DarePostViewController.swift in Sources */,
 				67D27AD9240F6003005EACEC /* DarePageHeaderNodeCell.swift in Sources */,
 				674D85472410787C00320D1B /* HalfModalTransitioningDelegate.swift in Sources */,
+				67981B3824121BAD00FDA39C /* SavedCollectionDataDelegate.swift in Sources */,
 				67D27ADA240F6003005EACEC /* SavedCollectionCell.swift in Sources */,
 				67D27ADB240F6003005EACEC /* SignUpViewController.swift in Sources */,
 				67D27ADC240F6003005EACEC /* EmailPhoneLoginViewController.swift in Sources */,

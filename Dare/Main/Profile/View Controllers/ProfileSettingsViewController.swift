@@ -41,7 +41,7 @@ class ProfileSettingsViewController: UICollectionViewController, UICollectionVie
         }
         catch let error as NSError
         {
-            print(error.localizedDescription)
+            self.view.showToast(message: error.localizedDescription)
         }
     }
     
@@ -54,7 +54,6 @@ class ProfileSettingsViewController: UICollectionViewController, UICollectionVie
      }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(indexPath.row)
         if indexPath.row == 9 {
             logout()
         }

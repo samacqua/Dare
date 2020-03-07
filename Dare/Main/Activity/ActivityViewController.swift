@@ -7,13 +7,8 @@
 //
 
 import AsyncDisplayKit
-import FirebaseFirestore
-import FirebaseAuth
 
 final class ActivityViewController: ASViewController<ASDisplayNode>, ASTableDataSource, ASTableDelegate {
-
-    let database = Firestore.firestore()
-    let uid = Auth.auth().currentUser!.uid
     
     var activityInstances = [Activity]()
 
@@ -60,9 +55,9 @@ final class ActivityViewController: ASViewController<ASDisplayNode>, ASTableData
         
         cellNode.parentVC = self
         
-        let usernameBoldLabelAttributes = Utilities.createAttributes(color: .black, fontSize: 16, bold: true, shadow: false)
-        let descriptionAttributes = Utilities.createAttributes(color: .darkGray, fontSize: 16, bold: false, shadow: false)
-        let timestampAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 10, bold: false, shadow: false)
+        let usernameBoldLabelAttributes = Utilities.createAttributes(color: .black, font: .boldSystemFont(ofSize: 16), shadow: false)
+        let descriptionAttributes = Utilities.createAttributes(color: .darkGray, font: .systemFont(ofSize: 16), shadow: false)
+        let timestampAttributes = Utilities.createAttributes(color: .lightGray, font: .systemFont(ofSize: 10), shadow: false)
         
         cellNode.profileImageView.url = URL(string: self.activityInstances[indexPath.row].profilePictureURL)
         cellNode.otheruid = self.activityInstances[indexPath.row].uid

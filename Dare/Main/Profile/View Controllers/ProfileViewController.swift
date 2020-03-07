@@ -6,9 +6,6 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import UIKit
-import FirebaseFirestore
-import FirebaseStorage
 import AsyncDisplayKit
 import FirebaseAuth
 
@@ -24,9 +21,7 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     
     var selectedImage: UIImage?
     
-    let db = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
-    let database = Firestore.firestore()
             
     // MARK: - Initialization and Setup
 
@@ -51,7 +46,27 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
         collectionNode.dataSource = self
         
         setUpElements()
-        fetchUserInfo()
+        
+        let userInfoFields = ["full_name", "username", "dare_count", "following_count", "follower_count", "profile_image", "bio"]
+        FirebaseUtilities.getUserInfo(userID: uid, fields: userInfoFields) { (userInfo, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+            }
+            self.profile.fullName = userInfo!["full_name"] as? String ?? ""
+            self.profile.username = userInfo!["username"] as? String ?? ""
+            self.profile.daresCompleted = userInfo!["dare_count"] as? Int ?? 0
+            self.profile.followingCount = userInfo!["following_count"] as? Int ?? 0
+            self.profile.followerCount = userInfo!["follower_count"] as? Int ?? 0
+            self.profile.pathToProfileImage = userInfo!["profile_image"] as? String ?? ""
+            self.profile.bio = userInfo!["bio"] as? String ?? ""
+            
+            self.title = self.profile.username
+            self.tabBarItem.title = nil
+            
+            DispatchQueue.main.async {
+                self.collectionNode.reloadData()
+            }
+        }
         
         FirebaseUtilities.getUserPostPreviews(profileuid: uid) { (postPreviews, error) in
             if error != nil {
@@ -61,7 +76,13 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
             self.userPosts = postPreviews
             self.collectionNode.reloadData()
         }
-        fetchProfileImage()
+        FirebaseUtilities.fetchProfileImage { (image, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+            }
+            self.selectedImage = image!
+            self.collectionNode.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -100,14 +121,14 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     @objc func followingTouchUpInside() {
         let followsVC = FollowsViewController()
         followsVC.followersOrFollowing = "Following"
-        followsVC.uid = uid
+        followsVC.userID = uid
         self.navigationController?.show(followsVC, sender: self)
     }
     
     @objc func followersTouchUpInside() {
         let followsVC = FollowsViewController()
         followsVC.followersOrFollowing = "Followers"
-        followsVC.uid = uid
+        followsVC.userID = uid
         self.navigationController?.show(followsVC, sender: self)
     }
     
@@ -122,145 +143,13 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
             collectionNode.reloadSections(indexSet)
         } else {
             onCompleted = false
-            fetchUserDares()
-        }
-    }
-    
-    // MARK: - Functions
-    
-    func fetchUserDares() {
-        let dareCollectionRef = database.collection("users").document(uid).collection("dares_created")
-        dareCollectionRef.getDocuments { (snapshot, error) in
-            if error != nil {
-                self.view.showToast(message: error!.localizedDescription)
-            }
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-            var tempDares = [Dare]()
-            print(documents.count)
-            for document in documents {
-                let documentData = document.data()
-                
-                
-                let dareNameFull = documentData["dare_full_name"] as? String ?? ""
-                let dareID = document.documentID
-                let numberOfAttempts = documentData["number_of_attempts"] as? Int ?? 0
-                let profilePictureURL = documentData["creator_profile_picture"] as? String ?? ""
-                
-                let dare = Dare()
-                dare.dareNameFull = dareNameFull
-                dare.dareNameID = dareID
-                dare.numberOfAttempts = numberOfAttempts
-                dare.creatorProfilePicturePath = profilePictureURL
-                tempDares.append(dare)
-            }
-            self.userDares = tempDares
-            self.collectionNode.reloadSections(IndexSet(integersIn: 1...1))
-            print(self.userDares.count)
-        }
-    }
-    
-    func fetchUserInfo() {
-        let userInfoRef = database.collection("users").document(uid)
-        userInfoRef.getDocument { (document, error) in
-            if error != nil {
-                print("Error retrieving user document: ", error!)
-            }
-            if let document = document, document.exists {
-                
-                self.profile.fullName = document.get("full_name") as? String ?? ""
-                self.profile.username = document.get("username") as? String ?? ""
-                self.profile.daresCompleted = Int(document.get("dare_count") as? Int ?? 0)
-                self.profile.followingCount = Int(document.get("following_count") as? Int ?? 0)
-                self.profile.followerCount = Int(document.get("follower_count") as? Int ?? 0)
-                self.profile.likeCount = Int(document.get("like_count") as? Int ?? 0)
-                self.profile.pathToProfileImage = document.get("profile_image") as? String ?? ""
-                self.profile.bio = document.get("bio") as? String ?? ""
-                self.profile.uid = document.get("uid") as? String ?? ""
-                
-                self.title = self.profile.username
-                self.tabBarItem.title = nil
-                
-                DispatchQueue.main.async {
-                    self.collectionNode.reloadData()
-                }
-            }
-        }
-    }
-    
-    func fetchProfileImage() {
-        if let image = Utilities.loadImageFromDiskWith(fileName: "\(self.uid).png") {
-            selectedImage = image
-        } else {
-            let downloadURLPath = self.db.collection("users").document(uid)
-            downloadURLPath.getDocument { (document, error) in
+            FirebaseUtilities.fetchUserDares { (dares, error) in
                 if error != nil {
-                    print("Error fetching profile picture:", error!)
-                    return
+                    self.view.showToast(message: error!.localizedDescription)
                 }
-                if let document = document, document.exists {
-                    if document.get("profile_image") != nil {
-                        if let downloadURL = document.get("profile_image") as? String {
-                            let downloadURLRef = Storage.storage().reference(forURL: downloadURL)
-                            downloadURLRef.getData(maxSize: 1 * 1024 * 1024) { (data, err) in
-                                if err != nil {
-                                    print("Error downloading profile picture from database:", err!)
-                                } else {
-                                    print("Data:", data!)
-                                    let image = UIImage(data: data!)
-                                    Utilities.saveImage(imageName: "\(self.uid).png", image: image!)
-                                    self.selectedImage = image
-                                }
-                                self.collectionNode.reloadData()
-                            }
-                        } else { print("Could not find URL to profile image") }
-                    } else { print("Could not find profile image") }
-                }
+                self.userDares = dares!
+                self.collectionNode.reloadSections(IndexSet(integersIn: 1...1))
             }
-        }
-    }
-    
-    func sendImageToDatabase() {
-        let storageRef = Storage.storage().reference(forURL: "gs://dare-9adb9.appspot.com").child("profileimages").child(uid)
-        
-        // push data to database storage
-        if let profileImg = selectedImage, let imageData = profileImg.jpegData(compressionQuality: 0.1) {
-            Utilities.saveImage(imageName: "\(uid).png", image: profileImg)
-            storageRef.putData(imageData, metadata: nil, completion: { (metadata, error) in
-                if error != nil {
-                    print("Error putting profile picture into storage: ", error!)
-                    return
-                }
-                // include image in user info
-                storageRef.downloadURL { (url, err) in
-                    guard let profileImageURL = url else { return }
-                    let userDocRef = self.database.collection("users").document(self.uid)
-                    
-                    let batch = self.database.batch()
-                    batch.updateData(["profile_image": profileImageURL.absoluteString], forDocument: userDocRef)
-                    
-                    // update posts to have correct profile picture
-                    userDocRef.collection("posts").getDocuments { (snapshot, error) in
-                        if error != nil {
-                            print("Error getting posts collection to update profile picture:", error!)
-                        }
-                        guard let unwrappedSnapshot = snapshot else { return }
-                        let documents = unwrappedSnapshot.documents
-                        
-                        for document in documents {
-                            let postID = document.documentID
-                            let postPath = self.database.collection("posts").document(postID)
-                            batch.updateData(["creator.profile_picture_URL": profileImageURL.absoluteString], forDocument: postPath)
-                        }
-                        batch.commit { (error) in
-                            if error != nil {
-                                print("Error updating profile image:", error!)
-                            }
-                            print("batch update success")
-                        }
-                    }
-                }
-            })
         }
     }
     
@@ -277,11 +166,11 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
             headerCell.profileImage.view.addGestureRecognizer(tap)
             headerCell.profileImage.view.isUserInteractionEnabled = true
             
-            let nameAttributes = Utilities.createAttributes(color: .black, fontSize: 26, bold: true, shadow: false)
-            let bioAttributes = Utilities.createAttributes(color: .black, fontSize: 14, bold: false, shadow: false)
-            let followCount = Utilities.createAttributes(color: .black, fontSize: 14, bold: true, shadow: false)
-            let followLabel = Utilities.createAttributes(color: .black, fontSize: 14, bold: false, shadow: false)
-            let dareCountAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 14, bold: false, shadow: false)
+            let nameAttributes = Utilities.createAttributes(color: .black, font: .boldSystemFont(ofSize: 26), shadow: false)
+            let bioAttributes = Utilities.createAttributes(color: .black, font: .systemFont(ofSize: 14), shadow: false)
+            let followCount = Utilities.createAttributes(color: .black, font: .boldSystemFont(ofSize: 14), shadow: false)
+            let followLabel = Utilities.createAttributes(color: .black, font: .systemFont(ofSize: 14), shadow: false)
+            let dareCountAttributes = Utilities.createAttributes(color: .lightGray, font: .systemFont(ofSize: 14), shadow: false)
             
             headerCell.nameLabel.attributedText = NSAttributedString(string: self.profile.fullName ?? "", attributes: nameAttributes)
             
@@ -353,8 +242,6 @@ class ProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
         if indexPath.section == 0 {
             return
         } else if indexPath.section == 1  && onCompleted {
-            print("------------profile--------------")
-            print(userPosts)
             let postSelectedVC = ProfilePostSelectedViewController()
             var postIDs = [""]
             for post in userPosts {
@@ -393,7 +280,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
             selectedImage = image
             self.collectionNode.reloadData()
-            sendImageToDatabase()
+            FirebaseUtilities.sendImageToDatabase(selectedImage: selectedImage) { (error) in
+                if error != nil {
+                    self.view.showToast(message: error!.localizedDescription)
+                }
+            }
         }
         dismiss(animated: true, completion: nil)
     }

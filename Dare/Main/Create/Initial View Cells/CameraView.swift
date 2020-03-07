@@ -204,7 +204,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
             }
             
             if newVideoInput == nil || err != nil {
-                print("Error creating capture device input: \(err?.localizedDescription ?? "")")
+                self.showToast(message: "Error creating capture device input: \(err?.localizedDescription ?? "")")
             } else {
                 captureSession.addInput(newVideoInput)
             }
@@ -237,13 +237,13 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
                     do {
                         try device.setTorchModeOn(level: 1.0)
                     } catch {
-                        print(error)
+                        self.showToast(message: error.localizedDescription)
                     }
                 }
                 
                 device.unlockForConfiguration()
             } catch {
-                print(error)
+                self.showToast(message: error.localizedDescription)
             }
         }
         
@@ -271,7 +271,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
                     activeInput = input
                 }
             } catch {
-                print("Error setting device video input: \(error)")
+                self.showToast(message: "Error setting device video input: \(error)")
                 return false
             }
             
@@ -284,7 +284,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
                     captureSession.addInput(micInput)
                 }
             } catch {
-                print("Error setting device audio input: \(error)")
+                self.showToast(message: "Error setting device audio input: \(error)")
                 return false
             }
             
@@ -361,7 +361,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
                         device.isSmoothAutoFocusEnabled = false
                         device.unlockForConfiguration()
                     } catch {
-                        print("Error setting configuration: \(error)")
+                        self.showToast(message: "Error setting configuration: \(error)")
                     }
                     
                 }
@@ -397,7 +397,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
             
             if (error != nil) {
                 
-                print("Error recording movie: \(error!.localizedDescription)")
+                self.showToast(message: "Error recording movie: \(error!.localizedDescription)")
                 
             } else {
                 
@@ -468,7 +468,7 @@ class CameraView: UIView, AVCaptureFileOutputRecordingDelegate {
                 parentViewController.navigationController?.show(darePostVC, sender: self)
             } else {
                 parentViewController.dismiss(animated: true, completion: nil)
-                print("Failed to get video URL")
+                self.showToast(message: "Failed to get video URL")
             }
         }
 }

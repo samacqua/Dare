@@ -6,8 +6,8 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import AVFoundation
 
 class Utilities {
     
@@ -96,7 +96,7 @@ class Utilities {
     
     // Save/load image locally
     
-    static func saveImage(imageName: String, image: UIImage) {
+    static func saveImage(imageName: String, image: UIImage, completion: @escaping(_ error: Error?) -> Void) {
         guard let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         
         let fileName = imageName
@@ -107,17 +107,17 @@ class Utilities {
         if FileManager.default.fileExists(atPath: fileURL.path) {
             do {
                 try FileManager.default.removeItem(atPath: fileURL.path)
-                print("Removed old image")
             } catch let removeError {
-                print("couldn't remove file at path", removeError)
+                return completion(removeError)
             }
         }
         
         do {
             try data.write(to: fileURL)
         } catch let error {
-            print("error saving file with error", error)
+            return completion(error)
         }
+        return completion(nil)
     }
     
     static func loadImageFromDiskWith(fileName: String) -> UIImage? {
@@ -134,8 +134,23 @@ class Utilities {
         return nil
     }
     
-    // Create NSAttributes
+    // Create video thumbnail
     
+    static func createThumbnail(url: URL) -> UIImage? {
+        do {
+            let asset = AVAsset(url: url)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            let cgImage = try imageGenerator.copyCGImage(at: CMTime.zero, actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        } catch {
+            return nil  // when calling func, if image == nil, show error
+        }
+    }
+
+
+// Create NSAttributes
+
     private static let defaultShadow: NSShadow = {
         let shadow = NSShadow()
         shadow.shadowBlurRadius = 5
@@ -144,15 +159,13 @@ class Utilities {
         return shadow
     }()
     
-    static func createAttributes(color: UIColor, fontSize: CGFloat, bold: Bool, shadow: Bool) -> [NSAttributedString.Key: Any] {
+    static func createAttributes(color: UIColor, font: UIFont, shadow: Bool) -> [NSAttributedString.Key: Any] {
         var attributes: [NSAttributedString.Key: Any] = [
             .foregroundColor : color,
-            .font : UIFont.systemFont(ofSize: fontSize)
+            .font : font
         ]
         if shadow {
             attributes[.shadow] = defaultShadow
-        } else if bold {
-            attributes[.font] = UIFont.boldSystemFont(ofSize: fontSize)
         }
         return attributes
     }

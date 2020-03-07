@@ -128,7 +128,11 @@ class EditProfileViewController: UICollectionViewController, UICollectionViewDel
         
         // push data to database storage
         if let profileImg = selectedImage, let imageData = profileImg.jpegData(compressionQuality: 0.1) {
-            Utilities.saveImage(imageName: "\(uid).png", image: profileImg)
+            Utilities.saveImage(imageName: "\(uid).png", image: profileImg) { (error) in
+                if error != nil {
+                    self.view.showToast(message: error!.localizedDescription)
+                }
+            }
             storageRef.putData(imageData, metadata: nil, completion: { (metadata, error) in
                 if error != nil {
                     print("Error putting profile picture into storage: ", error!)

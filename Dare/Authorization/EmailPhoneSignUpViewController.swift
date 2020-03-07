@@ -216,7 +216,6 @@ class EmailPhoneSignUpViewController: UIViewController, FPNTextFieldDelegate {
             if validateEmail() == nil {
                 Auth.auth().fetchSignInMethods(forEmail: email) { (signInMethods, error) in
                     if error != nil {
-                        print("Error: ", error!)
                         self.view.showToast(message: error!.localizedDescription)
                     }
                     if signInMethods == nil {

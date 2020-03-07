@@ -6,10 +6,8 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import FirebaseFirestore
-import FirebaseStorage
-import FirebaseAuth
 import AsyncDisplayKit
+import FirebaseAuth
 
 class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectionDataSource, ASCollectionDelegate {
     
@@ -23,8 +21,6 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
     var userPosts = [PostPreview]()
     var userDares = [Dare]()
     
-    let db = Firestore.firestore()
-    let database = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
     
     var needsToLoad: Bool = true
@@ -56,9 +52,28 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
         self.view.addSubnode(collectionNode)
     }
     
-    override func viewWillAppear(_ animated: Bool) {        
+    override func viewWillAppear(_ animated: Bool) {
+        let userInfoFields = ["full_name", "username", "dare_count", "following_count", "follower_count", "profile_image", "bio"]
         if needsToLoad {
-            fetchUserData()
+            FirebaseUtilities.getUserInfo(userID: creatoruid, fields: userInfoFields) { (userInfo, error) in
+                if error != nil {
+                    self.view.showToast(message: error!.localizedDescription)
+                }
+                self.profile.fullName = userInfo!["full_name"] as? String ?? ""
+                self.profile.username = userInfo!["username"] as? String ?? ""
+                self.profile.daresCompleted = userInfo!["dare_count"] as? Int ?? 0
+                self.profile.followingCount = userInfo!["following_count"] as? Int ?? 0
+                self.profile.followerCount = userInfo!["follower_count"] as? Int ?? 0
+                self.profile.pathToProfileImage = userInfo!["profile_image"] as? String ?? ""
+                self.profile.bio = userInfo!["bio"] as? String ?? ""
+                
+                self.title = self.profile.username
+                self.tabBarItem.title = nil
+                
+                DispatchQueue.main.async {
+                    self.collectionNode.reloadData()
+                }
+            }
             FirebaseUtilities.getUserPostPreviews(profileuid: creatoruid) { (postPreviews, error) in
                 if error != nil {
                     self.view.showToast(message: error!.localizedDescription)
@@ -81,14 +96,14 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
     @objc func followingTouchUpInside() {
         let followsVC = FollowsViewController()
         followsVC.followersOrFollowing = "Following"
-        followsVC.uid = creatoruid
+        followsVC.userID = creatoruid
         self.navigationController?.show(followsVC, sender: self)
     }
     
     @objc func followersTouchUpInside() {
         let followsVC = FollowsViewController()
         followsVC.followersOrFollowing = "Followers"
-        followsVC.uid = creatoruid
+        followsVC.userID = creatoruid
         self.navigationController?.show(followsVC, sender: self)
     }
     
@@ -109,68 +124,12 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
             collectionNode.reloadSections(indexSet)
         } else {
             onCompleted = false
-            fetchUserDares()
-        }
-    }
-    
-    // MARK: - Functions
-    
-    func fetchUserDares() {
-        let dareCollectionRef = database.collection("users").document(creatoruid).collection("dares_created")
-        dareCollectionRef.getDocuments { (snapshot, error) in
-            if error != nil {
-                self.view.showToast(message: error!.localizedDescription)
-            }
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-            var tempDares = [Dare]()
-            print(documents.count)
-            for document in documents {
-                let documentData = document.data()
-                
-                
-                let dareNameFull = documentData["dare_full_name"] as? String ?? ""
-                let dareID = document.documentID
-                let numberOfAttempts = documentData["number_of_attempts"] as? Int ?? 0
-                let profilePictureURL = documentData["creator_profile_picture"] as? String ?? ""
-                
-                let dare = Dare()
-                dare.dareNameFull = dareNameFull
-                dare.dareNameID = dareID
-                dare.numberOfAttempts = numberOfAttempts
-                dare.creatorProfilePicturePath = profilePictureURL
-                tempDares.append(dare)
-            }
-            self.userDares = tempDares
-            self.collectionNode.reloadSections(IndexSet(integersIn: 1...2))
-            print(self.userDares.count)
-        }
-    }
-    
-    func fetchUserData() {
-        guard let unwrappeduid = creatoruid else { print("no uid"); return }
-        let userInfoRef = database.collection("users").document(unwrappeduid)
-        userInfoRef.getDocument { (document, error) in
-            if error != nil {
-                print("Error retrieving user document: ", error!)
-            }
-            if let document = document, document.exists {
-                
-                self.profile.fullName = document.get("full_name") as? String ?? ""
-                self.profile.username = document.get("username") as? String ?? ""
-                self.profile.daresCompleted = Int(document.get("dare_count") as? Int ?? 0)
-                self.profile.followingCount = Int(document.get("following_count") as? Int ?? 0)
-                self.profile.followerCount = Int(document.get("follower_count") as? Int ?? 0)
-                self.profile.likeCount = Int(document.get("like_count") as? Int64 ?? 0)
-                self.profile.pathToProfileImage = document.get("profile_image") as? String ?? ""
-                self.profile.bio = document.get("bio") as? String ?? ""
-                self.profile.uid = document.get("username") as? String ?? ""
-                
-                self.title = self.profile.username
-                
-                DispatchQueue.main.async {
-                    self.collectionNode.reloadData()
+            FirebaseUtilities.fetchUserDares { (dares, error) in
+                if error != nil {
+                    self.view.showToast(message: error!.localizedDescription)
                 }
+                self.userDares = dares!
+                self.collectionNode.reloadSections(IndexSet(integersIn: 1...2))
             }
         }
     }
@@ -187,27 +146,26 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
             
             headerCell.profileImage.url = URL(string: self.profile.pathToProfileImage ?? "")
             
-            let nameAttributes = Utilities.createAttributes(color: .black, fontSize: 26, bold: true, shadow: false)
-            let bioAttributes = Utilities.createAttributes(color: .black, fontSize: 14, bold: false, shadow: false)
-            let followCount = Utilities.createAttributes(color: .black, fontSize: 14, bold: true, shadow: false)
-            let followLabel = Utilities.createAttributes(color: .black, fontSize: 14, bold: false, shadow: false)
-            let dareCountAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 14, bold: false, shadow: false)
+            let nameAttributes = Utilities.createAttributes(color: .black, font: .boldSystemFont(ofSize: 26), shadow: false)
+            let bioAndFollowLabelAttributes = Utilities.createAttributes(color: .black, font: .systemFont(ofSize: 14), shadow: false)
+            let followCountAttributes = Utilities.createAttributes(color: .black, font: .boldSystemFont(ofSize: 14), shadow: false)
+            let dareCountAttributes = Utilities.createAttributes(color: .lightGray, font: .systemFont(ofSize: 14), shadow: false)
             
             headerCell.nameLabel.attributedText = NSAttributedString(string: self.profile.fullName ?? "", attributes: nameAttributes)
             
             let bioText = (self.profile.bio ?? "").replacingOccurrences(of: "\n", with: "\n").replacingOccurrences(of: "\\n", with: "\n")
             headerCell.bioLabel.attributedText = NSAttributedString(string: bioText, attributes:
-                bioAttributes)
+                bioAndFollowLabelAttributes)
             
-            let followerButtonString = NSMutableAttributedString(string: String((self.profile.followerCount ?? 0)), attributes: followCount)
-            let followersString = NSMutableAttributedString(string: " followers", attributes: followLabel)
+            let followerButtonString = NSMutableAttributedString(string: String((self.profile.followerCount ?? 0)), attributes: followCountAttributes)
+            let followersString = NSMutableAttributedString(string: " followers", attributes: bioAndFollowLabelAttributes)
             followerButtonString.append(followersString)
             
             headerCell.followerButton.addTarget(self, action: #selector(followersTouchUpInside), forControlEvents: .touchUpInside)
             headerCell.followerButton.setAttributedTitle(followerButtonString, for: .normal)
             
-            let followingButtonString = NSMutableAttributedString(string: String((self.profile.followingCount ?? 0)), attributes: followCount)
-            let followingString = NSMutableAttributedString(string: " following", attributes: followLabel)
+            let followingButtonString = NSMutableAttributedString(string: String((self.profile.followingCount ?? 0)), attributes: followCountAttributes)
+            let followingString = NSMutableAttributedString(string: " following", attributes: bioAndFollowLabelAttributes)
             followingButtonString.append(followingString)
             
             headerCell.followingButton.addTarget(self, action: #selector(followingTouchUpInside), forControlEvents: .touchUpInside)
@@ -220,14 +178,14 @@ class ExploreProfileViewController: ASViewController<ASDisplayNode>, ASCollectio
             headerCell.followerCount = self.profile.followerCount ?? 0
             
             if isFollowing {
-                let followingAttributes = Utilities.createAttributes(color: .orange, fontSize: 18, bold: true, shadow: false)
+                let followingAttributes = Utilities.createAttributes(color: .orange, font: .boldSystemFont(ofSize: 18), shadow: false)
                 headerCell.followButton.setAttributedTitle(NSAttributedString(string: "Following", attributes: followingAttributes), for: .normal)
                 headerCell.followButton.backgroundColor = .white
                 headerCell.followButton.borderWidth = 3.0
                 headerCell.followButton.borderColor = UIColor.orange.cgColor
                 headerCell.isFollowing = true
             } else {
-                let followAttributes = Utilities.createAttributes(color: .white, fontSize: 18, bold: true, shadow: false)
+                let followAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: false)
                 headerCell.followButton.setAttributedTitle(NSAttributedString(string: "Follow", attributes: followAttributes), for: .normal)
                 headerCell.followButton.borderWidth = 0.0
                 headerCell.followButton.backgroundColor = .orange

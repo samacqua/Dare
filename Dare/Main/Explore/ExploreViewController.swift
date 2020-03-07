@@ -7,9 +7,6 @@
 //
 
 import AsyncDisplayKit
-import FirebaseFirestore
-import FirebaseStorage
-import FirebaseAuth
 
 class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSource, ASCollectionDelegate {
     
@@ -17,10 +14,6 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     var collectionNode: ASCollectionNode!
     
     var postPreviews = [PostPreview]()
-    
-    let database = Firestore.firestore()
-    let uid = Auth.auth().currentUser!.uid
-    let storageRef = Storage.storage().reference()
         
     // MARK: - Initialization and Setup
     
@@ -74,7 +67,7 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     
     func collectionNode(_ collectionNode: ASCollectionNode, nodeForItemAt indexPath: IndexPath) -> ASCellNode {
         let cellNode = ExploreCellNode()
-        cellNode.thumbnailImage.url = URL(string: self.postPreviews[indexPath.row].thumbnailImageURL)     // TODO: Cloud function to reduce size of thumbnail images
+//        cellNode.thumbnailImage.url = URL(string: self.postPreviews[indexPath.row].thumbnailImageURL)     // TODO: Cloud function to reduce size of thumbnail images
         return cellNode
     }
     
@@ -87,8 +80,6 @@ class ExploreViewController: ASViewController<ASDisplayNode>, ASCollectionDataSo
     }
     
     func collectionNode(_ collectionNode: ASCollectionNode, didSelectItemAt indexPath: IndexPath) {
-        print("------------explore--------------")
-        print(postPreviews)
         let postSelectedVC = ExplorePostSelectedViewController()
         postSelectedVC.postSelectedPreview = postPreviews[indexPath.row]
         postSelectedVC.postIndexPathRow = indexPath.row

@@ -39,4 +39,8 @@ struct Constants {
     // Example Dares
     
     static let exampleDares: [String] = ["Streak across Briggs 🤫", "Play wiffel ball in Lobby 10", "Hack to the top of the Dome", "Spend 24 hours in Maseeh D"]
+    
+    // Dare Storage
+    
+    static let dareStorageURL = "gs://dare-9adb9.appspot.com"
 }

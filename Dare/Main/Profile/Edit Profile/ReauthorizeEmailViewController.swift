@@ -36,8 +36,6 @@ class ReauthorizeEmailViewController: UIViewController, GIDSignInDelegate {
         
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance().delegate = self
-        
-        print(linkingAccountType ?? "Not trying to link any account")
     }
     
     var textViewY: CGFloat!
@@ -187,7 +185,7 @@ class ReauthorizeEmailViewController: UIViewController, GIDSignInDelegate {
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if error != nil {
-            print("Error logging into google: ", error!)
+            self.view.showToast(message: error!.localizedDescription)
             return
         }
         guard let authentication = user.authentication else { return }

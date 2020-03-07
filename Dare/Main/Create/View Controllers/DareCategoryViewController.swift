@@ -7,8 +7,6 @@
 //
 
 import AsyncDisplayKit
-import FirebaseFirestore
-import FirebaseStorage
 
 class DareCategoryViewController: ASViewController<ASDisplayNode>, ASTableDelegate, ASTableDataSource {
     
@@ -18,9 +16,6 @@ class DareCategoryViewController: ASViewController<ASDisplayNode>, ASTableDelega
     var headerTitle: UILabel!
     
     var dares = [Dare]()
-    
-    let database = Firestore.firestore()
-    let storageRef = Storage.storage().reference()
 
     var tableNode: ASTableNode {
         return node as! ASTableNode
@@ -46,7 +41,14 @@ class DareCategoryViewController: ASViewController<ASDisplayNode>, ASTableDelega
         tableNode.view.backgroundColor = .gray
         
         setUpHeaderView()
-        fetchDares()
+        FirebaseUtilities.fetchDaresInCategory(category: category!) { (dares, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+                return
+            }
+            self.dares = dares!
+            self.tableNode.reloadData()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,45 +88,6 @@ class DareCategoryViewController: ASViewController<ASDisplayNode>, ASTableDelega
     
     @objc func exitTouchUpInside() {
         self.navigationController?.popViewController(animated: true)
-    }
-    
-    // MARK: - Functions
-    
-    func fetchDares() {
-        print("Category:", self.category!.lowercased())
-        database.collection("universal_dare_categories").document(self.category!.lowercased()).getDocument { (document, error) in
-            if error != nil {
-                print("Error getting Dare category (\(self.category!)) document:", error!)
-            }
-            
-            guard let data = document?.data() else { return }
-            print("Document data:", data)
-            for (identifier, name) in data {
-                print("identifier:", identifier)
-                print("name:", name)
-                let stringName = name as! String
-                let dare = Dare()
-                dare.dareNameID = stringName
-                self.database.collection("dares").document(stringName).getDocument { (document2, error2) in
-                    if error2 != nil {
-                        print("Error getting dare from category \(self.category!):", error2!)
-                    }
-                    
-                    guard let dareData = document2?.data() else { return }
-                    print("Dare data:", dareData)
-                    
-                    dare.creatorProfilePicturePath = dareData["creator_profile_picture"] as? String ?? ""
-                    dare.numberOfAttempts = dareData["number_of_attempts"] as? Int ?? 0
-                    dare.dareNameFull = dareData["dare_full_name"] as? String ?? "Dare"
-                    
-                    self.dares.append(dare)
-                    print("Dare appended")
-                    DispatchQueue.main.async {
-                        self.tableNode.reloadData()
-                    }
-                }
-            }
-        }
     }
     
     // MARK: - TableNode

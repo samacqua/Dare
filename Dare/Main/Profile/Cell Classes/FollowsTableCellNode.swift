@@ -7,8 +7,6 @@
 //
 
 import AsyncDisplayKit
-import FirebaseAuth
-import FirebaseFirestore
 
 class FollowsTableCellNode: ASCellNode {
     
@@ -21,20 +19,9 @@ class FollowsTableCellNode: ASCellNode {
     var isCurrentUser: Bool = false
     
     var otheruid: String!
-    let uid = Auth.auth().currentUser!.uid
-    var currentUserUsername: String!
-    
-    let database = Firestore.firestore()
-    
-    let followAttributes: [NSAttributedString.Key: Any] = [
-        .foregroundColor : UIColor.white,
-        .font : UIFont.boldSystemFont(ofSize: 16)
-    ]
-    
-    let followingAttributes: [NSAttributedString.Key: Any] = [
-         .foregroundColor : UIColor.orange,
-         .font : UIFont.boldSystemFont(ofSize: 16)
-     ]
+        
+    let followAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: false)
+    let followingAttributes = Utilities.createAttributes(color: .orange, font: .boldSystemFont(ofSize: 16), shadow: false)
     
     // MARK: - Initalization and Setup
     
@@ -76,7 +63,6 @@ class FollowsTableCellNode: ASCellNode {
     // MARK: - Actions
     
     @objc func followButtonTouchUpInside() {
-        print("is following?", isFollowing)
         if isFollowing {
             followButton.setAttributedTitle(NSAttributedString(string: "Follow", attributes: followAttributes), for: .normal)
             followButton.borderWidth = 0.0
@@ -95,28 +81,7 @@ class FollowsTableCellNode: ASCellNode {
             followButton.borderColor = UIColor.orange.cgColor
             
             FirebaseUtilities.followUser(uidToFollow: otheruid, completion: {error in })
-            self.isFollowing = false
-        }
-    }
-    
-    // MARK: - Functions
-    
-    func getUserPostIDs(completion: @escaping(_ postIDs:[String]) -> ()) {
-        database.collection("users").document(otheruid).collection("posts").getDocuments { (snapshot, error) in
-            if error != nil {
-                print("Error retrieving user posts:", error!)
-            }
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-            
-            var postIDs = [String]()
-            
-            for document in documents {
-                
-                let id = document.documentID
-                postIDs.append(id)
-            }
-            return completion(postIDs)
+            self.isFollowing = true
         }
     }
     

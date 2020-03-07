@@ -7,14 +7,16 @@
 //
 
 import AsyncDisplayKit
-import AVFoundation
-import FirebaseFirestore
 import FirebaseAuth
 
 class PostCellNode: ASCellNode {
     
     var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
+    var parentViewController: UIViewController? = nil
     
+    let videoNode = ASVideoNode()
+    var asset = AVAsset(url: Constants.placeholderAssetURL)
+
     var dareButton = ASButtonNode()
     
     var profileImage = ASNetworkImageNode()
@@ -23,28 +25,19 @@ class PostCellNode: ASCellNode {
     var commentButton = ASButtonNode()
     var commentCountLabel = ASTextNode()
     var shareButton = ASButtonNode()
-    
     var usernameLabel = ASTextNode()
     var timestampLabel = ASTextNode()
     var captionLabel = ASTextNode()
     
-    let videoNode = ASVideoNode()
-    var asset = AVAsset(url: Constants.placeholderAssetURL)
-    
     var isLiked = false
-    
+    var thumbnailPictureURL: String!
     var dareID: String?
     var postID: String?
     var creatoruid: String?
-    
-    let databaseRef = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
-    
-    var parentViewController: UIViewController? = nil
     
     let profileImageDimension = 50.0
     
-    var thumbnailPictureURL: String!
             
     // MARK: - Initialization and setup
     
@@ -57,22 +50,14 @@ class PostCellNode: ASCellNode {
     override func didLoad() {
         super.didLoad()
         checkIfLiked()
-        playVideo()
+//        playVideo()
     }
     
     func setUpElements() {
-        self.backgroundColor = UIColor(white: 0.1, alpha: 1.0)
+        self.backgroundColor = .black
         
-        let postElementShadow = NSShadow()
-        postElementShadow.shadowBlurRadius = 5
-        postElementShadow.shadowOffset = CGSize(width: 0, height: 0)
-        postElementShadow.shadowColor = UIColor.black.withAlphaComponent(0.5)
-        
-        let boldLabelAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor : UIColor.white,
-            .font : UIFont.boldSystemFont(ofSize: 18),
-            .shadow : postElementShadow
-        ]
+        let dareFont = UIFont(name: "TravelingTypewriter", size: 16)
+        let boldLabelAttributes = Utilities.createAttributes(color: .white, font: dareFont!, shadow: true)
         
         dareButton.setAttributedTitle(NSAttributedString(string: "Dare", attributes: boldLabelAttributes), for: .normal)
         dareButton.addTarget(self, action: #selector(dareButtonPressed), forControlEvents: .touchUpInside)
@@ -194,7 +179,6 @@ class PostCellNode: ASCellNode {
     
     @objc func shareButtonTapped() {
         self.view.showToast(message: "Share button tapped")
-        print("share tapped")
     }
     
     // MARK: - Functions
@@ -218,9 +202,19 @@ class PostCellNode: ASCellNode {
     
     func playVideo() {
         videoNode.asset = asset
-        videoNode.shouldAutoplay = true
         videoNode.shouldAutorepeat = true
         videoNode.muted = false
+        videoNode.play()
+    }
+    
+    override func didEnterVisibleState() {
+        if videoNode.isNodeLoaded {
+            playVideo()
+        }
+    }
+
+    override func didExitVisibleState() {
+        videoNode.pause()
     }
     
     // MARK: - Layout
@@ -248,15 +242,11 @@ class PostCellNode: ASCellNode {
         let commentStackSpec = ASStackLayoutSpec(direction: .vertical, spacing: 5, justifyContent: .end, alignItems: .center, children: [commentButton, commentCountLabel])
         let actionStackSpec = ASStackLayoutSpec(direction: .vertical, spacing: 24, justifyContent: .end, alignItems: .center, children: [profileImage, likeStackSpec, commentStackSpec, shareButton])
         
-        let horizontalStackSpec = ASStackLayoutSpec(direction: .horizontal, spacing: 0, justifyContent: .end, alignItems: .baselineLast, children: [postInfoSpec, actionStackSpec])
+        let horizontalStackSpec = ASStackLayoutSpec(direction: .horizontal, spacing: 0, justifyContent: .end, alignItems: .end, children: [postInfoSpec, actionStackSpec])
         
-        let dareRelativeSpec = ASRelativeLayoutSpec(horizontalPosition: .center, verticalPosition: .start, sizingOption: [], child: dareButton)
-        dareRelativeSpec.style.flexGrow = 1.0
+        let dareCenterSpec = ASCenterLayoutSpec(centeringOptions: .XY, sizingOptions: [], child: dareButton)
         
-        let finalStackSpec = ASStackLayoutSpec()
-        finalStackSpec.direction = .vertical
-        finalStackSpec.children = [dareRelativeSpec, horizontalStackSpec]
-        finalStackSpec.spacing = 0
+        let finalStackSpec = ASOverlayLayoutSpec(child: dareCenterSpec, overlay: horizontalStackSpec)
         
         let insetSpec = ASInsetLayoutSpec(insets:UIEdgeInsets(top: 12, left: 10, bottom: 60, right: 10), child: finalStackSpec)
         

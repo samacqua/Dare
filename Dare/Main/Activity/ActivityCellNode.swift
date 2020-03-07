@@ -7,8 +7,6 @@
 //
 
 import AsyncDisplayKit
-import FirebaseAuth
-import FirebaseFirestore
 
 class ActivityCellNode: ASCellNode {
     
@@ -25,11 +23,9 @@ class ActivityCellNode: ASCellNode {
     var type: String!
     
     var otheruid: String!
-    let uid = Auth.auth().currentUser!.uid
-    let database = Firestore.firestore()
     
-    let followAttributes = Utilities.createAttributes(color: .white, fontSize: 16, bold: true, shadow: false)
-    let followingAttributes = Utilities.createAttributes(color: .orange, fontSize: 16, bold: true, shadow: false)
+    let followAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 16), shadow: false)
+    let followingAttributes = Utilities.createAttributes(color: .orange, font: .boldSystemFont(ofSize: 16), shadow: false)
     
     // MARK: - Initalization and Setup
     

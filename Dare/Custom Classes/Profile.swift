@@ -14,7 +14,6 @@ class Profile : NSObject {
     var daresCompleted: Int!
     var followingCount: Int!
     var followerCount: Int!
-    var likeCount: Int!
     var pathToProfileImage: String!
     var bio: String!
     var uid: String!

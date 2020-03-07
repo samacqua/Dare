@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import FirebaseAuth
-import FirebaseFirestore
 
 class ChangeUserInfoViewController: UIViewController {
     
@@ -32,7 +30,6 @@ class ChangeUserInfoViewController: UIViewController {
     func setUpElements() {
         view.backgroundColor = .white
         self.title = userProperty
-        print("value:", userPropertyValue)
         
         infoTextField = UITextField()
         infoTextField.placeholder = userPropertyValue

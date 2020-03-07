@@ -45,8 +45,20 @@ class DarePostViewController: UIViewController, UITextViewDelegate {
         hideKeyboardWhenTappedAround()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         playVideo()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     func setUpElements() {
@@ -111,10 +123,15 @@ class DarePostViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc func shareButtonTapped() {
-        sendVideoAndDataToStorage()
-        let homeVC = MainTabBarController()
-        homeVC.modalPresentationStyle = .fullScreen
-        self.present(homeVC, animated: true, completion: nil)
+        FirebaseUtilities.sendPostToFirestore(videoURL: videoURL!, caption: descriptionTextView.text, dare: dare, postPath: postPath) { (uploadTask, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+            }
+            let homeVC = MainTabBarController()
+            homeVC.uploadTask = uploadTask
+            homeVC.modalPresentationStyle = .fullScreen
+            self.present(homeVC, animated: true, completion: nil)
+        }
     }
     
     // MARK: - Functions
@@ -142,103 +159,6 @@ class DarePostViewController: UIViewController, UITextViewDelegate {
         self.playerLayer?.frame = videoView.frame
         self.playerLayer?.videoGravity = .resizeAspectFill
         self.player.play()
-    }
-    
-    func sendVideoAndDataToStorage() {
-        let metadata = StorageMetadata()
-        metadata.contentType = "video/quicktime"
-        
-        let vidFilename = filename  + ".mov"
-        
-        if let videoData = NSData(contentsOf: videoURL!) as Data? {
-            let storageRef = Storage.storage().reference()
-            let vidRef = storageRef.child("post_videos/\(vidFilename)")
-            
-            let uploadTask = vidRef.putData(videoData, metadata: nil) { (metadata, error) in
-                if error != nil {
-                    print("Error uploading video:", error!)
-                    return
-                }
-                
-                vidRef.downloadURL { (url, err) in
-                    if err != nil {
-                        print("Error downloading storage URL:", err!)
-                        return
-                    }
-                    print(url!)
-                    
-                    self.database.collection("users").document(self.uid).getDocument { (document, error) in
-                        if error != nil {
-                            print("error getting current user info:", error!)
-                        }
-                        
-                        let caption = self.descriptionTextView.text ?? ""
-                        
-                        let postID = self.postPath.documentID
-                        let dareNameFull = self.dare.dareNameFull ?? ""
-                        let dareID = self.dare.dareNameID ?? ""
-                        
-                        let username = document?.get("username") as! String
-                        let profilePictureURL = document?.get("profile_image") as! String
-                        
-                        let creatorObject = ["uid": self.uid, "username": username, "profile_picture_URL": profilePictureURL]
-                        
-                        let postData: [String: Any] = ["video_URL": url!.absoluteString, "dare_full_name": dareNameFull, "dare_ID": dareID, "caption": caption, "post_ID": postID, "creator": creatorObject, "timestamp": Timestamp.init()]
-                        
-                        self.postPath.setData(postData , mergeFields: Array(postData.keys))
-                        let userPath = self.database.collection("users").document(self.uid)
-                        userPath.collection("posts").document(postID).setData(["post_ID": postID], mergeFields: ["post_ID"])
-                        userPath.collection("following_post_IDs").document(postID).setData(["post_ID": postID], mergeFields: ["post_ID"])
-                        
-                        self.sendThumbnailToDatabase(image: self.createThumbnail(url: self.videoURL!)!)
-
-                        print("got to setting vid data")
-                    }
-                }
-            }
-            uploadTask.observe(.progress) { (snapshot) in
-                print(snapshot.progress?.completedUnitCount as Any)
-            }
-        }
-    }
-    
-    func createThumbnail(url: URL) -> UIImage? {
-        do {
-            let asset = AVAsset(url: url)
-            let imageGenerator = AVAssetImageGenerator(asset: asset)
-            imageGenerator.appliesPreferredTrackTransform = true
-            let cgImage = try imageGenerator.copyCGImage(at: CMTime.zero, actualTime: nil)
-            return UIImage(cgImage: cgImage)
-        } catch {
-            print("Error getting video thumbnail:", error.localizedDescription)
-            return nil
-        }
-    }
-    
-    func sendThumbnailToDatabase(image: UIImage) {
-        
-        let postID = postPath.documentID
-        
-        let imageFilename = filename  + ".JPEG"
-        let storageRef = Storage.storage().reference(forURL: "gs://dare-9adb9.appspot.com").child("post_thumbnails").child(imageFilename)
-        
-        // push data to database storage
-        let imageData = image.jpegData(compressionQuality: 0.1)
-        storageRef.putData(imageData!, metadata: nil) { (metadata, error) in
-            if error != nil {
-                print("Error sending thumbnail image to storage:", error!)
-            }
-            storageRef.downloadURL { (url, downloadError) in
-                if error != nil {
-                    print("Error downloading thumbnail image url:", downloadError!)
-                }
-                guard let thumbnailURL = url else { return }
-                self.postPath.setData(["thumbnail_image": thumbnailURL.absoluteString], mergeFields: ["thumbnail_image"])
-                self.database.collection("users").document(self.uid).collection("posts").document(postID).setData(["thumbnail_image": thumbnailURL.absoluteString], mergeFields: ["thumbnail_image"])
-                
-                print("got to merge")
-            }
-        }
     }
     
     // MARK: - Layout

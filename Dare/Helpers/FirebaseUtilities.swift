@@ -9,6 +9,7 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
 
 import GoogleSignIn
 import FBSDKLoginKit
@@ -136,7 +137,9 @@ class FirebaseUtilities {
         }
     }
     
-    static func handlePhoneAuthentication(credential: AuthCredential!, completion: @escaping(_ error: Error?) -> Void) {
+    static func handlePhoneAuthentication(verificationCode: String, verificationID: String, completion: @escaping(_ error: Error?) -> Void) {
+        let credential = PhoneAuthProvider.provider().credential(withVerificationID: verificationID, verificationCode: verificationCode)
+        
         Auth.auth().signIn(with: credential) { (authDataResult, signInError) in
             if signInError != nil {
                 return completion(signInError)
@@ -341,7 +344,7 @@ class FirebaseUtilities {
             userDocRef.setData(["bio": newData], merge: true)
             return completion(nil)
         default:
-            print("went through to default:", userProperty!)
+            return completion(CustomError(message: "User property not recognized."))
             // TODO: Show error
         }
     }
@@ -416,15 +419,16 @@ class FirebaseUtilities {
     
     static func followUser(uidToFollow: String!, completion: @escaping(_ error: Error?) -> Void) {
         
-        getUsername(userID: uid) { (username, usernameError) in
-            if usernameError != nil {
-                return completion(usernameError)
+        getUserInfo(userID: uidToFollow, fields: ["username"]) { (userInfo, userInfoError) in
+            let username = userInfo!["username"] as! String
+            if userInfoError != nil {
+                return completion(userInfoError)
             } else {
                 let batch = database.batch()    // activity update done over cloud function
                 
                 // update relationship in relationships collection
                 let relationshipDocPath = database.collection("relationships").document("\(uid)_\(uidToFollow!)")
-                batch.setData(["follower_uid": uid, "following_uid": uidToFollow!, "follower_username": username!], forDocument: relationshipDocPath)
+                batch.setData(["follower_uid": uid, "following_uid": uidToFollow!, "follower_username": username], forDocument: relationshipDocPath)
                 
                 // add 1 to current user's following count
                 let userDocPath = database.collection("users").document(uid)
@@ -501,18 +505,136 @@ class FirebaseUtilities {
         }
     }
     
-    static func getUsername(userID: String, completion: @escaping(_ username:String?, _ error: Error?) -> Void) {
+    static func getUserInfo(userID: String, fields: [String], completion: @escaping(_ userInfo: [String: Any]?, _ error: Error?) -> Void) {
         database.collection("users").document(userID).getDocument { (snapshot, error) in
             if error != nil {
                 return completion(nil, error)
             }
-            guard let documentData = snapshot?.data() else { return completion(nil, CustomError(message: "Failed to get user's username.")) }
-            let username = documentData["username"] as? String ?? ""
-            return completion(username, nil)
+            guard let documentData = snapshot?.data() else { return completion(nil, CustomError(message: "Failed to get user info.")) }
+            var userInfoDict = [String: Any]()
+            
+            for field in fields {
+                let userInfoValue = documentData[field]
+                userInfoDict[field] = userInfoValue
+            }
+            return completion(userInfoDict, nil)
         }
     }
     
-    // MARK: - Profile Navigation
+    // MARK: - Profile
+    
+    static func sendImageToDatabase(selectedImage: UIImage?, completion: @escaping(_ error: Error?) -> Void) {
+        let storageRef = Storage.storage().reference(forURL: "gs://dare-9adb9.appspot.com").child("profileimages").child(uid)
+        
+        // push data to database storage
+        if let profileImg = selectedImage, let imageData = profileImg.jpegData(compressionQuality: 0.1) {
+            Utilities.saveImage(imageName: "\(uid).png", image: profileImg, completion: { (saveImageError) in
+                if saveImageError != nil {
+                    return completion(saveImageError)
+                }
+            })
+                
+            storageRef.putData(imageData, metadata: nil, completion: { (metadata, putDataError) in
+                if putDataError != nil {
+                    return completion(putDataError)
+                }
+                // include image in user info
+                storageRef.downloadURL { (url, downloadError) in
+                    if downloadError != nil {
+                        return completion(downloadError)
+                    }
+                    guard let profileImageURL = url else { return }
+                    let userDocRef = self.database.collection("users").document(self.uid)
+                    
+                    let batch = self.database.batch()
+                    batch.updateData(["profile_image": profileImageURL.absoluteString], forDocument: userDocRef)
+                    
+                    // update posts to have correct profile picture
+                    userDocRef.collection("posts").getDocuments { (snapshot, getuserPostsError) in
+                        if getuserPostsError != nil {
+                            return completion(getuserPostsError)
+                        }
+                        guard let unwrappedSnapshot = snapshot else { return }
+                        let documents = unwrappedSnapshot.documents
+                        
+                        for document in documents {
+                            let postID = document.documentID
+                            let postPath = self.database.collection("posts").document(postID)
+                            batch.updateData(["creator.profile_picture_URL": profileImageURL.absoluteString], forDocument: postPath)
+                        }
+                        batch.commit { (batchError) in
+                            if batchError != nil {
+                                return completion(batchError)
+                            }
+                            return completion(nil)
+                        }
+                    }
+                }
+            })
+        }
+    }
+    
+    static func fetchProfileImage(completion: @escaping(_ image: UIImage?, _ error: Error?) -> Void) {
+        if let image = Utilities.loadImageFromDiskWith(fileName: "\(self.uid).png") {
+            return completion(image, nil)
+        } else {
+            let downloadURLPath = self.database.collection("users").document(uid)
+            downloadURLPath.getDocument { (document, downloadURLError) in
+                if downloadURLError != nil {
+                    return completion(nil, downloadURLError)
+                }
+                if let document = document, document.exists {
+                    if document.get("profile_image") != nil {
+                        if let downloadURL = document.get("profile_image") as? String {
+                            let downloadURLRef = Storage.storage().reference(forURL: downloadURL)
+                            downloadURLRef.getData(maxSize: 1 * 1024 * 1024) { (data, getDataError) in
+                                if getDataError != nil {
+                                    return completion(nil, getDataError)
+                                } else {
+                                    let image = UIImage(data: data!)
+                                    Utilities.saveImage(imageName: "\(self.uid).png", image: image!) { (saveImageError) in
+                                        if saveImageError != nil {
+                                            return completion(nil, saveImageError)
+                                        }
+                                    }
+                                    return completion(image, nil)
+                                }
+                            }
+                        } else { return completion(nil, CustomError(message: "Could not find URL to profile image")) }
+                    } else { return completion(nil, CustomError(message: "Could not find profile image")) }
+                }
+            }
+        }
+    }
+    
+    static func fetchUserDares(completion: @escaping(_ dares: [Dare]?, _ error: Error?) -> Void) {
+        let dareCollectionRef = database.collection("users").document(uid).collection("dares_created")
+        dareCollectionRef.getDocuments { (snapshot, error) in
+            if error != nil {
+                return completion(nil, error)
+            }
+            guard let unwrappedSnapshot = snapshot else { return }
+            let documents = unwrappedSnapshot.documents
+            var dares = [Dare]()
+            for document in documents {
+                let documentData = document.data()
+                
+                
+                let dareNameFull = documentData["dare_full_name"] as? String ?? ""
+                let dareID = document.documentID
+                let numberOfAttempts = documentData["number_of_attempts"] as? Int ?? 0
+                let profilePictureURL = documentData["creator_profile_picture"] as? String ?? ""
+                
+                let dare = Dare()
+                dare.dareNameFull = dareNameFull
+                dare.dareNameID = dareID
+                dare.numberOfAttempts = numberOfAttempts
+                dare.creatorProfilePicturePath = profilePictureURL
+                dares.append(dare)
+            }
+            return completion(dares, nil)
+        }
+    }
     
     static func checkIfFollowing(followeruid: String!, followinguid: String?, completion: @escaping(_ isFollowing:Bool?, _ error: Error?) -> Void) {
         guard let followinguid = followinguid else { return completion(nil, CustomError(message: "Error fetching following status.")) }
@@ -614,20 +736,22 @@ class FirebaseUtilities {
     
     // given a set of postIDs, it returns n more posts on the first call, then n more posts.
     static func fetchPosts(postIDs: [String], lastPost: Post?, postsToLoadInitial: Int, postsToLoad: Int, completion: @escaping(_ posts:[Post]?, _ error: Error?) -> ()) {
-        
         if !postIDs.isEmpty {
-            
-            let postsRef = self.database.collection("posts").whereField("post_ID", in: postIDs)
+            print(postIDs.count)
+            var trimmedPostIDs = postIDs
+            if postIDs.count > 10 {
+                trimmedPostIDs = Array(postIDs.prefix(10))
+            }
+            let postsRef = self.database.collection("posts").whereField("post_ID", in: trimmedPostIDs)
             let lastPost = lastPost
             var queryRef: Query
-            
+                        
             if lastPost == nil {
                 queryRef = postsRef.order(by: "timestamp", descending: true).limit(to: postsToLoadInitial)
             } else {
                 let lastTimestamp = lastPost!.timestamp
                 queryRef = postsRef.order(by: "timestamp", descending: true).start(after: [lastTimestamp]).limit(to: postsToLoad)
             }
-            
             queryRef.getDocuments { (snapshot, error) in
                 if error != nil {
                     return completion(nil, error)
@@ -670,7 +794,7 @@ class FirebaseUtilities {
         }
     }
     
-    // MARK: - Dare Creation
+    // MARK: - Dare Generation
     
     static func createDare(dareTitle: String, completion: @escaping(_ error: Error?) -> Void) {
         let trimmedTitle = dareTitle.replacingOccurrences(of: " ", with: "")
@@ -697,6 +821,59 @@ class FirebaseUtilities {
                 }
                 return completion(nil)
             }
+        }
+    }
+    
+    static func fetchDaresInCategory(category: String, completion: @escaping(_ dares: [Dare]?, _ error: Error?) -> Void) {        database.collection("universal_dare_categories").document(category.lowercased()).getDocument { (document, getCategoryDocError) in
+            if getCategoryDocError != nil {
+                return completion(nil, getCategoryDocError)
+            }
+            guard let data = document?.data() else { return completion(nil, CustomError(message: "Error fetching \(category) dares."))}
+        
+        var dares = [Dare]()
+        var daresIteratedCount = 0
+        
+            for (_, name) in data {
+                daresIteratedCount += 1
+                let stringName = name as! String
+                let dare = Dare()
+                dare.dareNameID = stringName
+                self.database.collection("dares").document(stringName).getDocument { (dareDocument, getDareDocError) in
+                    if getDareDocError != nil {
+                        return completion(nil, getDareDocError)
+                    }
+                    
+                    guard let dareData = dareDocument?.data() else { return }
+                    
+                    dare.creatorProfilePicturePath = dareData["creator_profile_picture"] as? String ?? ""
+                    dare.numberOfAttempts = dareData["number_of_attempts"] as? Int ?? 0
+                    dare.dareNameFull = dareData["dare_full_name"] as? String ?? "Dare"
+                    
+                    dares.append(dare)
+                    
+                    if daresIteratedCount >= data.count {
+                        return completion(dares, nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    static func fetchDare(dareID: String, completion: @escaping(_ dare: Dare?, _ error: Error?) -> Void) {
+        database.collection("dares").document(dareID).getDocument { (snapshot, error) in
+            if error != nil {
+                return completion(nil, error)
+            }
+            guard let unwrappedSnapshot = snapshot else { return }
+            guard let data = unwrappedSnapshot.data() else { return }
+            let dare = Dare()
+            dare.dareNameFull = data["dare_full_name"] as? String
+            dare.creatorduid = data["creator_uid"] as? String
+            dare.creatorUsername = data["creator_username"] as? String
+            dare.numberOfAttempts = data["number_of_attempts"] as? Int
+            dare.creatorProfilePicturePath = data["creator_profile_picture"] as? String
+            
+            return completion(dare, nil)
         }
     }
     
@@ -756,6 +933,256 @@ class FirebaseUtilities {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    // MARK: - Comments
+    
+    static func fetchComments(postID: String, lastComment: Comment?, completion: @escaping(_ comments:[Comment]?, _ error: Error?) -> ()) {
+        
+        let commentsRef = database.collection("posts").document(postID).collection("comments").order(by: "number_of_likes", descending: true)
+        var queryRef: Query
+        
+        if lastComment == nil {
+            queryRef = commentsRef.limit(to: 8)
+        } else {
+            let lastNumberOfLikes = lastComment!.numberOfLikes
+            queryRef = commentsRef.start(after: [lastNumberOfLikes]).limit(to: 8)
+        }
+        
+        queryRef.getDocuments { (snapshot, error) in
+            if error != nil {
+                return completion(nil, error)
+            }
+            
+            guard let unwrappedSnapshot = snapshot else { return }
+            let documents = unwrappedSnapshot.documents
+            
+            var tempComments = [Comment]()
+            
+            for document in documents {
+                
+                let documentData = document.data()
+                
+                let commenterData = documentData["commenter"] as? [String: Any] ?? ["": ""]
+                
+                let commenteruid = commenterData["uid"] as? String ?? ""
+                let commenterProfilePictureURL = commenterData["profile_picture_URL"] as? String ?? ""
+                let commenterUsername = commenterData["username"] as? String ?? ""
+
+                let numberOfLikes = documentData["number_of_likes"] as? Int ?? 0
+                let commentText = documentData["comment_text"] as? String ?? ""
+                
+                let commentID = documentData["comment_ID"] as? String ?? ""
+                
+                if commentID != lastComment?.commentID {
+                    let comment = Comment(uid: commenteruid, profilePictureURL: commenterProfilePictureURL, username: commenterUsername, comment: commentText, numberOfLikes: numberOfLikes, commentID: commentID)
+                    tempComments.append(comment)
+                }
+            }
+            return completion(tempComments, nil)
+        }
+    }
+    
+    static func sendCommentToDatabase(commentText: String, postID: String, completion: @escaping(_ error: Error?) -> Void) {
+        let batch = database.batch()
+        
+        FirebaseUtilities.getUserInfo(userID: uid, fields: ["profile_image", "username"]) { (userInfo, error) in
+            if error != nil {
+                return completion(error)
+            }
+            let username = userInfo!["username"] as! String
+            let profilePictureURL = userInfo!["profile_image"] as! String
+            
+            let postPath = self.database.collection("posts").document(postID)
+            batch.updateData(["number_of_comments": FieldValue.increment(Int64(1))], forDocument: postPath)
+            
+            let commentPath = postPath.collection("comments").document()
+            let commenter = ["profile_picture_URL": profilePictureURL, "uid": self.uid, "username": username]
+            let commentData: [String: Any] = ["comment_ID": commentPath.documentID, "comment_text": commentText, "commenter": commenter, "number_of_likes": Int(0)]
+            batch.setData(commentData, forDocument: commentPath)
+            
+            batch.commit { (commitError) in
+                if commitError != nil {
+                    return completion(commitError)
+                }
+                return completion(nil)
+            }
+        }
+    }
+    
+    // MARK: - Follows
+    
+    static func fetchFollows(userID: String, followersOrFollowing: String, completion: @escaping(_ profilePreviews: [ProfilePreview]?, _ error: Error?) -> Void ) {
+        if followersOrFollowing == "Followers" {
+            database.collection("relationships").whereField("following_uid", isEqualTo: userID).getDocuments { (snapshot, getRelationshipError) in
+                if getRelationshipError != nil {
+                    return completion(nil, getRelationshipError)
+                }
+                guard let unwrappedSnapshot = snapshot else { return }
+                let documents = unwrappedSnapshot.documents
+                
+                var profilePreviews = [ProfilePreview]()
+                var activitiesCheckedCount = 0  // since it is necessary to do an asynchronous function within the for loop, the for loop may complete before the asynchronous function is complete. So, there has to be a check to ensure async functions completed.
+                
+                for document in documents {
+                    let documentData = document.data()
+                    
+                    let followeruid = documentData["follower_uid"] as? String ?? ""
+                    
+                    self.database.collection("users").document(followeruid).getDocument { (userSnapshot, userError) in
+                        if userError != nil {
+                            return completion(nil, userError)
+                        }
+                        guard let unwrappedUserSnapshot = userSnapshot else { return }
+                        let data = unwrappedUserSnapshot.data()
+                        
+                        let username = data!["username"] as? String ?? ""
+                        let profilePictureURL = data!["profile_image"] as? String ?? ""
+                        let fullName = data!["full_name"] as? String ?? ""
+                        
+                        self.checkIfFollowing(followeruid: uid, followinguid: followeruid) { (isFollowing, followingError)  in
+                            if followingError != nil {
+                                return completion(nil, followingError)
+                            }
+                            let profilePreview = ProfilePreview(uid: followeruid, fullName: fullName, username: username, profileImageURL: profilePictureURL, isFollowing: isFollowing!)
+                            if followeruid == self.uid {
+                                profilePreview.isCurrentUser = true
+                            }
+                            profilePreviews.append(profilePreview)
+                            activitiesCheckedCount += 1
+                            
+                            if activitiesCheckedCount >= documents.count {
+                                return completion(profilePreviews, nil)
+                            }
+                        }
+                    }
+                }
+            }
+        } else if followersOrFollowing == "Following" {
+            database.collection("relationships").whereField("follower_uid", isEqualTo: userID).getDocuments { (snapshot, getRelationshipError) in
+                if getRelationshipError != nil {
+                    return completion(nil, getRelationshipError)
+                }
+                guard let unwrappedSnapshot = snapshot else { return }
+                let documents = unwrappedSnapshot.documents
+                
+                var profilePreviews = [ProfilePreview]()
+                var activitiesCheckedCount = 0  // since it is necessary to do an asynchronous function within the for loop, the for loop may complete before the asynchronous function is complete. So, there has to be a check to ensure async functions completed.
+                
+                for document in documents {
+                    let documentData = document.data()
+                    
+                    let followinguid = documentData["following_uid"] as? String ?? ""
+                    
+                    self.database.collection("users").document(followinguid).getDocument { (userSnapshot, userError) in
+                        if userError != nil {
+                            return completion(nil, userError)
+                        }
+                        guard let unwrappedUserSnapshot = userSnapshot else { return }
+                        let data = unwrappedUserSnapshot.data()
+                        
+                        let username = data!["username"] as? String ?? ""
+                        let profilePictureURL = data!["profile_image"] as? String ?? ""
+                        let fullName = data!["full_name"] as? String ?? ""
+                        
+                        self.checkIfFollowing(followeruid: uid, followinguid: followinguid) { (isFollowing, followingError) in
+                            if followingError != nil {
+                                return completion(nil, followingError)
+                            }
+                            let profilePreview = ProfilePreview(uid: followinguid, fullName: fullName, username: username, profileImageURL: profilePictureURL, isFollowing: isFollowing!)
+                            if followinguid == uid {
+                                profilePreview.isCurrentUser = true
+                            }
+                            profilePreviews.append(profilePreview)
+                            activitiesCheckedCount += 1
+                            
+                            if activitiesCheckedCount >= documents.count {
+                                return completion(profilePreviews, nil)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Post Creation
+    
+    static func sendPostToFirestore(videoURL: URL, caption: String, dare: Dare, postPath: DocumentReference, completion: @escaping(_ uploadTask: StorageUploadTask?, _ error: Error?) -> Void) {
+        let metadata = StorageMetadata()
+        metadata.contentType = "video/quicktime"
+        
+        let filename = NSUUID().uuidString
+        let vidFilename = filename  + ".mov"
+        
+        if let videoData = NSData(contentsOf: videoURL) as Data? {
+            let storageRef = Storage.storage().reference()
+            let vidRef = storageRef.child("post_videos/\(vidFilename)")
+            
+            let uploadTask = vidRef.putData(videoData, metadata: nil) { (metadata, putDataError) in
+                if putDataError != nil {
+                    return completion(nil, putDataError)
+                }
+                
+                vidRef.downloadURL { (url, downloadError) in
+                    if downloadError != nil {
+                        return completion(nil, downloadError)
+                    }
+                    self.database.collection("users").document(self.uid).getDocument { (document, getDocError) in
+                        if getDocError != nil {
+                            return completion(nil, getDocError)
+                        }
+                        let postID = postPath.documentID
+                        let dareNameFull = dare.dareNameFull ?? ""
+                        let dareID = dare.dareNameID ?? ""
+                        
+                        let username = document?.get("username") as! String
+                        let profilePictureURL = document?.get("profile_image") as! String
+                        
+                        let creatorObject = ["uid": self.uid, "username": username, "profile_picture_URL": profilePictureURL]
+                        
+                        let postData: [String: Any] = ["video_URL": url!.absoluteString, "dare_full_name": dareNameFull, "dare_ID": dareID, "caption": caption, "post_ID": postID, "creator": creatorObject, "timestamp": Timestamp.init()]
+                        
+                        postPath.setData(postData , mergeFields: Array(postData.keys))
+                        let userPath = self.database.collection("users").document(self.uid)
+                        userPath.collection("posts").document(postID).setData(["post_ID": postID], mergeFields: ["post_ID"])
+                        userPath.collection("following_post_IDs").document(postID).setData(["post_ID": postID], mergeFields: ["post_ID"])
+                        
+                        self.sendThumbnailToDatabase(filename: filename, postPath: postPath, videoURL: videoURL) { (thumbnailError) in
+                            if thumbnailError != nil {
+                                return completion(nil, thumbnailError)
+                            }
+                        }
+                    }
+                }
+            }
+            return completion(uploadTask, nil)
+        }
+    }
+    
+    static func sendThumbnailToDatabase(filename: String, postPath: DocumentReference, videoURL: URL, completion: @escaping(_ error: Error?) -> Void ) {
+        
+        let postID = postPath.documentID
+        let imageFilename = filename  + ".JPEG"
+        let storageRef = Storage.storage().reference(forURL: Constants.dareStorageURL).child("post_thumbnails").child(imageFilename)
+        
+        let thumbnail = Utilities.createThumbnail(url: videoURL)
+        
+        // push data to database storage
+        guard let imageData = thumbnail!.jpegData(compressionQuality: 0.1) else { return completion(CustomError(message: "Error creating post thumbnail."))}
+        storageRef.putData(imageData, metadata: nil) { (metadata, putDataError) in
+            if putDataError != nil {
+                return completion(putDataError)
+            }
+            storageRef.downloadURL { (url, downloadError) in
+                if downloadError != nil {
+                    return completion(downloadError)
+                }
+                guard let thumbnailURL = url else { return }
+                postPath.setData(["thumbnail_image": thumbnailURL.absoluteString], mergeFields: ["thumbnail_image"])
+                self.database.collection("users").document(self.uid).collection("posts").document(postID).setData(["thumbnail_image": thumbnailURL.absoluteString], mergeFields: ["thumbnail_image"])
             }
         }
     }

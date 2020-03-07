@@ -7,8 +7,12 @@
 //
 
 import UIKit
+import FirebaseStorage  // necessary to transfer completion info
 
 class MainTabBarController: UITabBarController {
+    
+    let homeVC = HomeViewController()
+    var uploadTask: StorageUploadTask?
     
     // MARK: - Setup
     
@@ -22,7 +26,7 @@ class MainTabBarController: UITabBarController {
         
         let offset: CGFloat = 6.0
         
-        let homeVC = HomeViewController()
+
         let homeTabBarImageUnselected = UIImage(named: "home_unselected")
         let homeTabBarImageSelected = UIImage(named: "home_selected")
         homeVC.tabBarItem = UITabBarItem(title: nil, image: homeTabBarImageUnselected, selectedImage: homeTabBarImageSelected)
@@ -58,9 +62,17 @@ class MainTabBarController: UITabBarController {
         let viewControllerList = [homeVC, exploreVC, postVC, activityVC, profileVC]
         viewControllers = viewControllerList.map { UINavigationController(rootViewController: $0) }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if uploadTask != nil {
+            homeVC.uploadTask = uploadTask
+        }
+    }
 }
 
-extension MainTabBarController: UITabBarControllerDelegate {
+extension MainTabBarController: UITabBarControllerDelegate {    // allows custom transition to create VC
 
     /*
      Called to allow the delegate to return a UIViewControllerAnimatedTransitioning delegate object for use during a noninteractive tab bar view controller transition.

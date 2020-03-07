@@ -6,10 +6,6 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import UIKit
-import FirebaseFirestore
-import FirebaseStorage
-import FirebaseAuth
 import AsyncDisplayKit
 
 class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASCollectionDataSource, ASCollectionDelegate {
@@ -20,10 +16,6 @@ class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
     var postSelectedPreview: PostPreview!
     var posts = [Post]()
     var postIndexPathRow = 0
-    
-    let database = Firestore.firestore()
-    let storageRef = Storage.storage().reference()
-    let uid = Auth.auth().currentUser!.uid
     
     var reachedEnd = false
         
@@ -124,9 +116,9 @@ class ExplorePostSelectedViewController: ASViewController<ASDisplayNode>, ASColl
         cellNode.postID = self.posts[indexPath.row].postID
         cellNode.creatoruid = self.posts[indexPath.row].creatoruid
         
-        let boldLabelAttributes = Utilities.createAttributes(color: .white, fontSize: 18, bold: true, shadow: true)
-        let captionAttributes = Utilities.createAttributes(color: .white, fontSize: 16, bold: false, shadow: true)
-        let timestampAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 14, bold: false, shadow: true)
+        let boldLabelAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: true)
+        let captionAttributes = Utilities.createAttributes(color: .white, font: .systemFont(ofSize: 16), shadow: true)
+        let timestampAttributes = Utilities.createAttributes(color: .lightGray, font: .systemFont(ofSize: 14), shadow: true)
         
         cellNode.profileImage.url = URL(string: self.posts[indexPath.row].pathToProfileImage)
         cellNode.commentCountLabel.attributedText = NSAttributedString(string: String(self.posts[indexPath.row].numberOfComments), attributes: boldLabelAttributes)

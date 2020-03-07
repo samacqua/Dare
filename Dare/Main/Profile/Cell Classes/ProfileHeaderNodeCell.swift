@@ -8,8 +8,6 @@
 
 import AsyncDisplayKit
 import FirebaseAuth
-import FirebaseFirestore
-import FirebaseStorage
 
 class ProfileHeaderNodeCell: ASCellNode {
     
@@ -41,7 +39,6 @@ class ProfileHeaderNodeCell: ASCellNode {
     var editProfileButton = ASButtonNode()
     var likedPostsButton = ASButtonNode()
     
-    let db = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
     
     // MARK: - Initialization and setup
@@ -82,13 +79,13 @@ class ProfileHeaderNodeCell: ASCellNode {
         profileImage.layer.cornerRadius = 50
         profileImage.clipsToBounds = true
         
-        let editProfileAttributes = Utilities.createAttributes(color: .white, fontSize: 18, bold: true, shadow: false)
+        let editProfileAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: false)
         let editProfileText = NSAttributedString(string: "Edit profile", attributes: editProfileAttributes)
         editProfileButton.backgroundColor = .orange
         editProfileButton.cornerRadius = 5.0
         editProfileButton.setAttributedTitle(editProfileText, for: .normal)
         
-        let likedPostsAttributes = Utilities.createAttributes(color: .orange, fontSize: 18, bold: true, shadow: false)
+        let likedPostsAttributes = Utilities.createAttributes(color: .orange, font: .boldSystemFont(ofSize: 18), shadow: false)
         let likedPostsText = NSAttributedString(string: "Liked posts", attributes: likedPostsAttributes)
         likedPostsButton.borderColor = UIColor.orange.cgColor
         likedPostsButton.borderWidth = 3.0
@@ -96,12 +93,14 @@ class ProfileHeaderNodeCell: ASCellNode {
         likedPostsButton.setAttributedTitle(likedPostsText, for: .normal)
     }
     
+    // MARK: - Actions
+    
     @objc func segmentedControlChanged() {
         segmentedView.changeUnderlinePosition()
     }
     
     func getUserTopPostPreviews() {
-        FirebaseUtilities.getUserPostPreviews(profileuid: Auth.auth().currentUser!.uid) { (postPreviews, error) in
+        FirebaseUtilities.getUserPostPreviews(profileuid: uid) { (postPreviews, error) in
             if error != nil {
                 self.view.showToast(message: error!.localizedDescription)
             }
@@ -153,6 +152,7 @@ class ProfileHeaderNodeCell: ASCellNode {
 }
 
 extension ProfileHeaderNodeCell: ASCollectionDataSource, ASCollectionDelegate {
+    
     func collectionNode(_ collectionNode: ASCollectionNode, nodeForItemAt indexPath: IndexPath) -> ASCellNode {
         let cell = TopDaresNodeCell()
         if indexPath.row == 0 {

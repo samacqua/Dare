@@ -6,7 +6,6 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import UIKit
 import AsyncDisplayKit
 
 class ExploreProfileHeaderNodeCell: ASCellNode {
@@ -41,7 +40,7 @@ class ExploreProfileHeaderNodeCell: ASCellNode {
         })
     }()
     
-    let followAttributes = Utilities.createAttributes(color: .white, fontSize: 18, bold: true, shadow: false)
+    let followAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: false)
     
     // MARK: - Initialization and setup
     
@@ -90,15 +89,13 @@ class ExploreProfileHeaderNodeCell: ASCellNode {
         segmentedView.changeUnderlinePosition()
     }
     
-    @objc func followButtonTouchUpInside() {
-        print("Is following:", isFollowing)
-        
-        let followCount = Utilities.createAttributes(color: .black, fontSize: 14, bold: true, shadow: false)
-        let followLabel = Utilities.createAttributes(color: .black, fontSize: 14, bold: false, shadow: false)
+    @objc func followButtonTouchUpInside() {        
+        let followCount = Utilities.createAttributes(color: .black, font: .boldSystemFont(ofSize: 14), shadow: false)
+        let followLabel = Utilities.createAttributes(color: .black, font: .systemFont(ofSize: 14), shadow: false)
         
         if !isFollowing {
             self.isFollowing = true
-            let followingAttributes = Utilities.createAttributes(color: .orange, fontSize: 18, bold: true, shadow: false)
+            let followingAttributes = Utilities.createAttributes(color: .orange, font: .boldSystemFont(ofSize: 18), shadow: false)
             
             followButton.setAttributedTitle(NSAttributedString(string: "Following", attributes: followingAttributes), for: .normal)
             followButton.backgroundColor = .white

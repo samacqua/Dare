@@ -6,10 +6,9 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import FirebaseFirestore
-import FirebaseStorage
-import FirebaseAuth
 import AsyncDisplayKit
+import FirebaseAuth
+import FirebaseStorage
 
 // TODO: Setup Explore Page that loads posts similar to ones user posts/interacts with
 // TODO: Setup activity page
@@ -44,6 +43,7 @@ import AsyncDisplayKit
 // TODO: Improve Password regex to not include weird characters or white spaces
 // TODO: Reload data when get back to edit profile from changing data
 // TODO: Implement username search
+// TODO: Fix loading so loads more than just 10 posts
 
 class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSource, ASCollectionDelegate {
     
@@ -53,14 +53,11 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
     var posts = [Post]()
     let filename = String()
     
-    let database = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
-    let storageRef = Storage.storage().reference()
     
     var reachedEnd = false
     
-    var tabBarBackgroundImage = UIImage()
-    var tabBarShadowImage = UIImage()
+    var uploadTask: StorageUploadTask?
         
     // MARK: - Initialization and Setup
     
@@ -93,6 +90,11 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
         collectionNode.view.decelerationRate = UIScrollView.DecelerationRate.fast
         collectionNode.showsVerticalScrollIndicator = false
         collectionNode.leadingScreensForBatching = 2.0
+        
+        for family in UIFont.familyNames.sorted() {
+            let names = UIFont.fontNames(forFamilyName: family)
+            print("Family: \(family) Font names: \(names)")
+        }
     }
     
     override var prefersStatusBarHidden: Bool { true }
@@ -101,9 +103,11 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        displayUploadCompletion()
+        
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
         let tabBar = self.tabBarController!.tabBar
-        
+
         tabBar.barTintColor = .clear
         let backgroundColor = UIColor(white: 0.0, alpha: 0.10)
         tabBar.backgroundImage = UIImage.from(color: backgroundColor)
@@ -128,6 +132,17 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
         tabBar.shadowImage = UIImage.from(color: backgroundColor)
     }
     
+    // MARK: - Functions
+    
+    func displayUploadCompletion() {
+        guard let uploadTask = uploadTask else { print("no upload"); return }
+        uploadTask.observe(.progress) { (snapshot) in
+            let percentCompleted = Int(snapshot.progress!.fractionCompleted * 100)
+
+            self.view.showToast(message: "Percent complete: \(percentCompleted)")
+        }
+    }
+    
     // MARK: - CollectionNode
     
     // Give each cell node their info
@@ -135,9 +150,11 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
         
         let cellNode = PostCellNode()
         
-        let boldLabelAttributes = Utilities.createAttributes(color: .white, fontSize: 18, bold: true, shadow: true)
-        let captionAttributes = Utilities.createAttributes(color: .white, fontSize: 16, bold: false, shadow: true)
-        let timestampAttributes = Utilities.createAttributes(color: .lightGray, fontSize: 14, bold: false, shadow: true)
+        let dareFont = UIFont(name: "AmericanTypewriter-Bold", size: 20)
+        let dareLabelAttributes = Utilities.createAttributes(color: .white, font: dareFont!, shadow: false)
+        let boldLabelAttributes = Utilities.createAttributes(color: .white, font: .boldSystemFont(ofSize: 18), shadow: true)
+        let captionAttributes = Utilities.createAttributes(color: .white, font: .systemFont(ofSize: 16), shadow: true)
+        let timestampAttributes = Utilities.createAttributes(color: .lightGray, font: .systemFont(ofSize: 14), shadow: true)
         
         cellNode.asset = AVAsset(url: URL(string: posts[indexPath.row].pathToVideo)!)
         
@@ -155,7 +172,7 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
         cellNode.timestampLabel.attributedText = NSAttributedString(string: timestampText, attributes: timestampAttributes)
         cellNode.captionLabel.attributedText = NSAttributedString(string: self.posts[indexPath.row].caption, attributes: captionAttributes)
         
-        let dareButtonTitleString = NSAttributedString(string: self.posts[indexPath.row].dareFullName, attributes: boldLabelAttributes)
+        let dareButtonTitleString = NSAttributedString(string: self.posts[indexPath.row].dareFullName, attributes: dareLabelAttributes)
         cellNode.dareButton.setAttributedTitle(dareButtonTitleString, for: .normal)
         cellNode.dareID = self.posts[indexPath.row].dareID
         

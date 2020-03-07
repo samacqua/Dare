@@ -11,7 +11,6 @@ import UIKit
 import FBSDKLoginKit
 import FirebaseAuth
 import GoogleSignIn
-import FirebaseFirestore
 
 class LoginViewController: UIViewController, GIDSignInDelegate {
     
@@ -141,7 +140,6 @@ class LoginViewController: UIViewController, GIDSignInDelegate {
             if error != nil {
                 self.view.showToast(message: error!.localizedDescription)
             }
-            print("success")
             let homeVC = MainTabBarController()
             homeVC.modalPresentationStyle = .fullScreen
             self.present(homeVC, animated: true, completion: nil)

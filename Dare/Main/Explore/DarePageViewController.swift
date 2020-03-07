@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import FirebaseFirestore
-import FirebaseStorage
 import AsyncDisplayKit
 
 class DarePageViewController: ASViewController<ASDisplayNode>, ASCollectionDataSource, ASCollectionDelegate {
@@ -16,8 +14,6 @@ class DarePageViewController: ASViewController<ASDisplayNode>, ASCollectionDataS
     var collectionNode: ASCollectionNode!
     
     var dareID: String!
-    let database = Firestore.firestore()
-    
     var dare = Dare()
     
     // MARK: Initialization and Setup
@@ -54,7 +50,15 @@ class DarePageViewController: ASViewController<ASDisplayNode>, ASCollectionDataS
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchDare()
+        FirebaseUtilities.fetchDare(dareID: dareID) { (dare, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+            }
+            self.dare = dare!
+            DispatchQueue.main.async {
+                self.collectionNode.reloadData()
+            }
+        }
         self.navigationItem.title = dare.dareNameFull
     }
     
@@ -64,27 +68,6 @@ class DarePageViewController: ASViewController<ASDisplayNode>, ASCollectionDataS
         let exploreProfileVC = ExploreProfileViewController()
         exploreProfileVC.creatoruid = dare.creatorduid
         self.navigationController?.show(exploreProfileVC, sender: self)
-    }
-    
-    // MARK: Functions
-    
-    func fetchDare() {
-        database.collection("dares").document(dareID).getDocument { (snapshot, error) in
-            if error != nil {
-                print("Error retrieving dare:", error!)
-            }
-            guard let unwrappedSnapshot = snapshot else { return }
-            guard let data = unwrappedSnapshot.data() else { return }
-            self.dare.dareNameFull = data["dare_full_name"] as? String
-            self.dare.creatorduid = data["creator_uid"] as? String
-            self.dare.creatorUsername = data["creator_username"] as? String
-            self.dare.numberOfAttempts = data["number_of_attempts"] as? Int
-            self.dare.creatorProfilePicturePath = data["creator_profile_picture"] as? String
-            
-            DispatchQueue.main.async {
-                self.collectionNode.reloadData()
-            }
-        }
     }
     
     // MARK: CollectionNode

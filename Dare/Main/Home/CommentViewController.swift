@@ -7,7 +7,6 @@
 //
 
 import AsyncDisplayKit
-import FirebaseFirestore
 import FirebaseAuth
 
 class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, ASTableDataSource, UITextViewDelegate, HalfModalPresentable {
@@ -27,7 +26,6 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     
     var comments = [Comment]()
     
-    let database = Firestore.firestore()
     let uid = Auth.auth().currentUser!.uid
     
     var reachedEnd: Bool = false
@@ -49,6 +47,8 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        addTitleViewTapAction(action: #selector(closeTapped))
+
     }
     
     override func viewDidLoad() {
@@ -78,9 +78,10 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
         footerView.backgroundColor = .lightGray
         footerView.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(footerView)
+        tableNode.view.addSubview(footerView)
         bottomConstraint = NSLayoutConstraint(item: footerView!, attribute: .bottom, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .bottom, multiplier: 1.0, constant: 0.0)
-        view.addConstraintsWithFormat(format: "V:[v0(44)]", views: footerView)
+        tableNode.view.addConstraintsWithFormat(format: "V:[v0(44)]", views: footerView)
+        tableNode.view.bringSubviewToFront(footerView)
         
         view.addConstraint(bottomConstraint!)
         
@@ -119,13 +120,48 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     
     // MARK: - Actions
     
-    @objc func sendButtonTouchUpInside() {
-        if textView.text != "" && textView.text != "Comment" {
-            self.dismissKeyboard()
-            sendCommentToDatabase()
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == "Comment" {
+            textView.text = nil
+            textView.textColor = UIColor.black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
             textView.text = "Comment"
             textView.textColor = UIColor.lightGray
         }
+    }
+    
+    @objc func closeTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func sendButtonTouchUpInside() {
+        if textView.text != "" && textView.text != "Comment" {
+            self.dismissKeyboard()
+            FirebaseUtilities.sendCommentToDatabase(commentText: textView.text, postID: postID) { (error) in
+                if error != nil {
+                    self.view.showToast(message: error!.localizedDescription)
+                }
+            }
+            textView.text = "Comment"
+            textView.textColor = UIColor.lightGray
+        }
+    }
+    
+    func addTitleViewTapAction(action: Selector) {
+      if let subviews = self.navigationController?.navigationBar.subviews {
+        for subview in subviews {
+          if let _ = subview.subviews.first as? UILabel {
+            let gesture = UITapGestureRecognizer(target: self, action: action)
+            subview.isUserInteractionEnabled = true
+            subview.addGestureRecognizer(gesture)
+            break
+          }
+        }
+      }
     }
     
     @objc func handleKeyboardNotification(notification: NSNotification) {
@@ -148,116 +184,15 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
         self.dismiss(animated: true, completion: nil)
     }
     
-    // MARK: - Functions
-    
-    func getCommenterInfo(completion: @escaping(_ profilePictureURL: String, _ username: String) -> ()) {
-        database.collection("users").document(uid).getDocument { (document, error) in
-            if error != nil {
-                print("Error retrieving current user's information:", error!)
-            }
-            guard let data = document?.data() else { return }
-            let username = data["username"] as? String ?? ""
-            let profilePictureURL = data["profile_image"] as? String ?? ""
-            return completion(profilePictureURL, username)
-        }
-    }
-    
-    func sendCommentToDatabase() {
-        let batch = database.batch()
-        
-        let commentText = textView.text!
-        
-        getCommenterInfo { (profilePictureURL, username) in
-            
-            let postPath = self.database.collection("posts").document(self.postID)
-            batch.updateData(["number_of_comments": FieldValue.increment(Int64(1))], forDocument: postPath)
-            
-            let commentPath = postPath.collection("comments").document()
-            
-            let commenter = ["profile_picture_URL": profilePictureURL, "uid": self.uid, "username": username]
-            let commentData: [String: Any] = ["comment_ID": commentPath.documentID, "comment_text": commentText, "commenter": commenter, "number_of_likes": Int(0)]
-            batch.setData(commentData, forDocument: commentPath)
-            
-            batch.commit()
-        }
-    }
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == "Comment" {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
-            textView.text = "Comment"
-            textView.textColor = UIColor.lightGray
-        }
-    }
-    
-    func fetchComments(completion: @escaping(_ comments:[Comment]) -> ()) {
-        
-        let commentsRef = database.collection("posts").document(postID).collection("comments").order(by: "number_of_likes", descending: true)
-        let lastComment = self.comments.last
-        var queryRef: Query
-        
-        if lastComment == nil {
-            queryRef = commentsRef.limit(to: 8)
-        } else {
-            let lastNumberOfLikes = lastComment!.numberOfLikes
-            queryRef = commentsRef.start(after: [lastNumberOfLikes]).limit(to: 8)
-        }
-        
-        queryRef.getDocuments { (snapshot, error) in
-            if error != nil {
-                print("Error getting comments:", error!)
-            }
-            
-            guard let unwrappedSnapshot = snapshot else { return }
-            let documents = unwrappedSnapshot.documents
-            
-            var tempComments = [Comment]()
-            
-            for document in documents {
-                
-                let documentData = document.data()
-                
-                let commenterData = documentData["commenter"] as? [String: Any] ?? ["": ""]
-                
-                let commenteruid = commenterData["uid"] as? String ?? ""
-                let commenterProfilePictureURL = commenterData["profile_picture_URL"] as? String ?? ""
-                let commenterUsername = commenterData["username"] as? String ?? ""
-
-                let numberOfLikes = documentData["number_of_likes"] as? Int ?? 0
-                let commentText = documentData["comment_text"] as? String ?? ""
-                
-                let commentID = documentData["comment_ID"] as? String ?? ""
-                
-                if commentID != lastComment?.commentID {
-                    let comment = Comment(uid: commenteruid, profilePictureURL: commenterProfilePictureURL, username: commenterUsername, comment: commentText, numberOfLikes: numberOfLikes, commentID: commentID)
-                    tempComments.append(comment)
-                }
-            }
-            return completion(tempComments)
-        }
-    }
-    
     // MARK: - TableNode
     
     func tableNode(_ tableNode: ASTableNode, nodeForRowAt indexPath: IndexPath) -> ASCellNode {
         
         let cellNode = CommentCellNode()
         
-        let usernameAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor : UIColor.lightGray,
-            .font : UIFont.boldSystemFont(ofSize: 14)
-        ]
+        let usernameAttributes = Utilities.createAttributes(color: .lightGray, font: .boldSystemFont(ofSize: 14), shadow: false)
         
-        let commentAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor : UIColor.black,
-            .font : UIFont.systemFont(ofSize: 16)
-        ]
+        let commentAttributes = Utilities.createAttributes(color: .black, font: .systemFont(ofSize: 16), shadow: false)
         
         let usernameText = self.comments[indexPath.row].username
         cellNode.usernameLabel.attributedText = NSAttributedString(string: usernameText, attributes: usernameAttributes)
@@ -297,18 +232,17 @@ class CommentViewController: ASViewController<ASDisplayNode>, ASTableDelegate, A
     }
     
     func tableNode(_ tableNode: ASTableNode, willBeginBatchFetchWith context: ASBatchContext) {
-        print("called batch fetch")
-        fetchComments { (newComments) in
-            
+        FirebaseUtilities.fetchComments(postID: postID, lastComment: self.comments.last) { (fetchedComments, error) in
+            if error != nil {
+                self.view.showToast(message: error!.localizedDescription)
+            }
+            guard let newComments = fetchedComments else { return }
             self.comments.append(contentsOf: newComments)
             
             self.reachedEnd = newComments.count == 0
             
             if !self.reachedEnd {
                 let newCommentsCount = newComments.count
-                print("New comments count:", newCommentsCount)
-                
-                print("Complete comments count:", self.comments.count)
                 
                 if self.comments.count - newCommentsCount > 0 {
                     let indexRange = (self.comments.count - newCommentsCount..<self.comments.count)

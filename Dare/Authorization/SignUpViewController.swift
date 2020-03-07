@@ -10,11 +10,8 @@ import UIKit
 import FBSDKLoginKit
 import FirebaseAuth
 import GoogleSignIn
-import FirebaseFirestore
 
 class SignUpViewController: UIViewController, GIDSignInDelegate {
-    
-    
     
     var exitButton: UIButton!
     var faqButton: UIButton!
@@ -135,7 +132,6 @@ class SignUpViewController: UIViewController, GIDSignInDelegate {
     
     @objc func faqButtonTouchUpInside() {
         print("FAQ Pressed")
-        view.showToast(message: "FAQ pressed")
     }
     
     @objc func exitTouchUpInside() {
@@ -171,7 +167,7 @@ class SignUpViewController: UIViewController, GIDSignInDelegate {
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         if error != nil {
-            print("Error logging into google: ", error!)
+            self.view.showToast(message: error!.localizedDescription)
             return
         }
         guard let authentication = user.authentication else { return }

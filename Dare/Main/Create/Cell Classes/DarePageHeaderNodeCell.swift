@@ -6,10 +6,6 @@
 //  Copyright © 2020 Sam Acquaviva. All rights reserved.
 //
 
-import UIKit
-import FirebaseAuth
-import FirebaseFirestore
-import FirebaseStorage
 import AsyncDisplayKit
 
 class DarePageHeaderNodeCell: ASCellNode {
@@ -22,7 +18,6 @@ class DarePageHeaderNodeCell: ASCellNode {
     
     var dareID: String!
     var creatoruid: String!
-    let database = Firestore.firestore()
     
     var isSaved: Bool = false
     
