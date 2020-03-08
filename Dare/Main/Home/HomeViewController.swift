@@ -10,10 +10,6 @@ import AsyncDisplayKit
 import FirebaseAuth
 import FirebaseStorage
 
-// TODO: Setup Explore Page that loads posts similar to ones user posts/interacts with
-// TODO: Setup activity page
-// TODO: Better home layout to fit all screen sizes
-// TODO: Stylize profile header
 // TODO: Cache one or a few videos so that when loaded no wait for post
 // TODO: Listen to data usage and tone it down if doing too much
 // TODO: Check if dare sent to database is okay with cloud functions
@@ -82,7 +78,7 @@ class HomeViewController: ASViewController<ASDisplayNode>, ASCollectionDataSourc
     // Set up collectionNode delegate/datasource and view properties
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         collectionNode.delegate = self
         collectionNode.dataSource = self
         collectionNode.view.allowsSelection = false

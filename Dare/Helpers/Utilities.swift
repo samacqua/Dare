@@ -72,6 +72,17 @@ class Utilities {
     
     // Validate user input
     
+    static func isDareAllowed(_ dare: String?) -> Bool {
+        let dareCheckCharacterSet: CharacterSet = [",", " ", "!",".","?"]
+        guard let dareList = dare?.lowercased().components(separatedBy: dareCheckCharacterSet) else { return false }
+        for word in dareList {
+            if Obscenities.obscenities.contains(word) {
+                return false
+            }
+        }
+        return true
+    }
+    
     static func isPasswordValid(_ password : String?) -> Bool {
         guard password != nil else { return false }
         let regEx = "^((?!\\s).){8,}$"

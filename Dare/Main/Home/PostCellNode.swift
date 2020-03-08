@@ -37,8 +37,7 @@ class PostCellNode: ASCellNode {
     let uid = Auth.auth().currentUser!.uid
     
     let profileImageDimension = 50.0
-    
-            
+                    
     // MARK: - Initialization and setup
     
     override init() {
@@ -50,7 +49,6 @@ class PostCellNode: ASCellNode {
     override func didLoad() {
         super.didLoad()
         checkIfLiked()
-//        playVideo()
     }
     
     func setUpElements() {
@@ -212,6 +210,16 @@ class PostCellNode: ASCellNode {
             playVideo()
         }
     }
+        
+    override func nodeDidLoad() {
+        print("🔊")
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+        
+        if self.isVisible {
+            playVideo()
+        }
+    }
 
     override func didExitVisibleState() {
         videoNode.pause()
@@ -244,12 +252,23 @@ class PostCellNode: ASCellNode {
         
         let horizontalStackSpec = ASStackLayoutSpec(direction: .horizontal, spacing: 0, justifyContent: .end, alignItems: .end, children: [postInfoSpec, actionStackSpec])
         
-        let dareCenterSpec = ASCenterLayoutSpec(centeringOptions: .XY, sizingOptions: [], child: dareButton)
-        
-        let finalStackSpec = ASOverlayLayoutSpec(child: dareCenterSpec, overlay: horizontalStackSpec)
-        
-        let insetSpec = ASInsetLayoutSpec(insets:UIEdgeInsets(top: 12, left: 10, bottom: 60, right: 10), child: finalStackSpec)
-        
-        return ASOverlayLayoutSpec(child: videoNode, overlay: insetSpec)
+        print("🔶" + String(self.indexPath!.row))
+        if !isNodeLoaded {
+            let dareSpec = ASCenterLayoutSpec(centeringOptions: .XY, sizingOptions: [], child: dareButton)
+            
+            let finalStackSpec = ASOverlayLayoutSpec(child: dareSpec, overlay: horizontalStackSpec)
+            
+            let insetSpec = ASInsetLayoutSpec(insets:UIEdgeInsets(top: 12, left: 10, bottom: 60, right: 10), child: finalStackSpec)
+            
+            return ASOverlayLayoutSpec(child: videoNode, overlay: insetSpec)
+        } else {
+            let dareSpec = ASRelativeLayoutSpec(horizontalPosition: .center, verticalPosition: .end, sizingOption: .minimumSize, child: dareButton)
+            
+            let finalStackSpec = ASOverlayLayoutSpec(child: dareSpec, overlay: horizontalStackSpec)
+            
+            let insetSpec = ASInsetLayoutSpec(insets:UIEdgeInsets(top: 12, left: 10, bottom: 60, right: 10), child: finalStackSpec)
+            
+            return ASOverlayLayoutSpec(child: videoNode, overlay: insetSpec)
+        }
     }
 }

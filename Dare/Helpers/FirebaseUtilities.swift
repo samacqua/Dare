@@ -797,6 +797,9 @@ class FirebaseUtilities {
     // MARK: - Dare Generation
     
     static func createDare(dareTitle: String, completion: @escaping(_ error: Error?) -> Void) {
+        if !Utilities.isDareAllowed(dareTitle) {
+            return completion(CustomError(message: "The title of your Dare does not conform to our community guidelines."))
+        }
         let trimmedTitle = dareTitle.replacingOccurrences(of: " ", with: "")
         database.collection("users").document(uid).getDocument { (snapshot, userDocError) in
             if userDocError != nil {
